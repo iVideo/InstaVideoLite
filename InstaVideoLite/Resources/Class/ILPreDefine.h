@@ -23,6 +23,9 @@
 #define IL_PLAYER_H      [[UIScreen mainScreen] bounds].size.width
 #define IL_PLAYER_W      [[UIScreen mainScreen] bounds].size.width
 
+#define IL_CAMERA_H      [[UIScreen mainScreen] bounds].size.width
+#define IL_CAMERA_W      [[UIScreen mainScreen] bounds].size.width
+
 #define IL_USER_DEFAULT [NSUserDefaults standardUserDefaults]
 #define iOS7_OR_LATER [[[UIDevice currentDevice] systemVersion] floatValue] >= 7;
 #define iPhone5 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)

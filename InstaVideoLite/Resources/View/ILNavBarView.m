@@ -22,10 +22,10 @@
         [_btnBack setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
         [self addSubview:_btnBack];
 
-        _btnBack = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_btnBack setFrame:CGRectMake(276, 0, 44, 44)];
-        [_btnBack setImage:[UIImage imageNamed:@"Next"] forState:UIControlStateNormal];
-        [self addSubview:_btnBack];
+        _btnNext = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_btnNext setFrame:CGRectMake(IL_SCREEN_W - 44, 0, 44, 44)];
+        [_btnNext setImage:[UIImage imageNamed:@"Next"] forState:UIControlStateNormal];
+        [self addSubview:_btnNext];
         
     }
     return self;

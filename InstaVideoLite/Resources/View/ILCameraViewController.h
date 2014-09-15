@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+#import "ILPreDefine.h"
 
 @interface ILCameraViewController : UIViewController
 <UIGestureRecognizerDelegate>

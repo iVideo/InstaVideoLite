@@ -32,7 +32,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor grayColor];
+        self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bk_btn.png"]];
         [self createScrollView];
 //        [self refreshClipDock];
     }
@@ -163,7 +163,7 @@
 
 -(void)bbb:(UIView *)view
 {
-    NSInteger radio = ceil(view.center.x/THRUMB_W *view.tag);
+//    NSInteger radio = ceil(view.center.x/THRUMB_W *view.tag);
     
 }
     

@@ -153,17 +153,18 @@
     [_playerView setBackgroundColor:[UIColor blackColor]];
     [self.view addSubview:_playerView];
     
-    CGRect btnPlayFrame = CGRectMake(126, 125, 69, 69);
+    CGRect btnPlayFrame = CGRectMake(IL_PLAYER_W/2 - 35, IL_PLAYER_H/2, 70, 70);
     _btnPlay = [UIButton buttonWithType:UIButtonTypeCustom];
     [_btnPlay setFrame:btnPlayFrame];
     [_btnPlay setImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateNormal];
     [_btnPlay addTarget:self action:@selector(playPause:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view insertSubview:_btnPlay aboveSubview:_playerView];
+    [_playerView addSubview:_btnPlay];
+    _btnPlay.center = _playerView.center;
     
     [PLAYER setPlayerItemWithAssets:[DATASTORE getMovieClips]];
     [self.playerView.playerLayer setPlayer:PLAYER.queuePlayer];
-    [PLAYER play];
-    _btnPlay.selected = YES;
+//    [PLAYER play];
+//    _btnPlay.selected = YES;
 
 }
 
@@ -204,17 +205,16 @@
 - (void)addClip:(UIButton *)sender
 {
     [PLAYER pause];
-    [self test];
-//    [_clipDock refreshClipDock];
-    [_clipDock addLastAsset];
-//    [self select:sender];
+//    [self test];
+//    [_clipDock addLastAsset];
+    [self select:sender];
 }
 
 - (void)createNavBar
 {
     _navBarView = [[ILNavBarView alloc] initWithFrame:CGRectMake(0, IL_SCREEN_H - 44, IL_SCREEN_W, 44)];
     [_navBarView.btnBack addTarget:self action:@selector(btnBackPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [_navBarView.btnBack addTarget:self action:@selector(btnNextPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [_navBarView.btnNext addTarget:self action:@selector(btnNextPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_navBarView];
 }
 

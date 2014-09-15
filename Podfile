@@ -2,7 +2,8 @@
 # platform :ios, "6.0"
 
 target "InstaVideoLite" do
-pod	"GPUImage","~>0.1.5"
+pod	"GPUImage","0.1.4"
+pod	"SVProgressHUD"
 end
 
 target "InstaVideoLiteTests" do
