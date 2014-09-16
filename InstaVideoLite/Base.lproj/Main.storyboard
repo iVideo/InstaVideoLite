@@ -24,7 +24,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hus-tk-G9m" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="840" y="-767"/>
+            <point key="canvasLocation" x="887" y="-945"/>
         </scene>
         <!--Editor View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -40,11 +40,27 @@
                         <segue destination="0fl-Te-6uI" kind="push" identifier="compose" id="egm-Fd-OdI"/>
                         <segue destination="3O7-c7-BaN" kind="push" identifier="select" id="F1Q-eS-NR8"/>
                         <segue destination="846-Uc-OQv" kind="push" identifier="purchase" id="8AP-2D-cvW"/>
+                        <segue destination="Srq-2m-0Fi" kind="push" identifier="album" id="oDQ-8F-YuL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="432" y="-740"/>
+        </scene>
+        <!--Album View Controller-->
+        <scene sceneID="tXp-9T-3sW">
+            <objects>
+                <viewController id="Srq-2m-0Fi" customClass="ILAlbumViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="pN2-ob-KjW">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="lQe-8z-6hM"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="m3e-p8-buY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="887" y="-296"/>
         </scene>
         <!--Camera View Controller-->
         <scene sceneID="j1I-la-Usz">

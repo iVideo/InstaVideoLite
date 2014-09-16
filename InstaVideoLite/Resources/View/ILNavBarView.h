@@ -13,7 +13,11 @@
 
 @property (strong, nonatomic) UIButton *btnBack;
 @property (strong, nonatomic) UIButton *btnNext;
+@property (strong, nonatomic) UIActivityIndicatorView *indicator;
 
 - (instancetype)initWithFrame:(CGRect)frame;
+
+- (void)startWaiting;
+- (void)stopWaited;
 
 @end

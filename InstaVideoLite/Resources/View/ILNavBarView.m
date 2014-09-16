@@ -27,8 +27,28 @@
         [_btnNext setImage:[UIImage imageNamed:@"Next"] forState:UIControlStateNormal];
         [self addSubview:_btnNext];
         
+        _indicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        [_indicator setFrame:CGRectMake(IL_SCREEN_W - 44, 0, 44, 44)];
+        _indicator.hidesWhenStopped = YES;
+        _indicator.hidden = YES;
+        [self insertSubview:_indicator aboveSubview:_btnNext];
+        
     }
     return self;
+}
+
+- (void)startWaiting
+{
+    _btnNext.hidden = YES;
+    _indicator.hidden = NO;
+    [_indicator startAnimating];
+}
+
+- (void)stopWaited
+{
+    [_indicator stopAnimating];
+    _indicator.hidden = YES;
+    _btnNext.hidden = NO;
 }
 
 @end

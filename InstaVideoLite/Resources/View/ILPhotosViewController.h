@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ILPreDefine.h"
 
 @interface ILPhotosViewController : UIViewController
 <UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
+
+- (instancetype)initWithFrame:(CGRect)frame;
 
 @end

@@ -8,7 +8,7 @@
 
 #import "ILVideoComposition.h"
 
-static float kMaxDuration = 20.0;
+static float kMaxDuration = 15.0f;
 
 @interface ILVideoComposition ()
 {
@@ -37,9 +37,14 @@ static float kMaxDuration = 20.0;
     return  kMaxDuration;
 }
 
-- (NSString *)description
+- (NSArray *)getVideoClips
 {
-    return [NSString stringWithFormat:@"composition contains %ld takes", [clips count]];
+    return [[NSArray alloc]initWithArray:clips];
+}
+
+- (void)clearVideoClips
+{
+    [clips removeAllObjects];
 }
 
 - (void)addVideoClip:(ILVideoClip *) take
@@ -70,26 +75,28 @@ static float kMaxDuration = 20.0;
 
 #pragma mark
 
-- (BOOL) canAddVideoClip
+- (BOOL)canAddVideoClip
 {
     return ([self duration] < kMaxDuration);
 }
 
-- (void) setRecording: (BOOL) recording
+- (void)setRecording: (BOOL) recording
 {
     _isRecording = recording;
     
     if (_isRecording){
         startedAt = [NSDate date];
         timer = [NSTimer scheduledTimerWithTimeInterval: 0.1 target:self selector:@selector(notifyDurationChanges) userInfo:nil repeats:YES];
+        [timer fire];
     } else {
         [self notifyDurationChanges];
-        [timer invalidate]; timer = nil;
+        [timer invalidate];
+        timer = nil;
         startedAt = nil;
     }
 }
 
-- (float) recordingDuration
+- (float)recordingDuration
 {
     if (!_isRecording) return  0.0;
     else {
@@ -97,7 +104,7 @@ static float kMaxDuration = 20.0;
     }
 }
 
-- (float) recordedDuration
+- (float)recordedDuration
 {
     float dur = 0;
     for (ILVideoClip *take in clips){
@@ -107,67 +114,11 @@ static float kMaxDuration = 20.0;
     return dur;
 }
 
-- (void) notifyDurationChanges
+- (void)notifyDurationChanges
 {
     NSLog(@"notifyDurationChanges");
     [self willChangeValueForKey: @"duration"];
     [self didChangeValueForKey: @"duration"];
-}
-
-#pragma mark
-
-
-- (void) concatenateVideosWithCompletionHandler:(void (^)(BOOL))handler
-{
-    if (self.duration == 0){
-        NSLog(@"No video clips to stitch");
-        handler(NO);
-        return;
-    }
-    
-    
-    NSMutableArray *assets = [NSMutableArray array];
-    for (ILVideoClip *take in clips){
-        [assets addObject: [take videoAsset]];
-    }
-    AVMutableComposition *composition = [AVMutableComposition composition];
-    CMTime current = kCMTimeZero;
-    NSError *compositionError = nil;
-    for(AVAsset *asset in assets) {
-        BOOL result = [composition insertTimeRange:CMTimeRangeMake(kCMTimeZero, [asset duration])
-                                           ofAsset:asset atTime:current error:&compositionError];
-        if(!result) {
-            handler(NO);
-            return;
-        } else {
-            current = CMTimeAdd(current, [asset duration]);
-        }
-    }
-    
-    NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:composition];
-    AVAssetExportSession *exportSession;
-    if ([compatiblePresets containsObject:AVAssetExportPresetHighestQuality]) {
-        exportSession = [[AVAssetExportSession alloc] initWithAsset:composition presetName:AVAssetExportPresetHighestQuality];
-    } else if ([compatiblePresets containsObject:AVAssetExportPresetMediumQuality]) {
-        exportSession = [[AVAssetExportSession alloc] initWithAsset:composition presetName:AVAssetExportPresetMediumQuality];
-    } else if ([compatiblePresets containsObject:AVAssetExportPresetLowQuality]) {
-        exportSession = [[AVAssetExportSession alloc] initWithAsset:composition presetName:AVAssetExportPresetLowQuality];
-    }
-    
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *outputURL = paths[0];
-    NSFileManager *manager = [NSFileManager defaultManager];
-    [manager createDirectoryAtPath:outputURL withIntermediateDirectories:YES attributes:nil error:nil];
-    outputURL = [outputURL stringByAppendingPathComponent: @"output.mp4"];
-    unlink([outputURL UTF8String]);
-    
-    exportSession.outputURL = [NSURL fileURLWithPath:outputURL];
-    exportSession.outputFileType = AVFileTypeQuickTimeMovie;
-    
-    [exportSession exportAsynchronouslyWithCompletionHandler:^{
-        BOOL success = ([exportSession status] == AVAssetExportSessionStatusCompleted);
-        handler(success);
-    }];
 }
 
 @end

@@ -34,7 +34,6 @@
     if (self) {
         self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bk_btn.png"]];
         [self createScrollView];
-//        [self refreshClipDock];
     }
     return self;
 }
@@ -47,40 +46,41 @@
 - (void)createScrollView
 {
     _scrollView = [[UIScrollView alloc] initWithFrame:
-                   CGRectMake(4, 2, self.frame.size.width, self.frame.size.height)];
+                   CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
     _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.showsVerticalScrollIndicator = NO;
     [self addSubview:_scrollView];
 }
 
-- (void)addLastAsset
+- (void)initialize
 {
-    NSArray *assets = [DATASTORE getMovieClips];
-    AVAsset *asset = [assets lastObject];
-    NSInteger i = [assets count];
-    [self createThumbView:asset maxCount:i];
+    [self clearContentView];
+    [self createContentView];
 }
 
-//- (void)clearContentView
-//{
-//    for (UIView *subView in [_scrollView subviews]) {
-//        [subView removeFromSuperview];
-//    }
-//}
+- (void)clearContentView
+{
+    for (UIView *subView in [_scrollView subviews]) {
+        [subView removeFromSuperview];
+    }
+}
 
-//- (void)refreshClipDock
-//{
-//    [self clearContentView];
-//    [self createContentView];
-//}
+- (void)createContentView
+{
+    NSArray *assets = [DATASTORE getMovieClips];
+    for (int i = 0; i < [assets count]; i ++) {
+        AVAsset *asset = [assets objectAtIndex:i];
+        [self createThumbView:asset maxCount:i];
+    }
+    _scrollView.contentSize = CGSizeMake(72*[assets count], self.frame.size.height);
+}
 
-//- (void)createContentView
+//- (void)addLastAsset
 //{
 //    NSArray *assets = [DATASTORE getMovieClips];
-//    for (int i = 0; i < [assets count]; i ++) {
-//        AVAsset *asset = [assets objectAtIndex:i];
-//        [self createThumbView:asset maxCount:i];
-//    }
+//    AVAsset *asset = [assets lastObject];
+//    NSInteger i = [assets count];
+//    [self createThumbView:asset maxCount:i];
 //    _scrollView.contentSize = CGSizeMake(72*[assets count], self.frame.size.height);
 //}
 
@@ -95,13 +95,13 @@
     panGesture.maximumNumberOfTouches = 1;
     [thumbView addGestureRecognizer:panGesture];
     
-    UIImageView *selectView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 66, 66)];
+    UIImageView *selectView = [[UIImageView alloc] initWithFrame:CGRectMake(2, 2, 66, 66)];
     selectView.image = [UIImage imageNamed:@"edit_btn"];
     [thumbView addSubview:selectView];
     
     AVAssetImageGenerator *generator = [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
     UIImage *coverImage = [UIImage imageWithCGImage:[generator copyCGImageAtTime:kCMTimeZero actualTime:nil error:nil]];
-    UIImageView *coverView = [[UIImageView alloc] initWithFrame:CGRectMake(1, 1, 64, 64)];
+    UIImageView *coverView = [[UIImageView alloc] initWithFrame:CGRectMake(3, 3, 64, 64)];
     coverView.image = coverImage;
     [thumbView insertSubview:coverView aboveSubview:selectView];
     
@@ -114,9 +114,6 @@
 //    [thumbView insertSubview:btnPlay aboveSubview:coverView];
     
     [_scrollView addSubview:thumbView];
-    
-    _scrollView.contentSize = CGSizeMake(THRUMB_W * i, THRUMB_H);
-    
 }
 
 - (void)btnPlayPressed:(UIButton *)sender

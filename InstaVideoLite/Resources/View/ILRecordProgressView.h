@@ -11,6 +11,6 @@
 
 @interface ILRecordProgressView : UIView
 
-@property (nonatomic, strong) ILVideoComposition *composition;
+@property (strong, nonatomic) ILVideoComposition *composition;
 
 @end

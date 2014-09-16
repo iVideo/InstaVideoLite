@@ -26,6 +26,8 @@
 
 - (instancetype)initWithFrame:(CGRect)frame;
 
-- (void)addLastAsset;
+- (void)initialize;
+
+//- (void)addLastAsset;
 
 @end

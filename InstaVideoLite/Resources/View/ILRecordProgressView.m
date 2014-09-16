@@ -9,6 +9,13 @@
 #import "ILRecordProgressView.h"
 
 @implementation ILRecordProgressView
+
+- (void)dealloc
+{
+    [_composition removeObserver: self forKeyPath: @"isLastTakeReadyToRemove"];
+    [_composition removeObserver: self forKeyPath: @"duration"];
+}
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -28,7 +35,7 @@
     CGFloat recColors []    = { 244/255.0,121/255.0,99/255.0, 1.0, 241/255.0,58/255.0,58/255.0, 1.0 };
     
     
-    float maxDuration = [self.composition maxDurationAllowed];
+    float maxDuration = [_composition maxDurationAllowed];
     float w         = self.frame.size.width;
     float h         = self.frame.size.height;
     
@@ -39,10 +46,10 @@
     CGContextFillRect(context, rect);
     
     // Recorded clips
-    float duration              = [self.composition recordedDuration];
-    float lastCompDuration      = [self.composition recordingDuration];
-    if (self.composition.isLastTakeReadyToRemove){
-        CGSize range    = [self.composition lastVideoClipRange];
+    float duration              = [_composition recordedDuration];
+    float lastCompDuration      = [_composition recordingDuration];
+    if (_composition.isLastTakeReadyToRemove){
+        CGSize range    = [_composition lastVideoClipRange];
         lastCompDuration   = range.height;
         duration          -= lastCompDuration;
     }
@@ -51,7 +58,7 @@
     [self drawRect: fixed withColors: fixedColors context: context];
     
     // Recording clip or last clip to be removed
-    if (self.composition.isRecording || self.composition.isLastTakeReadyToRemove){
+    if (_composition.isRecording || _composition.isLastTakeReadyToRemove){
         float addedLength       = lastCompDuration / maxDuration * w;
         CGRect added            = CGRectMake(length, 0, addedLength, h);
         [self drawRect: added withColors: recColors context: context];
@@ -76,19 +83,19 @@
 {
     _composition = composition;
     
-    if (composition){
-        [composition addObserver: self forKeyPath: @"isLastTakeReadyToRemove" options: NSKeyValueObservingOptionNew context: nil];
-        [composition addObserver: self forKeyPath:@"duration" options: NSKeyValueObservingOptionInitial context: nil];
+    if (_composition){
+        [_composition addObserver: self forKeyPath: @"isLastTakeReadyToRemove" options: NSKeyValueObservingOptionNew context: nil];
+        [_composition addObserver: self forKeyPath:@"duration" options: NSKeyValueObservingOptionInitial context: nil];
         
     } else {
-        [composition removeObserver: self forKeyPath: @"isLastTakeReadyToRemove"];
-        [composition removeObserver: self forKeyPath: @"duration"];
+        [_composition removeObserver: self forKeyPath: @"isLastTakeReadyToRemove"];
+        [_composition removeObserver: self forKeyPath: @"duration"];
     }
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if (self.composition == object){
+    if (_composition == object){
         if ( [keyPath isEqualToString: @"isLastTakeReadyToRemove"] || [keyPath isEqualToString: @"duration"]){
             [self setNeedsDisplay];
         }

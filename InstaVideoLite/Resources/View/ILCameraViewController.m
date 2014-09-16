@@ -8,16 +8,18 @@
 
 #import "ILCameraViewController.h"
 
-#import "ILPhotosViewController.h"
+//#import "ILPhotosViewController.h"
+#import "ILAlbumViewController.h"
 #import "ILRecordProgressView.h"
 #import "ILVideoComposition.h"
 #import "ILVideoClip.h"
 #import "ILNavBarView.h"
 #import "GPUImage.h"
 
-#define OVERLAY_HEIGHT  320.0
+#import "SVProgressHUD.h"
+
+//#define OVERLAY_HEIGHT  320.f
 #define PAN_TIMING      0.5f
-#define IL_DEVICE_SIZE  [[UIScreen mainScreen] bounds].size
 
 @interface ILCameraViewController ()
 {
@@ -28,21 +30,18 @@
     GPUImageView            *videoView;
     GPUImageMovieWriter     *movieWriter;
     ILRecordProgressView    *progressView;
-//    NTRecProgressView       *progressView;
     
-    ILVideoComposition      *composition;
     ILVideoClip             *videoTake;
     NSURL *movieURL;
     
-//    GPUImageMovieWriter     *movieWriter;
-//    ILVideoComposition      *composition;
-//    ILVideoClip             *videoTake;
-//    NSURL *movieURL;
+    BOOL isFinished;
 }
 @property (strong, nonatomic) ILNavBarView *navBarView;
 
 //@property (strong, nonatomic) GPUImageVideoCamera *videoCamera;
 //@property (strong, nonatomic) GPUImageView *videoView;
+
+@property (strong, nonatomic) ILVideoComposition *composition;
 
 @property (strong, nonatomic) UIView *controlView;
 @property (strong, nonatomic) UIButton *btnDelete;
@@ -50,11 +49,17 @@
 @property (strong, nonatomic) UIButton *btnCamera;
 //@property (strong, nonatomic) ILRecordProgressView *progressView;
 
-@property (strong, nonatomic) ILPhotosViewController *photosView;
+//@property (strong, nonatomic) ILPhotosViewController *photosView;
+@property (strong, nonatomic) ILAlbumViewController *albumView;
 
 @end
 
 @implementation ILCameraViewController
+
+- (void)dealloc
+{
+    [self removeSelectView];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -63,7 +68,7 @@
     [self createCameraView];
     [self createNavBar];
     
-//    [self createSelectView];
+    [self createSelectView];
 
 }
 
@@ -91,7 +96,8 @@
     [_btnRecord setFrame:CGRectMake(IL_SCREEN_W/2 - 50, controlHeight/2 - 50, 100, 100)];
     //    [_btnRecord setCenter:_controlView.center];
     [_btnRecord setImage:[UIImage imageNamed:@"Video_btn"] forState:UIControlStateNormal];
-    [_btnRecord addTarget:self action:@selector(btnRecordPressed:) forControlEvents:UIControlEventTouchUpInside];
+//    [_btnRecord addTarget:self action:@selector(btnRecordPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [_btnRecord addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(btnRecordLongPressed:)]];
     [_controlView addSubview:_btnRecord];
     
     //Delete button
@@ -122,15 +128,6 @@
     videoView.fillMode = kGPUImageFillModePreserveAspectRatioAndFill;
     [self.view insertSubview: videoView atIndex: 0];
     
-    // Record Settings
-    NSString *moviePath = [NSHomeDirectory() stringByAppendingPathComponent:
-                           [[NSString alloc] initWithFormat:@"Documents/movie_%u.m4v",arc4random()]
-                           ];
-    unlink([moviePath UTF8String]);
-    movieURL = [[NSURL alloc] initFileURLWithPath:moviePath];
-    movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:movieURL size:CGSizeMake(480.0, 640.0)];
-    movieWriter.encodingLiveVideo = YES;
-    
     // Tap Gesture
     UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc] initWithTarget: self action: @selector(longPressGestureRecognized:)];
     gesture.minimumPressDuration = 0.25;
@@ -141,30 +138,44 @@
     [videoCamera startCameraCapture];
     
     // Video composition
-    composition     = [[ILVideoComposition alloc] init];
-    progressView.composition = composition;
+    _composition     = [[ILVideoComposition alloc] init];
+    progressView.composition = _composition;
     
+}
+
+- (void)btnRecordLongPressed:(UILongPressGestureRecognizer *)gesture
+{
+    switch (gesture.state) {
+        case UIGestureRecognizerStateBegan:
+            [self startRecording];
+            break;
+        case UIGestureRecognizerStateEnded:
+            [self pauseRecording];
+            break;
+        default:
+            break;
+    }
 }
 
 - (void)btnRecordPressed:(UIButton *)sender
 {
-    sender.selected = !sender.selected;
     if (!sender.selected) {
         [self startRecording];
     }
     else {
         [self pauseRecording];
     }
+    sender.selected = !sender.selected;
 }
 
 - (void)btnDeletePressed:(UIButton *)sender
 {
-    if ([composition isLastTakeReadyToRemove]){
-        [composition removeLastVideoClip];
+    if ([_composition isLastTakeReadyToRemove]){
+        [_composition removeLastVideoClip];
     } else {
-        composition.isLastTakeReadyToRemove = YES;
+        _composition.isLastTakeReadyToRemove = YES;
     }
-    sender.selected = composition.isLastTakeReadyToRemove;
+    sender.selected = _composition.isLastTakeReadyToRemove;
     [progressView setNeedsDisplay];
 }
 
@@ -183,21 +194,23 @@
 
 - (void) doesStartRecording
 {
-    if ([composition canAddVideoClip]){
-        [composition setRecording: YES];
+    if ([_composition canAddVideoClip]){
+        [_composition setRecording: YES];
         _btnDelete.selected = NO;
+        isFinished = NO;
         
         // Record Settings
-        NSTimeInterval time = [NSDate timeIntervalSinceReferenceDate] * 1000; // Create random unique path for the temporary video file
-        NSString *path = [NSString stringWithFormat: @"Movie_%d.m4v", (int)time];
-        NSString *pathToMovie = [NSTemporaryDirectory() stringByAppendingPathComponent:path];
-        unlink([pathToMovie UTF8String]); // If a file already exists, AVAssetWriter won't let you record new frames, so delete the old movie
-        movieURL        = [NSURL fileURLWithPath:pathToMovie];
-        movieWriter     = [[GPUImageMovieWriter alloc] initWithMovieURL:movieURL size:CGSizeMake(480.0, 640.0)];
+        NSString *moviePath = [NSTemporaryDirectory() stringByAppendingPathComponent:
+                               [[NSString alloc] initWithFormat:@"movie_%u.m4v",arc4random()]];
+        unlink([moviePath UTF8String]);
+        movieURL = [[NSURL alloc] initFileURLWithPath:moviePath];
+        movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:movieURL
+                                                               size:CGSizeMake(480.0, 640.0)];
+        movieWriter.encodingLiveVideo = YES;
         
         videoTake = [[ILVideoClip alloc] init];
         videoTake.videoPath = movieURL;
-        [composition addVideoClip: videoTake];
+        [_composition addVideoClip: videoTake];
         
         [videoCamera addTarget: movieWriter];
         videoCamera.audioEncodingTarget = movieWriter;
@@ -207,15 +220,18 @@
 
 - (void) pauseRecording
 {
-    [composition setRecording: NO];
+//    [_navBarView startWaiting];
+    [_composition setRecording: NO];
     
     [videoCamera removeTarget:movieWriter];
     videoCamera.audioEncodingTarget = nil;
     
-    float duration          = CMTimeGetSeconds(movieWriter.duration);
-    videoTake.duration    = duration;
+    float duration = CMTimeGetSeconds(movieWriter.duration);
+    videoTake.duration = duration;
     
     [movieWriter finishRecordingWithCompletionHandler:^{
+//        [_navBarView stopWaited];
+        isFinished = YES;
         NSLog(@"finishRecording");
     }];
 }
@@ -234,21 +250,6 @@
     }
 }
 
-- (IBAction) stopRecording:(id)sender
-{
-    [composition concatenateVideosWithCompletionHandler:^(AVAssetExportSessionStatus status){
-        if (status == AVAssetExportSessionStatusCompleted){
-            [[[ALAssetsLibrary alloc] init] writeVideoAtPathToSavedPhotosAlbum:movieURL completionBlock:^(NSURL *assetURL, NSError *error) {
-                if (error == nil) {
-                    NSLog(@"Movie saved");
-                } else {
-                    NSLog(@"Error %@", error);
-                }
-            }];
-        }
-    }];
-}
-
 #pragma mark -- navbarView ---
 - (void)createNavBar
 {
@@ -265,30 +266,45 @@
 
 - (void)btnNextPressed:(UIButton *)sender
 {
-    
+    if (isFinished == NO) {
+        return;
+    }
+    NSArray *clips = [[_composition getVideoClips] copy];
+    [_composition clearVideoClips];
+    for (ILVideoClip *clip in clips) {
+        [DATASTORE addMovieClip:[clip videoAsset]];
+    }
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark -- selectView ---
 
+- (void)removeSelectView
+{
+    [_albumView removeFromParentViewController];
+    _albumView = nil;
+}
+
 - (void)createSelectView
 {
-    _photosView = [[ILPhotosViewController alloc] initWithNibName:@"ILPhotosViewController" bundle:nil];
-    _photosView.view.frame = CGRectMake(0, OVERLAY_HEIGHT, _photosView.view.frame.size.width, _photosView.view.frame.size.height);
-    
-    //add the overlay as child view controller
-    [self addChildViewController:_photosView];
-    [self.view addSubview:_photosView.view];
-    
-    [_photosView didMoveToParentViewController:self];
-    
-    
+
+    if (_albumView == nil) {
+        _albumView = [[ILAlbumViewController alloc] init];
+//        _albumView = [[ILAlbumViewController alloc] initWithFrame:CGRectMake(0, IL_PLAYER_H, IL_SCREEN_W, IL_SCREEN_H)];
+        //add the overlay as child view controller
+        [self addChildViewController:_albumView];
+        [self.view addSubview:_albumView.view];
+        
+        [_albumView didMoveToParentViewController:self];
+    }
+
     selectPanGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(toggleSelectView:)];
     [selectPanGesture setDelegate:self];
-    [_photosView.view  addGestureRecognizer:selectPanGesture];
+    [_albumView.view  addGestureRecognizer:selectPanGesture];
     
-    UITapGestureRecognizer *selectTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapSelectVC:)];
-    [selectTapGesture setDelegate:self];
-    [_photosView.view addGestureRecognizer:selectTapGesture];
+//    UITapGestureRecognizer *selectTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapSelectVC:)];
+//    [selectTapGesture setDelegate:self];
+//    [_photosView.view addGestureRecognizer:selectTapGesture];
     
 }
 
@@ -316,9 +332,9 @@
 - (void)changedTranslateSelectView:(id)sender
 {
     CGPoint translatedPoint = [(UIPanGestureRecognizer *) sender translationInView:self.view];
-    CGRect selectFrame = _photosView.view.frame ;
+    CGRect selectFrame = _albumView.view.frame ;
     selectFrame.origin.y = selectFrame.origin.y + translatedPoint.y;
-    _photosView.view.frame = selectFrame;
+    _albumView.view.frame = selectFrame;
     [sender setTranslation:CGPointZero inView:self.view];
 }
 
@@ -326,9 +342,9 @@
 {
     [UIView animateWithDuration:PAN_TIMING delay:0.0f options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         
-        CGRect selectFrame = _photosView.view.frame;
+        CGRect selectFrame = _albumView.view.frame;
         selectFrame.origin = finalPoint;
-        _photosView.view.frame = selectFrame;
+        _albumView.view.frame = selectFrame;
         [sender setTranslation:CGPointZero inView:self.view];
         
     } completion:^(BOOL finished) {
@@ -340,12 +356,12 @@
 - (void)resetFinalPoint:(id)sender
 {
     CGPoint velocity = [(UIPanGestureRecognizer *)sender velocityInView:self.view];
-    if (velocity.y < 0) {
-        finalPoint = CGPointMake(0, 0);
-    } else if (velocity.y > 360) {
-        finalPoint = CGPointMake(0, IL_DEVICE_SIZE.height);
+    if (velocity.y < IL_PLAYER_H) {
+        finalPoint = CGPointMake(0, - IL_PLAYER_H/2);
+    } else if (velocity.y > IL_SCREEN_H*3/4) {
+        finalPoint = CGPointMake(0, IL_SCREEN_H);
     }else {
-        finalPoint = CGPointMake(0, OVERLAY_HEIGHT);
+        finalPoint = CGPointMake(0, IL_PLAYER_H);
     }
 }
 

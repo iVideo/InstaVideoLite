@@ -43,21 +43,18 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [_clipDock removeFromSuperview];
-    [self createClipDock];
-    NSLog(@"viewWillAppear");
+    [self initializeClipDock];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor blackColor];
-    
-    [self initAssets];
     [self createPlayerView];
     [self createEditorBar];
-    [self createNavBar];
+    [self createNavView];
     [self createAddButon];
+    [self createClipDock];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -75,28 +72,22 @@
 }
 */
 
-- (void)initAssets
+- (void)initializeClipDock
 {
-//    _assets = [[NSMutableArray alloc] initWithCapacity:0];
-    currentIndex = 0;
-    [self test];
-//    [self test];
-//    [self test];
-//    [self test];
-    
+    [_clipDock initialize];
 }
 
-- (void)test
-{
-    //TODO: Testing Code
+//TODO: Testing Code
+//- (void)test
+//{
 //    NSString *path1 = [[NSBundle mainBundle] pathForResource:@"jerryfish" ofType:@"m4v"];
 //    [DATASTORE addMovieClip:[AVAsset assetWithURL:[[NSURL alloc]initFileURLWithPath:path1]] atIndex:currentIndex];
 //    currentIndex += 1;
     
-    NSString *path2 = [[NSBundle mainBundle] pathForResource:@"skateboarding" ofType:@"m4v"];
-    [DATASTORE addMovieClip:[AVAsset assetWithURL:[[NSURL alloc]initFileURLWithPath:path2]] atIndex:currentIndex];
-    currentIndex += 1;
-}
+//    NSString *path2 = [[NSBundle mainBundle] pathForResource:@"skateboarding" ofType:@"m4v"];
+//    [DATASTORE addMovieClip:[AVAsset assetWithURL:[[NSURL alloc]initFileURLWithPath:path2]] atIndex:currentIndex];
+//    currentIndex += 1;
+//}
 
 # pragma mark - UI Initialization
 
@@ -163,8 +154,11 @@
     
     [PLAYER setPlayerItemWithAssets:[DATASTORE getMovieClips]];
     [self.playerView.playerLayer setPlayer:PLAYER.queuePlayer];
-//    [PLAYER play];
-//    _btnPlay.selected = YES;
+    
+    currentIndex = 0;
+    
+    [PLAYER play];
+    _btnPlay.selected = YES;
 
 }
 
@@ -184,7 +178,6 @@
     CGRect clipDockFrame = CGRectMake(0, IL_PLAYER_H, IL_SCREEN_W - DOCK_H , DOCK_H);
     _clipDock = [[ILClipDockView alloc] initWithFrame:clipDockFrame];
     [self.view addSubview:_clipDock] ;
-    [_clipDock addLastAsset];
 }
 - (void)btnPlayPressed:(UIButton *)sender
 {
@@ -207,10 +200,12 @@
     [PLAYER pause];
 //    [self test];
 //    [_clipDock addLastAsset];
-    [self select:sender];
+//    [self select:sender];
+    [self album:sender];
+    
 }
 
-- (void)createNavBar
+- (void)createNavView
 {
     _navBarView = [[ILNavBarView alloc] initWithFrame:CGRectMake(0, IL_SCREEN_H - 44, IL_SCREEN_W, 44)];
     [_navBarView.btnBack addTarget:self action:@selector(btnBackPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -220,12 +215,17 @@
 
 - (void)btnBackPressed:(UIButton *)sender
 {
-    
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)btnNextPressed:(UIButton *)sender
 {
     
+}
+
+- (void)album:(id)sender
+{
+    [self performSegueWithIdentifier:@"album" sender:self];
 }
 
 - (void)select:(id)sender
@@ -236,6 +236,11 @@
 - (void)compose:(id)sender
 {
     [self performSegueWithIdentifier:@"compose" sender:self];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    
 }
 
 @end

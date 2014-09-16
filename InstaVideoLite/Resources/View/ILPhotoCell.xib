@@ -13,18 +13,21 @@
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                 <rect key="frame" x="0.0" y="0.0" width="165" height="114"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="play.png" translatesAutoresizingMaskIntoConstraints="NO" id="rx4-aP-4uX">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rx4-aP-4uX">
                         <rect key="frame" x="0.0" y="0.0" width="165" height="114"/>
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eVt-vE-1Ma">
-                        <rect key="frame" x="0.0" y="76" width="165" height="38"/>
+                        <rect key="frame" x="0.0" y="76" width="165" height="30"/>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0:00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1ag-lK-gse">
-                        <rect key="frame" x="115" y="85" width="42" height="21"/>
+                        <rect key="frame" x="74" y="85" width="80" height="22"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="video_icon.png" translatesAutoresizingMaskIntoConstraints="NO" id="Bg0-K3-n8F">
+                        <rect key="frame" x="0.0" y="76" width="44" height="30"/>
+                    </imageView>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
@@ -34,6 +37,6 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="play.png" width="80" height="80"/>
+        <image name="video_icon.png" width="30" height="16"/>
     </resources>
 </document>

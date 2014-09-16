@@ -18,6 +18,7 @@
 #define IL_SCREEN_H      [[UIScreen mainScreen] bounds].size.height
 #define IL_SCREEN_W      [[UIScreen mainScreen] bounds].size.width
 
+#define IL_COMMON_H      44.0f
 #define IL_NAVBAR_H      44.0f
 
 #define IL_PLAYER_H      [[UIScreen mainScreen] bounds].size.width

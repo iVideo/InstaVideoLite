@@ -7,9 +7,12 @@
 //
 
 #import "ILPhotosViewController.h"
+#import "ILPlayerManager.h"
 #import "ILPhotoCell.h"
 
 @interface ILPhotosViewController ()
+
+@property (strong, nonatomic) ILPlayerView *playerView;
 
 @property (strong, nonatomic) UICollectionView *collectionView;
 
@@ -17,22 +20,49 @@
 
 @implementation ILPhotosViewController
 
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super init];
+    if (self) {
+        self.view.frame = frame;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
-    UICollectionViewLayout *flowLayout = [[UICollectionViewFlowLayout alloc]init];
-    _collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, 320, 480) collectionViewLayout:flowLayout];
-    _collectionView.delegate = self;
-    _collectionView.dataSource = self;
-    [_collectionView registerClass:[ILPhotoCell class] forCellWithReuseIdentifier:@"photocell"];
-    [self.view addSubview:_collectionView];
+    [self createPlayerView];
+    [self createPhotosGrid];
     
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)createPhotosGrid
+{
+    UICollectionViewLayout *flowLayout = [[UICollectionViewFlowLayout alloc]init];
+    _collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, IL_PLAYER_H, IL_SCREEN_W, IL_SCREEN_H - IL_PLAYER_H) collectionViewLayout:flowLayout];
+    _collectionView.delegate = self;
+    _collectionView.dataSource = self;
+    [_collectionView registerClass:[ILPhotoCell class] forCellWithReuseIdentifier:@"photocell"];
+    [self.view addSubview:_collectionView];
+}
+
+- (void)createPlayerView
+{
+    _playerView = [[ILPlayerView alloc] initWithFrame:CGRectMake(0, 0,IL_PLAYER_W, IL_PLAYER_H)];
+    [_playerView setBackgroundColor:[UIColor blackColor]];
+    [self.view addSubview:_playerView];
+    
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"jerryfish" ofType:@"m4v"];
+    [PLAYER setPlayerItemWithAssets:@[[AVAsset assetWithURL:[[NSURL alloc]initFileURLWithPath:path]]]];
+    [self.playerView.playerLayer setPlayer:PLAYER.queuePlayer];
+    [PLAYER play];
+    
 }
 
 #pragma mark - UICollectionViewDelegation

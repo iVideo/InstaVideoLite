@@ -11,8 +11,6 @@
 
 @interface ILEditorViewController : UIViewController
 
-//@property (strong, nonatomic) NSMutableArray *assets;//<AVAsset>
-
 //- (void)insertAsset:(NSURL *)url inAssetsAtIndex:(NSUInteger)index;
 
 @end

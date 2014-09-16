@@ -18,7 +18,9 @@
 - (BOOL) canAddVideoClip;
 
 - (void) addVideoClip: (ILVideoClip *) take;
-- (void) concatenateVideosWithCompletionHandler:(void (^)(AVAssetExportSessionStatus))handler;
+
+- (NSArray *)getVideoClips;
+- (void)clearVideoClips;
 
 - (void) removeLastVideoClip;
 - (CGSize) lastVideoClipRange;
