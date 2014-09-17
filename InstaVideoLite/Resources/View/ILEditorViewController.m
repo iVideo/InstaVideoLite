@@ -10,6 +10,7 @@
 #import "ILNavBarView.h"
 #import "ILClipDockView.h"
 #import "ILPlayerManager.h"
+#import "ILAlbumManager.h"
 
 #define DOCK_H 72.0f
 #define DOCK_W 72.0f
@@ -50,6 +51,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor blackColor];
+    [self initialization];
     [self createPlayerView];
     [self createEditorBar];
     [self createNavView];
@@ -71,6 +73,11 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (void)initialization
+{
+    [IL_ALBUM updateAssets];
+}
 
 - (void)initializeClipDock
 {

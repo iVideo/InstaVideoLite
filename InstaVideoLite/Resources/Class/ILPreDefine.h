@@ -31,7 +31,8 @@
 #define iOS7_OR_LATER [[[UIDevice currentDevice] systemVersion] floatValue] >= 7;
 #define iPhone5 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
 
-#define PLAYER [ILPlayerManager sharedInstance]
-#define DATASTORE [ILDataStore sharedInstance]
+#define IL_ALBUM    [ILAlbumManager sharedInstance]
+#define PLAYER      [ILPlayerManager sharedInstance]
+#define DATASTORE   [ILDataStore sharedInstance]
 
 #endif

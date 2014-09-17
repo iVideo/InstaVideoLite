@@ -76,29 +76,3 @@
 }
 
 @end
-
-#pragma mark --- ILPlayerView Class----
-
-@implementation ILPlayerView
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        _playerLayer = [[AVPlayerLayer alloc] init];
-        [_playerLayer setFrame:frame];
-        [self.layer addSublayer:_playerLayer];
-    }
-    return self;
-}
-
-/*
- // Only override drawRect: if you perform custom drawing.
- // An empty implementation adversely affects performance during animation.
- - (void)drawRect:(CGRect)rect {
- // Drawing code
- }
- */
-
-
-@end

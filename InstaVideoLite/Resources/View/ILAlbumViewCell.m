@@ -20,6 +20,7 @@
         _selectedBg = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"play_edit_btn"]];
         _selectedBg.frame = CGRectMake(1.f, 1.f, 78.f, 78.f);
         _selectedBg.contentMode = UIViewContentModeScaleAspectFill;
+        _selectedBg.hidden = YES;
         [self addSubview:_selectedBg];
         
         _imageView = [[UIImageView alloc]initWithFrame:CGRectMake(2.f, 2.f, 76.f, 76.f)];
@@ -36,6 +37,7 @@
         _lblDuration = [[UILabel alloc]initWithFrame:CGRectMake(40.f, 4.f, 40.f, 22.f)];
         _lblDuration.textAlignment = NSTextAlignmentCenter;
         _lblDuration.textColor = [UIColor whiteColor];
+        [_lblDuration setFont:[UIFont systemFontOfSize:11.f]];
         [_infoView addSubview:_lblDuration];
         
         [self insertSubview:_infoView aboveSubview:_imageView];
@@ -44,10 +46,14 @@
     return self;
 }
 
-- (void)updateCellImage:(UIImage *)image duration:(NSString *)duration
+- (void)updateCellImage:(UIImage *)image duration:(NSNumber *)duration
 {
+    long long time = [duration longLongValue]; int minute = (int)time / 60; int sec = (int)time % 60;
+    if(minute >= 0 && minute < 60 && sec >= 0 && sec < 60){
+        _lblDuration.text = [NSString stringWithFormat:@"%02d:%02d", minute, sec];
+    }
     _imageView.image = image;
-    _lblDuration.text = duration;
+    
     [self setNeedsDisplay];
 }
 

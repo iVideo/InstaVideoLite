@@ -8,13 +8,19 @@
 
 #import "ILAlbumViewController.h"
 #import "ILPlayerManager.h"
+#import "ILAlbumManager.h"
 #import "ILNavBarView.h"
 
 #import "ILAlbumViewCell.h"
 #import "ILAlbumHeader.h"
 
+#import "ILAlbumGroupCell.h"
+
+#import <AssetsLibrary/AssetsLibrary.h>
+
 @interface ILAlbumViewController ()
-<UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
+<UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,
+UITableViewDataSource,UITableViewDelegate>
 {
     CGFloat midHeight;
     
@@ -22,12 +28,16 @@
     CGPoint originMidViewPoint;
     
     CGPoint offsetTogglePoint;
+    
+    NSString *groupName;
 }
 
 @property (strong, nonatomic) UIView *topView; //Container
 @property (strong, nonatomic) UIView *toggleView;
 @property (strong, nonatomic) UIButton *btnPlay;
-@property (strong, nonatomic) ILPlayerView *playerView;
+//@property (strong, nonatomic) ILPlayerView *playerView;
+@property (strong, nonatomic) AVPlayer *player;
+@property (strong, nonatomic) AVPlayerLayer *playerLayer;
 
 @property (strong, nonatomic) UIView *midView; //Container
 @property (strong, nonatomic) UITableView *groupView;
@@ -35,13 +45,29 @@
 
 @property (strong, nonatomic) ILNavBarView *navBarView;
 
+@property (strong, nonatomic) NSDictionary *groups; //groupView datasource
+@property (strong, nonatomic) NSArray *assets;   //albumView datasource
+
+
 @end
 
 @implementation ILAlbumViewController
 
+- (void)dealloc
+{
+    _assets = nil;
+    _groups = nil;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    [self initialization];
     [self createTopView];
     [self createMidView];
     [self createNavView];
@@ -52,38 +78,97 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)initialization
+{
+    _groups = [[NSDictionary alloc]initWithDictionary:[IL_ALBUM allVideoGroups]];
+    ALAssetsGroup *firstGroup = (ALAssetsGroup *)[[_groups allValues] firstObject];
+    groupName = [firstGroup valueForProperty:ALAssetsGroupPropertyName];
+    _assets = [[NSArray alloc] initWithArray:[IL_ALBUM getVideoAssetsWithGroup:firstGroup]];
+}
+
 #pragma mark - midView
 
 - (void)createMidView
 {
     midHeight = IL_SCREEN_H - IL_PLAYER_H - IL_NAVBAR_H;
-    _midView = [[UIView alloc] initWithFrame:CGRectMake(.0f, IL_PLAYER_H,IL_SCREEN_W,midHeight)];
+    _midView = [[UIView alloc] initWithFrame:CGRectMake(.0f, IL_PLAYER_H,2*IL_SCREEN_W,midHeight)];
     _midView.backgroundColor = [UIColor blackColor];
     [self.view addSubview:_midView];
     originMidViewPoint = _midView.center;
     
-//    _groupView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, IL_SCREEN_W, midHeight) style:UITableViewStylePlain];
-//    _groupView.backgroundColor = [UIColor redColor];
-//    [_midView addSubview:_groupView];
-//    
+    [self createGroupView];
+    [self createAlbumView];
+    
+    [self hideGroupView:nil];
+}
+
+- (void)createGroupView
+{
+    _groupView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, IL_SCREEN_W, midHeight) style:UITableViewStylePlain];
+    [_groupView registerClass:[ILAlbumGroupCell class] forCellReuseIdentifier:@"ILAlbumGroupCell"];
+    _groupView.dataSource = self;
+    _groupView.delegate = self;
+    _groupView.backgroundView = nil;
+    _groupView.backgroundColor = [UIColor clearColor];
+    [_midView addSubview:_groupView];
+}
+
+- (void)createAlbumView
+{
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
     flowLayout.itemSize = CGSizeMake(IL_SCREEN_W / 4, IL_SCREEN_W / 4);
     flowLayout.sectionInset = UIEdgeInsetsMake(0,0,0,0);
     flowLayout.minimumLineSpacing = .0f;
     flowLayout.minimumInteritemSpacing = 0.f;
     
-//    UICollectionReusableView *sectionHeader = [[UICollectionReusableView alloc] initWithFrame:CGRectMake(0, 0, IL_SCREEN_W, IL_COMMON_H)];
-//    sectionHeader.
-    
-    _albumView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, IL_SCREEN_W, midHeight) collectionViewLayout:flowLayout];
+    _albumView = [[UICollectionView alloc] initWithFrame:CGRectMake(IL_SCREEN_W, 0, IL_SCREEN_W, midHeight) collectionViewLayout:flowLayout];
     [_albumView registerClass:[ILAlbumHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"ILAlbumHeader"];
     [_albumView registerClass:[ILAlbumViewCell class] forCellWithReuseIdentifier:@"ILAlbumViewCell"];
     _albumView.delegate = self;
     _albumView.dataSource = self;
     _albumView.backgroundColor = [UIColor clearColor];
     [_midView addSubview:_albumView];
-    
 }
+
+#pragma mark - UITableViewDataSource & UITableViewDelegate
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [_groups count];
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 44.f;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    ILAlbumGroupCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ILAlbumGroupCell" forIndexPath:indexPath];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    
+    ALAssetsGroup *group = [[_groups allValues] objectAtIndex:indexPath.row];
+    cell.textLabel.text = [group valueForProperty:ALAssetsGroupPropertyName];
+    cell.imageView.image = [UIImage imageWithCGImage:[group posterImage]];
+    
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    ALAssetsGroup *group = [[_groups allValues] objectAtIndex:indexPath.row];
+    _assets = [IL_ALBUM getVideoAssetsWithGroup:group];
+    groupName = [group valueForProperty:ALAssetsGroupPropertyName];
+    [self hideGroupView:nil];
+    [_albumView reloadData];
+}
+
 
 #pragma mark - UICollectionViewDelegate & UICollectionViewDataSource & UICollectionViewDelegateFlowLayout
 
@@ -94,31 +179,54 @@
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 29;
+    return [_assets count];
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
     ILAlbumHeader *header =  [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"ILAlbumHeader" forIndexPath:indexPath];
-    header.lblGroup.text = @"Camera Roll";
+    [header.btnBack addTarget:self action:@selector(showGroupView:) forControlEvents:UIControlEventTouchUpInside];
+    header.lblGroup.text = groupName;
     return header;
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-//    ILAlbumViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-    NSLog(@"%ld",(long)indexPath.row);
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     ILAlbumViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"ILAlbumViewCell" forIndexPath:indexPath];
-    [cell updateCellImage:nil duration:@"0:00"];
+    ALAsset *asset = [_assets objectAtIndex:indexPath.row];
+    [cell updateCellImage:[UIImage imageWithCGImage:[asset thumbnail]]
+                 duration:[asset valueForProperty:ALAssetPropertyDuration]];
     return cell;
 }
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    ALAsset *asset = [_assets objectAtIndex:indexPath.row];
+    [PLAYER setPlayerItemWithAssets:@[asset]];
+    [PLAYER play];
+    
+    ILAlbumViewCell *cell = (ILAlbumViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    cell.selectedBg.hidden = NO;
+}
+- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    ILAlbumViewCell *cell = (ILAlbumViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    cell.selectedBg.hidden = YES;
+}
+
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
     return CGSizeMake(IL_SCREEN_W, IL_COMMON_H);
+}
+
+- (void)hideGroupView:(id)sender
+{
+    _midView.center = CGPointMake(_midView.center.x - IL_SCREEN_W, _midView.center.y);
+}
+
+- (void)showGroupView:(id)sender
+{
+    _midView.center = CGPointMake(_midView.center.x + IL_SCREEN_W, _midView.center.y);
 }
 
 
@@ -182,7 +290,6 @@
         case UIGestureRecognizerStateChanged:
         {
             offsetTogglePoint = [recognizer translationInView:self.view];
-            NSLog(@"%f",offsetTogglePoint.y);
             [_topView setCenter:CGPointMake(_topView.center.x, _topView.center.y + offsetTogglePoint.y)];
             [_midView setCenter:CGPointMake(_midView.center.x, _midView.center.y + offsetTogglePoint.y)];
             [recognizer setTranslation:CGPointZero inView:self.view];
@@ -192,10 +299,10 @@
         {
             if (offsetTogglePoint.y < 0 ) {
                 [_topView setCenter:CGPointMake(_topView.center.x, originTopViewPoint.y - IL_PLAYER_H/2 -80.f)];
-                [_midView setCenter:CGPointMake(_topView.center.x, originMidViewPoint.y - IL_PLAYER_H/2 -80.f)];
+                [_midView setCenter:CGPointMake(_midView.center.x, originMidViewPoint.y - IL_PLAYER_H/2 -80.f)];
             }else{
                 [_topView setCenter:CGPointMake(_topView.center.x,originTopViewPoint.y)];
-                [_midView setCenter:CGPointMake(_topView.center.x,originMidViewPoint.y)];
+                [_midView setCenter:CGPointMake(_midView.center.x,originMidViewPoint.y)];
             }
         }
             break;

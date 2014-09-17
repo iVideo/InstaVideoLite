@@ -17,6 +17,6 @@
 @property (strong, nonatomic) UIImageView *selectedBg;
 @property (strong, nonatomic) UIImageView *imageView;
 
-- (void)updateCellImage:(UIImage *)image duration:(NSString *)duration;
+- (void)updateCellImage:(UIImage *)image duration:(NSNumber *)duration;
 
 @end

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
+#import "ILPlayerView.h"
 
 @interface ILPlayerManager : NSObject
 
@@ -23,13 +24,5 @@
 
 - (void)play;
 - (void)pause;
-
-@end
-
-@interface ILPlayerView : UIView
-
-@property (strong, nonatomic) AVPlayerLayer *playerLayer;
-
-- (instancetype)initWithFrame:(CGRect)frame;
 
 @end

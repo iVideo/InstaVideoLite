@@ -127,6 +127,9 @@
 		68E8BFE819C8083600D61814 /* ILAlbumViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8BFE719C8083600D61814 /* ILAlbumViewCell.m */; };
 		68E8BFEB19C80B4700D61814 /* ILAlbumGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8BFEA19C80B4700D61814 /* ILAlbumGroupCell.m */; };
 		68E8BFEE19C819E300D61814 /* ILAlbumHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8BFED19C819E300D61814 /* ILAlbumHeader.m */; };
+		68E8BFF019C827E300D61814 /* ILAlbumGroupCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68E8BFEF19C827E300D61814 /* ILAlbumGroupCell.xib */; };
+		68E8BFF319C885F800D61814 /* ILAlbumManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8BFF219C885F800D61814 /* ILAlbumManager.m */; };
+		68E8BFF819C8A69900D61814 /* ILPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8BFF719C8A69900D61814 /* ILPlayerView.m */; };
 		68F60D5219C20ED300F934A8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60D5119C20ED300F934A8 /* main.m */; };
 		68F60D5519C20ED300F934A8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60D5419C20ED300F934A8 /* AppDelegate.m */; };
 		68F60D5B19C20ED300F934A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 68F60D5919C20ED300F934A8 /* Main.storyboard */; };
@@ -300,6 +303,11 @@
 		68E8BFEA19C80B4700D61814 /* ILAlbumGroupCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILAlbumGroupCell.m; sourceTree = "<group>"; };
 		68E8BFEC19C819E300D61814 /* ILAlbumHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILAlbumHeader.h; sourceTree = "<group>"; };
 		68E8BFED19C819E300D61814 /* ILAlbumHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILAlbumHeader.m; sourceTree = "<group>"; };
+		68E8BFEF19C827E300D61814 /* ILAlbumGroupCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ILAlbumGroupCell.xib; sourceTree = "<group>"; };
+		68E8BFF119C885F800D61814 /* ILAlbumManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILAlbumManager.h; sourceTree = "<group>"; };
+		68E8BFF219C885F800D61814 /* ILAlbumManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILAlbumManager.m; sourceTree = "<group>"; };
+		68E8BFF619C8A69900D61814 /* ILPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILPlayerView.h; sourceTree = "<group>"; };
+		68E8BFF719C8A69900D61814 /* ILPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILPlayerView.m; sourceTree = "<group>"; };
 		68F60D4C19C20ED300F934A8 /* InstaVideoLite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InstaVideoLite.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		68F60D5019C20ED300F934A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		68F60D5119C20ED300F934A8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -570,6 +578,7 @@
 				68E8BFED19C819E300D61814 /* ILAlbumHeader.m */,
 				68E8BFE919C80B4700D61814 /* ILAlbumGroupCell.h */,
 				68E8BFEA19C80B4700D61814 /* ILAlbumGroupCell.m */,
+				68E8BFEF19C827E300D61814 /* ILAlbumGroupCell.xib */,
 				68F60DBC19C2EF5100F934A8 /* ILPhotosViewController.h */,
 				68F60DBD19C2EF5100F934A8 /* ILPhotosViewController.m */,
 				68F60DC219C2FF5C00F934A8 /* ILPhotoCell.h */,
@@ -696,8 +705,12 @@
 		68F60D7A19C20F3300F934A8 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				68E8BFF619C8A69900D61814 /* ILPlayerView.h */,
+				68E8BFF719C8A69900D61814 /* ILPlayerView.m */,
 				68F60DAA19C296AD00F934A8 /* ILPlayerManager.h */,
 				68F60DAB19C296AD00F934A8 /* ILPlayerManager.m */,
+				68E8BFF119C885F800D61814 /* ILAlbumManager.h */,
+				68E8BFF219C885F800D61814 /* ILAlbumManager.m */,
 				68F60DA119C28D1500F934A8 /* ILClipDockView.h */,
 				68F60DA219C28D1500F934A8 /* ILClipDockView.m */,
 				68E8BEAC19C6D18900D61814 /* ILEditorView.h */,
@@ -804,6 +817,7 @@
 				68E8BF8919C6D5C300D61814 /* Save.png in Resources */,
 				68E8BF5B19C6D5C300D61814 /* btn_holiday.png in Resources */,
 				68E8BF2E19C6D5C300D61814 /* delete@2x.png in Resources */,
+				68E8BFF019C827E300D61814 /* ILAlbumGroupCell.xib in Resources */,
 				68E8BF6019C6D5C300D61814 /* btn_love@2x.png in Resources */,
 				68E8BF8E19C6D5C300D61814 /* Twitter@2x.png in Resources */,
 				68E8BF7A19C6D5C300D61814 /* Pause@2x.png in Resources */,
@@ -981,6 +995,7 @@
 				68F60D9D19C28B1000F934A8 /* ILEditorViewController.m in Sources */,
 				68E8BFEE19C819E300D61814 /* ILAlbumHeader.m in Sources */,
 				68F60DAC19C296AD00F934A8 /* ILPlayerManager.m in Sources */,
+				68E8BFF319C885F800D61814 /* ILAlbumManager.m in Sources */,
 				68F60D5219C20ED300F934A8 /* main.m in Sources */,
 				68F60DBF19C2EF5100F934A8 /* ILPhotosViewController.m in Sources */,
 				68E8BEAE19C6D18900D61814 /* ILEditorView.m in Sources */,
@@ -993,6 +1008,7 @@
 				68E8BF9C19C6E00E00D61814 /* ILVideoClip.m in Sources */,
 				68F60DBB19C2ECAA00F934A8 /* ILCameraViewController.m in Sources */,
 				68F60DC519C2FF5C00F934A8 /* ILPhotoCell.m in Sources */,
+				68E8BFF819C8A69900D61814 /* ILPlayerView.m in Sources */,
 				68E8BF9519C6DE1700D61814 /* ILRecordProgressView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

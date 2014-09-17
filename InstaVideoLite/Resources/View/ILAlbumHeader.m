@@ -19,7 +19,6 @@
         _btnBack = [UIButton buttonWithType:UIButtonTypeCustom];
         [_btnBack setFrame:CGRectMake(.0f, 7.f, 40.f, 30.f)];
         [_btnBack setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
-//        [_btnBack addTarget:self action:@selector(btnBackPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_btnBack];
         
         _lblGroup = [[UILabel alloc]initWithFrame:CGRectMake(40.f, 11.f, frame.size.width - 80.f, 22.f)];
