@@ -137,11 +137,12 @@
 
 - (void)btnTrimPressed:(UIButton *)sender
 {
-    
+    [self performSegueWithIdentifier:@"timespan" sender:self];
 }
 
 - (void)btnFxPressed:(UIButton *)sender
 {
+    [self performSegueWithIdentifier:@"frame" sender:self];
     
 }
 
@@ -155,6 +156,7 @@
     _btnPlay = [UIButton buttonWithType:UIButtonTypeCustom];
     [_btnPlay setFrame:btnPlayFrame];
     [_btnPlay setImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateNormal];
+    [_btnPlay setImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateHighlighted];
     [_btnPlay addTarget:self action:@selector(playPause:) forControlEvents:UIControlEventTouchUpInside];
     [_playerView addSubview:_btnPlay];
     _btnPlay.center = _playerView.center;
@@ -227,7 +229,7 @@
 
 - (void)btnNextPressed:(UIButton *)sender
 {
-    
+    [self performSegueWithIdentifier:@"compose" sender:self];
 }
 
 - (void)album:(id)sender

@@ -7,6 +7,7 @@
 //
 
 #import "ILAlbumViewController.h"
+#import <MediaPlayer/MediaPlayer.h>
 #import "ILPlayerManager.h"
 #import "ILAlbumManager.h"
 #import "ILNavBarView.h"
@@ -16,12 +17,12 @@
 
 #import "ILAlbumGroupCell.h"
 
-#import <AssetsLibrary/AssetsLibrary.h>
-
 @interface ILAlbumViewController ()
 <UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,
 UITableViewDataSource,UITableViewDelegate>
 {
+        NSString *path;
+    
     CGFloat midHeight;
     
     CGPoint originTopViewPoint;
@@ -33,11 +34,10 @@ UITableViewDataSource,UITableViewDelegate>
 }
 
 @property (strong, nonatomic) UIView *topView; //Container
-@property (strong, nonatomic) UIView *toggleView;
+@property (strong, nonatomic) UIScrollView *playerView;
+@property (strong, nonatomic) MPMoviePlayerController *moviePlayer;
 @property (strong, nonatomic) UIButton *btnPlay;
-//@property (strong, nonatomic) ILPlayerView *playerView;
-@property (strong, nonatomic) AVPlayer *player;
-@property (strong, nonatomic) AVPlayerLayer *playerLayer;
+@property (strong, nonatomic) UIView *toggleView;
 
 @property (strong, nonatomic) UIView *midView; //Container
 @property (strong, nonatomic) UITableView *groupView;
@@ -57,6 +57,13 @@ UITableViewDataSource,UITableViewDelegate>
 {
     _assets = nil;
     _groups = nil;
+    
+    _moviePlayer = nil;
+    _navBarView = nil;
+    
+    _albumView = nil;
+    _groupView = nil;
+    _midView = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -80,6 +87,8 @@ UITableViewDataSource,UITableViewDelegate>
 
 - (void)initialization
 {
+    path = [[NSBundle mainBundle] pathForResource:@"skateboarding" ofType:@"m4v"];
+    
     _groups = [[NSDictionary alloc]initWithDictionary:[IL_ALBUM allVideoGroups]];
     ALAssetsGroup *firstGroup = (ALAssetsGroup *)[[_groups allValues] firstObject];
     groupName = [firstGroup valueForProperty:ALAssetsGroupPropertyName];
@@ -144,15 +153,18 @@ UITableViewDataSource,UITableViewDelegate>
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 44.f;
+    return 60.f;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ILAlbumGroupCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ILAlbumGroupCell" forIndexPath:indexPath];
+    ILAlbumGroupCell *cell = (ILAlbumGroupCell *)[tableView dequeueReusableCellWithIdentifier:@"ILAlbumGroupCell" forIndexPath:indexPath];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    
+    cell.backgroundView = nil;
+    cell.backgroundColor = [UIColor clearColor];
+    cell.textLabel.textColor = [UIColor whiteColor];
+    cell.textLabel.textAlignment = NSTextAlignmentLeft;
     ALAssetsGroup *group = [[_groups allValues] objectAtIndex:indexPath.row];
     cell.textLabel.text = [group valueForProperty:ALAssetsGroupPropertyName];
     cell.imageView.image = [UIImage imageWithCGImage:[group posterImage]];
@@ -201,10 +213,8 @@ UITableViewDataSource,UITableViewDelegate>
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    ALAsset *asset = [_assets objectAtIndex:indexPath.row];
-    [PLAYER setPlayerItemWithAssets:@[asset]];
-    [PLAYER play];
-    
+//    ALAsset *asset = [_assets objectAtIndex:indexPath.row];
+
     ILAlbumViewCell *cell = (ILAlbumViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
     cell.selectedBg.hidden = NO;
 }
@@ -221,12 +231,24 @@ UITableViewDataSource,UITableViewDelegate>
 
 - (void)hideGroupView:(id)sender
 {
-    _midView.center = CGPointMake(_midView.center.x - IL_SCREEN_W, _midView.center.y);
+    [UIView animateWithDuration:.5f animations:^{
+        _groupView.hidden = YES;
+        _albumView.hidden = NO;
+        _midView.center = CGPointMake(_midView.center.x - IL_SCREEN_W, _midView.center.y);
+    } completion:^(BOOL finished) {
+        [_albumView reloadData];
+    }];
 }
 
 - (void)showGroupView:(id)sender
 {
-    _midView.center = CGPointMake(_midView.center.x + IL_SCREEN_W, _midView.center.y);
+    [UIView animateWithDuration:.5f animations:^{
+        _groupView.hidden = NO;
+        _albumView.hidden = YES;
+        _midView.center = CGPointMake(_midView.center.x + IL_SCREEN_W, _midView.center.y);
+    } completion:^(BOOL finished) {
+        [_groupView reloadData];
+    }];
 }
 
 
@@ -246,34 +268,74 @@ UITableViewDataSource,UITableViewDelegate>
 
 - (void)createPlayerView
 {
-    _playerView = [[ILPlayerView alloc] initWithFrame:CGRectMake(.0f, .0f, IL_PLAYER_W, IL_PLAYER_H)];
-    [_playerView setBackgroundColor:[UIColor blackColor]];
-    [_topView insertSubview:_playerView atIndex:0];
+    NSURL *url = [[NSURL alloc] initFileURLWithPath:path];
+    _moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:url];
+    [_moviePlayer.view setFrame:CGRectMake(0.f, 0.f, IL_PLAYER_W, IL_PLAYER_H)];
+    [_moviePlayer setControlStyle:MPMovieControlStyleNone];
+    [_moviePlayer setScalingMode:MPMovieScalingModeAspectFill];
+    [_moviePlayer setRepeatMode:MPMovieRepeatModeOne];
+    [_moviePlayer setShouldAutoplay:YES];
+    [_moviePlayer prepareToPlay];
     
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"jerryfish" ofType:@"m4v"];
-    [PLAYER setPlayerItemWithAssets:@[[AVAsset assetWithURL:[[NSURL alloc]initFileURLWithPath:path]]]];
-    [self.playerView.playerLayer setPlayer:PLAYER.queuePlayer];
-    [PLAYER play];
+    _playerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.f, 0.f, IL_PLAYER_W, IL_PLAYER_H)];
+    [_playerView addSubview:_moviePlayer.view];
+    
+    [_topView addSubview:_playerView];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(movieNaturalSizeAvailable:) name:MPMovieNaturalSizeAvailableNotification object:_moviePlayer];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(movieThumbnailLoadComplete:) name:MPMoviePlayerThumbnailImageRequestDidFinishNotification object:_moviePlayer];
+    
+    [_moviePlayer requestThumbnailImagesAtTimes:[NSArray arrayWithObject:[NSNumber numberWithDouble:0]] timeOption:MPMovieTimeOptionNearestKeyFrame];
+    
+}
+
+- (void)movieThumbnailLoadComplete:(NSNotification*)notification
+{
+//    NSDictionary *userInfo = [notification userInfo];
+}
+
+- (void)movieNaturalSizeAvailable:(NSNotification*)notification
+{
+    float height = _moviePlayer.naturalSize.height;
+    float width = _moviePlayer.naturalSize.width;
+    float ratio = MAX(IL_PLAYER_H / height, IL_PLAYER_W / width);
+    
+    [_moviePlayer.view setFrame:CGRectMake(0.f, 0.f, width*ratio, height*ratio)];
+    [_playerView setContentSize:_moviePlayer.view.frame.size];
+    
+    [_topView bringSubviewToFront:_btnPlay];
+    [_topView bringSubviewToFront:_toggleView];
 }
 
 - (void)createPlayButton
 {
     CGRect btnPlayFrame = CGRectMake(IL_PLAYER_W/2 - 35.f, IL_PLAYER_H/2, 70.f, 70.f);
     _btnPlay = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_btnPlay setFrame:btnPlayFrame];
-    [_btnPlay setImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateNormal];
-    [_btnPlay setImage:[UIImage imageNamed:@""] forState:UIControlStateHighlighted];
-    [_btnPlay addTarget:self action:@selector(playPause:) forControlEvents:UIControlEventTouchUpInside];
-    [_playerView addSubview:_btnPlay];
-    _btnPlay.center = _playerView.center;
-    _btnPlay.selected = NO;
+    _btnPlay.frame = btnPlayFrame;
+    _btnPlay.center = _moviePlayer.view.center;
+    [_btnPlay setImage:[UIImage imageNamed:@"Pause"] forState:UIControlStateNormal];
+    [_btnPlay setImage:[UIImage imageNamed:@"play"] forState:UIControlStateSelected];
+    [_btnPlay addTarget:self action:@selector(btnPlayPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [_topView addSubview:_btnPlay];
+}
+
+- (void)btnPlayPressed:(UIButton *)sender
+{
+    if (!sender.selected) {
+        sender.selected = YES;
+        [_moviePlayer pause];
+        return;
+    }
+    sender.selected = NO;
+    [_moviePlayer play];
 }
 
 - (void)createToggleView
 {
     _toggleView = [[UIView alloc] initWithFrame:CGRectMake(.0f, IL_PLAYER_H - IL_COMMON_H, IL_SCREEN_W, IL_COMMON_H)];
     _toggleView.backgroundColor = [UIColor colorWithWhite:0.1 alpha:0.7];
-    [_topView insertSubview:_toggleView aboveSubview:_playerView];
+    [_topView addSubview:_toggleView];
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panToggle:)];
     [_toggleView addGestureRecognizer:panGesture];

@@ -1,4 +1,6 @@
 InstaVideoLite/Resources/Media/
+InstaVideoLite/Resources/RES_FRAME/
+!InstaVideoLite/Resources/RES_FRAME/.gitkeep
 InstaVideoLite/4inch_*
 Pods/
 Podfile.lock

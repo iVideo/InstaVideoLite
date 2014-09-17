@@ -9,12 +9,28 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "InstaVideoLite/Resources/View/ILAlbumGroupCell.m"
-            timestampString = "432550864.773626"
+            filePath = "InstaVideoLite/Resources/View/ILFrameViewController.m"
+            timestampString = "432641711.825503"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "17"
-            endingLineNumber = "17"
+            startingLineNumber = "286"
+            endingLineNumber = "286"
+            landmarkName = "-tableView:cellForRowAtIndexPath:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "InstaVideoLite/Resources/View/ILFrameGroupCell.m"
+            timestampString = "432635974.959062"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "15"
+            endingLineNumber = "15"
             landmarkName = "-initWithFrame:"
             landmarkType = "5">
          </BreakpointContent>

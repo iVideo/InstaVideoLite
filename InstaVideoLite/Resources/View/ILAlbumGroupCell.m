@@ -10,20 +10,6 @@
 
 @implementation ILAlbumGroupCell
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        self.backgroundView = nil;
-        self.backgroundColor = [UIColor clearColor];
-        
-        self.textLabel.textColor = [UIColor whiteColor];
-        self.textLabel.textAlignment = NSTextAlignmentLeft;
-        
-    }
-    return self;
-}
-
 - (void)awakeFromNib {
     // Initialization code
 }

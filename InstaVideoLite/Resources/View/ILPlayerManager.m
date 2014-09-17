@@ -17,15 +17,21 @@
 
 @implementation ILPlayerManager
 
+- (void)dealloc
+{
+    _queuePlayer = nil;
+    _playerView = nil;
+    _playItems = nil;
+}
 
 + (instancetype) sharedInstance
 {
-    static ILPlayerManager *playerManage;
+    static ILPlayerManager *playerManager;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        playerManage = [[ILPlayerManager alloc] init];
+        playerManager = [[ILPlayerManager alloc] init];
     });
-    return playerManage;
+    return playerManager;
 }
 
 - (instancetype)init

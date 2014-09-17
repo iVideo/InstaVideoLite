@@ -10,4 +10,6 @@
 
 @interface ILFrameGroupCell : UITableViewCell
 
+- (instancetype)initWithFrame:(CGRect)frame;
+
 @end

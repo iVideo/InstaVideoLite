@@ -58,7 +58,7 @@
     [_playerView setBackgroundColor:[UIColor blackColor]];
     [self.view addSubview:_playerView];
     
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"jerryfish" ofType:@"m4v"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"skateboarding" ofType:@"m4v"];
     [PLAYER setPlayerItemWithAssets:@[[AVAsset assetWithURL:[[NSURL alloc]initFileURLWithPath:path]]]];
     [self.playerView.playerLayer setPlayer:PLAYER.queuePlayer];
     [PLAYER play];

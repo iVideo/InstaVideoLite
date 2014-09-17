@@ -15,6 +15,7 @@
     frame = CGRectMake(0.f, 0.f, 80.f, 80.f);
     self = [super initWithFrame:frame];
     if (self) {
+        self.backgroundView = nil;
         self.backgroundColor = [UIColor clearColor];
         
         _selectedBg = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"play_edit_btn"]];
@@ -51,6 +52,8 @@
     long long time = [duration longLongValue]; int minute = (int)time / 60; int sec = (int)time % 60;
     if(minute >= 0 && minute < 60 && sec >= 0 && sec < 60){
         _lblDuration.text = [NSString stringWithFormat:@"%02d:%02d", minute, sec];
+    }else{
+        _lblDuration.text = @"00:00";
     }
     _imageView.image = image;
     

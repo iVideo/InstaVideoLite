@@ -10,6 +10,4 @@
 
 @interface ILAlbumGroupCell : UITableViewCell
 
-- (instancetype)initWithFrame:(CGRect)frame;
-
 @end

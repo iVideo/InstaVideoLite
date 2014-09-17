@@ -10,4 +10,9 @@
 
 @interface ILFrameViewCell : UICollectionViewCell
 
+@property (strong, nonatomic) UIImageView *selectedBg;
+@property (strong, nonatomic) UIImageView *imageView;
+
+- (void)updateCellImage:(UIImage *)image;
+
 @end
