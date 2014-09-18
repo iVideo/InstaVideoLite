@@ -41,6 +41,12 @@
 
 - (void)dealloc
 {
+    _moviePlayer = nil;
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:MPMoviePlayerThumbnailImageRequestDidFinishNotification
                                                   object:_moviePlayer];
@@ -48,6 +54,12 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:MPMovieNaturalSizeAvailableNotification
                                                   object:_moviePlayer];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [SVProgressHUD dismiss];
 }
 
 - (void)viewDidLoad {
@@ -65,16 +77,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 #pragma mark - init
 
@@ -150,6 +152,7 @@
     Float64 duration = CMTimeGetSeconds([asset duration]);
     CGFloat contentsize = rectsize * ceilf(duration) ;
     generator.maximumSize = CGSizeMake(contentsize, rectsize);
+    generator.appliesPreferredTrackTransform = YES;
     CMTime actualTime;
     NSError *error;
     for (int i = 0; i < duration; i++) {
@@ -284,7 +287,9 @@
 
 - (void)createPlayerView
 {
-    _moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:assetURL];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"skateboarding" ofType:@"m4v"];
+    NSURL *url = [[NSURL alloc] initFileURLWithPath:path];
+    _moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:url];
     [_moviePlayer.view setFrame:CGRectMake(0.f, 0.f, IL_PLAYER_W, IL_PLAYER_H)];
     [_moviePlayer setControlStyle:MPMovieControlStyleNone];
     [_moviePlayer setScalingMode:MPMovieScalingModeAspectFill];
@@ -304,7 +309,7 @@
 
 - (void)movieThumbnailLoadComplete:(NSNotification*)notification
 {
-//    NSDictionary *userInfo = [notification userInfo];
+    NSLog(@"movieThumbnailLoadComplete notification");
 }
 
 - (void)movieNaturalSizeAvailable:(NSNotification*)notification
@@ -334,13 +339,12 @@
 
 - (void)btnPlayPressed:(UIButton *)sender
 {
+    sender.selected = !sender.selected;
     if (!sender.selected) {
-        sender.selected = YES;
-        [_moviePlayer play];
+        [_moviePlayer pause];
         return;
     }
-    sender.selected = NO;
-    [_moviePlayer pause];
+    [_moviePlayer play];
 }
 
 #pragma mark - naviBarView

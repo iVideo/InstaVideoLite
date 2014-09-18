@@ -32,19 +32,16 @@
 
 @implementation ILEditorViewController
 
-//- (instancetype)init
-//{
-//    self = [super init];
-//    if (self) {
-//        
-//    }
-//    return self;
-//}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [_dockView updateDockView];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
 }
 
 - (void)viewDidLoad {
@@ -57,6 +54,8 @@
     [self createNavView];
     [self createAddButon];
     [self createClipDock];
+    //default to camera
+    [self performSegueWithIdentifier:@"camera" sender:self];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -127,8 +126,12 @@
     if (url == nil) {
         return;
     }
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
     [IL_DATA pushURL:url];
-    [self performSegueWithIdentifier:editType sender:self];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [self performSegueWithIdentifier:editType sender:self];
+    });
+
 }
 
 - (void)createPlayerView
@@ -192,11 +195,7 @@
 - (void)addClip:(UIButton *)sender
 {
     [PLAYER pause];
-//    [self addtest];
-//    [_clipDock addLastAsset];
     [self camera:sender];
-//    [self album:sender];
-    
 }
 
 - (void)createNavView

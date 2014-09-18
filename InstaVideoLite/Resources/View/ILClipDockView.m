@@ -146,8 +146,11 @@
 
 - (void)createThumbView:(NSURL *)url index:(NSInteger)idx
 {
-    AVAssetImageGenerator *generator = [AVAssetImageGenerator assetImageGeneratorWithAsset:[AVAsset assetWithURL:url]];
-    CGImageRef imgRef = [generator copyCGImageAtTime:kCMTimeZero actualTime:nil error:nil];
+    AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc]initWithAsset:[AVAsset assetWithURL:url]];
+    generator.maximumSize = CGSizeMake(THRUMB_W, THRUMB_H);
+    generator.appliesPreferredTrackTransform = YES;
+    CMTime actualTime; NSError *error;
+    CGImageRef imgRef = [generator copyCGImageAtTime:kCMTimeZero actualTime:&actualTime error:&error];
     UIImage *image = [UIImage imageWithCGImage:imgRef];
     CGImageRelease(imgRef);
     
@@ -177,8 +180,6 @@
     [clipView setNeedsDisplay];
     
     selectedIndex = [_thumbArray indexOfObject:clipView];
-    NSLog(@"selectedIndex %ld ",(long)selectedIndex);
-    
     lastView = clipView;
 }
 

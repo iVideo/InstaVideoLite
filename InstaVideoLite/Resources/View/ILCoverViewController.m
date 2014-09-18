@@ -40,9 +40,15 @@
 
 - (void)dealloc
 {
+    _moviePlayer = nil;
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:MPMoviePlayerThumbnailImageRequestDidFinishNotification
-                                                  object:_moviePlayer];
+                                                        name:MPMoviePlayerThumbnailImageRequestDidFinishNotification
+                                                      object:_moviePlayer];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:MPMovieNaturalSizeAvailableNotification
@@ -64,16 +70,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 #pragma mark - init
 
@@ -111,9 +107,11 @@
 
 - (void)generateImages
 {
+    Float64 rect_h = 78.f;
+    
     AVAsset *asset = [AVAsset assetWithURL:[[NSURL alloc] initFileURLWithPath:path]];
     generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-    Float64 rect_h = 78.f;
+    generator.appliesPreferredTrackTransform = YES;
     generator.maximumSize = CGSizeMake(IL_SCREEN_W - 2.f, rect_h - 2.f);
     Float64 duration = CMTimeGetSeconds([asset duration]);
     Float64 rect_w = IL_SCREEN_W / ceilf(duration);
@@ -212,8 +210,9 @@
 
 - (void)movieThumbnailLoadComplete:(NSNotification*)notification
 {
-        NSDictionary *userInfo = [notification userInfo];
-        _postImage.image = [userInfo objectForKey: @"MPMoviePlayerThumbnailImageKey"];
+    NSDictionary *userInfo = [notification userInfo];
+    _postImage.image = [userInfo objectForKey: @"MPMoviePlayerThumbnailImageKey"];
+    NSLog(@"movieThumbnailLoadComplete notification");
 }
 
 - (void)movieNaturalSizeAvailable:(NSNotification*)notification
@@ -227,6 +226,8 @@
     [_playerView setScrollsToTop:NO];
     [_playerView setCenter:_topView.center];
     [_topView bringSubviewToFront:_btnPlay];
+    
+    NSLog(@"movieNaturalSizeAvailable notification");
 }
 
 - (void)createPlayButton
@@ -243,13 +244,12 @@
 
 - (void)btnPlayPressed:(UIButton *)sender
 {
+    sender.selected = !sender.selected;
     if (!sender.selected) {
-        sender.selected = YES;
-        [_moviePlayer play];
+        [_moviePlayer pause];
         return;
     }
-    sender.selected = NO;
-    [_moviePlayer pause];
+    [_moviePlayer play];
 }
 
 #pragma mark - naviBarView

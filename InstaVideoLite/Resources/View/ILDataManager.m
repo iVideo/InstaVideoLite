@@ -56,14 +56,13 @@
 #pragma mark - editable item
 - (void)pushURL:(NSURL *)url
 {
+    [_itemURLs removeAllObjects];
     [_itemURLs addObject:url];
 }
 
 - (NSURL *)popURL
 {
-    NSURL *url = [[_itemURLs lastObject] copy];
-    [_itemURLs removeLastObject];
-    return url;
+    return [_itemURLs lastObject];
 }
 
 @end

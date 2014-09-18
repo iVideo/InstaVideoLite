@@ -64,6 +64,12 @@ UITableViewDataSource,UITableViewDelegate>
     
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [SVProgressHUD dismiss];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
@@ -79,16 +85,6 @@ UITableViewDataSource,UITableViewDelegate>
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 - (void)initialization
 {
@@ -463,13 +459,12 @@ UITableViewDataSource,UITableViewDelegate>
 
 - (void)playPause:(UIButton *)sender
 {
-    if (sender.selected == YES) {
-        sender.selected = NO;
-        [PLAYER pause];
+    sender.selected = !sender.selected;
+    if (!sender.selected) {
+        [_moviePlayer pause];
         return;
     }
-    sender.selected = YES;
-    [PLAYER play];
+    [_moviePlayer play];
 }
 
 #pragma mark - naviBarView

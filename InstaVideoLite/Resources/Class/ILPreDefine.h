@@ -14,6 +14,7 @@
 #import "ILDataManager.h"
 #import "ILPlayerManager.h"
 #import "ILAlbumManager.h"
+#import "SVProgressHUD.h"
 
 //#define IL_SCREEN_BOUNDS    [[UIScreen mainScreen] bounds]
 //#define IL_SCREEN_SIZE      [[UIScreen mainScreen] bounds].size

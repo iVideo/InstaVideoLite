@@ -12,8 +12,8 @@
 
 @property (strong, nonatomic) ALAssetsLibrary *library;
 
-@property (strong, nonatomic) NSMutableDictionary *albums; //@{assets:grouppid}
-@property (strong, nonatomic) NSMutableDictionary *groups; //@{group:grouppid}
+@property (strong, nonatomic) NSMutableDictionary *albums; //@{assets:grouppid} ALAsset : String
+@property (strong, nonatomic) NSMutableDictionary *groups; //@{group:grouppid} ALAssetsGroup : String
 
 @end
 
@@ -72,7 +72,7 @@
 
 - (NSDictionary *)allVideoGroups
 {
-    return [NSDictionary dictionaryWithDictionary:_groups];
+    return [[NSDictionary alloc] initWithDictionary:_groups];
 }
 
 - (NSDictionary *)allVideoAssets

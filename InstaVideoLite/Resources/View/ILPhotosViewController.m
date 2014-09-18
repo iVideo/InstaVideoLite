@@ -59,7 +59,7 @@
     [self.view addSubview:_playerView];
     
     NSString *path = [[NSBundle mainBundle] pathForResource:@"skateboarding" ofType:@"m4v"];
-    [PLAYER setPlayerItemWithAssets:@[[AVAsset assetWithURL:[[NSURL alloc]initFileURLWithPath:path]]]];
+    [PLAYER setPlayerItemWithURLs:[NSArray arrayWithObject:[NSURL URLWithString:path]]];
     [self.playerView.playerLayer setPlayer:PLAYER.queuePlayer];
     [PLAYER play];
     

@@ -165,8 +165,6 @@
 		68F60DAF19C29EB600F934A8 /* ILCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60DAE19C29EB600F934A8 /* ILCommon.m */; };
 		68F60DB819C2CCDC00F934A8 /* instavideo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 68F60DB619C2CCDC00F934A8 /* instavideo.xcdatamodeld */; };
 		68F60DBB19C2ECAA00F934A8 /* ILCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60DBA19C2ECAA00F934A8 /* ILCameraViewController.m */; };
-		68F60DBF19C2EF5100F934A8 /* ILPhotosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60DBD19C2EF5100F934A8 /* ILPhotosViewController.m */; };
-		68F60DC519C2FF5C00F934A8 /* ILPhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60DC319C2FF5C00F934A8 /* ILPhotoCell.m */; };
 		68F60E8319C3DD6B00F934A8 /* ILNavBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60E8219C3DD6B00F934A8 /* ILNavBarView.m */; };
 /* End PBXBuildFile section */
 
@@ -370,10 +368,6 @@
 		68F60DB719C2CCDC00F934A8 /* instavideo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = instavideo.xcdatamodel; sourceTree = "<group>"; };
 		68F60DB919C2ECAA00F934A8 /* ILCameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILCameraViewController.h; sourceTree = "<group>"; };
 		68F60DBA19C2ECAA00F934A8 /* ILCameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILCameraViewController.m; sourceTree = "<group>"; };
-		68F60DBC19C2EF5100F934A8 /* ILPhotosViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILPhotosViewController.h; sourceTree = "<group>"; };
-		68F60DBD19C2EF5100F934A8 /* ILPhotosViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILPhotosViewController.m; sourceTree = "<group>"; };
-		68F60DC219C2FF5C00F934A8 /* ILPhotoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILPhotoCell.h; sourceTree = "<group>"; };
-		68F60DC319C2FF5C00F934A8 /* ILPhotoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILPhotoCell.m; sourceTree = "<group>"; };
 		68F60E8119C3DD6B00F934A8 /* ILNavBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILNavBarView.h; sourceTree = "<group>"; };
 		68F60E8219C3DD6B00F934A8 /* ILNavBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILNavBarView.m; sourceTree = "<group>"; };
 		BC32C2C6B22F40ED9A554C59 /* Pods-InstaVideoLite.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstaVideoLite.xcconfig"; path = "Pods/Pods-InstaVideoLite.xcconfig"; sourceTree = "<group>"; };
@@ -601,10 +595,6 @@
 				68E8BFFB19C9320100D61814 /* ILAlbumGroup.m */,
 				68E8BFE919C80B4700D61814 /* ILAlbumGroupCell.h */,
 				68E8BFEA19C80B4700D61814 /* ILAlbumGroupCell.m */,
-				68F60DBC19C2EF5100F934A8 /* ILPhotosViewController.h */,
-				68F60DBD19C2EF5100F934A8 /* ILPhotosViewController.m */,
-				68F60DC219C2FF5C00F934A8 /* ILPhotoCell.h */,
-				68F60DC319C2FF5C00F934A8 /* ILPhotoCell.m */,
 			);
 			name = Camera;
 			sourceTree = "<group>";
@@ -1059,7 +1049,6 @@
 				68F60D5219C20ED300F934A8 /* main.m in Sources */,
 				68E8C02219C959D400D61814 /* FCFileManager.m in Sources */,
 				68E8C00219C93F5200D61814 /* ILFrameViewController.m in Sources */,
-				68F60DBF19C2EF5100F934A8 /* ILPhotosViewController.m in Sources */,
 				68E8BEAE19C6D18900D61814 /* ILEditorView.m in Sources */,
 				68F60DA319C28D1500F934A8 /* ILClipDockView.m in Sources */,
 				68F60DB819C2CCDC00F934A8 /* instavideo.xcdatamodeld in Sources */,
@@ -1071,7 +1060,6 @@
 				68E8BF9C19C6E00E00D61814 /* ILVideoClip.m in Sources */,
 				68E9137D19CA9F5700C7A4F4 /* ILClipView.m in Sources */,
 				68F60DBB19C2ECAA00F934A8 /* ILCameraViewController.m in Sources */,
-				68F60DC519C2FF5C00F934A8 /* ILPhotoCell.m in Sources */,
 				68E8BFFD19C9320100D61814 /* ILAlbumGroup.m in Sources */,
 				68E8BFF819C8A69900D61814 /* ILPlayerView.m in Sources */,
 				68E8BF9519C6DE1700D61814 /* ILRecordProgressView.m in Sources */,

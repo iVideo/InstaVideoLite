@@ -56,9 +56,8 @@ UITableViewDataSource,UITableViewDelegate>
     _assets = nil;
     _groups = nil;
     
-    _moviePlayer = nil;
     _navBarView = nil;
-    
+
     _albumView = nil;
     _groupView = nil;
     _midView = nil;
@@ -66,9 +65,25 @@ UITableViewDataSource,UITableViewDelegate>
     _moviePlayer = nil;
 }
 
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self
+//                                                    name:MPMoviePlayerThumbnailImageRequestDidFinishNotification
+//                                                  object:_moviePlayer];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:MPMovieNaturalSizeAvailableNotification
+                                                  object:_moviePlayer];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    if (_groups == nil || [_groups count] < 1) {
+        [self.navigationController popViewControllerAnimated:YES];
+        return;
+    }
     [self firstAlbumSelected];
 }
 
@@ -229,6 +244,7 @@ UITableViewDataSource,UITableViewDelegate>
     ALAsset *asset = [_assets objectAtIndex:indexPath.row];
     [_moviePlayer stop];
     _moviePlayer.contentURL = [[asset defaultRepresentation] url];
+    NSLog(@" Album moviePlayer.contentURL %@",_moviePlayer.contentURL);
     [_moviePlayer prepareToPlay];
     ILAlbumViewCell *cell = (ILAlbumViewCell *)[_albumView cellForItemAtIndexPath:indexPath];
     cell.selectedBg.hidden = NO;
@@ -290,7 +306,7 @@ UITableViewDataSource,UITableViewDelegate>
     [_moviePlayer setScalingMode:MPMovieScalingModeAspectFill];
     [_moviePlayer setRepeatMode:MPMovieRepeatModeOne];
     [_moviePlayer setShouldAutoplay:YES];
-    
+    [_moviePlayer prepareToPlay];
     _playerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.f, 0.f, IL_PLAYER_W, IL_PLAYER_H)];
     [_playerView addSubview:_moviePlayer.view];
     [_topView addSubview:_playerView];
@@ -320,6 +336,7 @@ UITableViewDataSource,UITableViewDelegate>
     [_playerView setCenter:_topView.center];
     [_topView bringSubviewToFront:_btnPlay];
     [_topView bringSubviewToFront:_toggleView];
+    NSLog(@"movieNaturalSizeAvailable notification");
 }
 
 - (void)createPlayButton
@@ -389,13 +406,12 @@ UITableViewDataSource,UITableViewDelegate>
 
 - (void)playPause:(UIButton *)sender
 {
+    sender.selected = !sender.selected;
     if (sender.selected == YES) {
-        sender.selected = NO;
-        [PLAYER pause];
+        [_moviePlayer play];
         return;
     }
-    sender.selected = YES;
-    [PLAYER play];
+    [_moviePlayer pause];
 }
 
 #pragma mark - naviBarView
