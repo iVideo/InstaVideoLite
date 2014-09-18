@@ -11,7 +11,7 @@
 
 @interface ILVideoClip : NSObject
 
-@property (nonatomic, strong) NSURL  *videoPath;
+@property (nonatomic, strong) NSURL *videoURL;
 @property (nonatomic) float duration;
 @property (nonatomic) float startAt;
 

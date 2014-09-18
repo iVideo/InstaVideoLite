@@ -11,6 +11,9 @@
 
 #import "ILDataStore.h"
 #import <AVFoundation/AVFoundation.h>
+#import "ILDataManager.h"
+#import "ILPlayerManager.h"
+#import "ILAlbumManager.h"
 
 //#define IL_SCREEN_BOUNDS    [[UIScreen mainScreen] bounds]
 //#define IL_SCREEN_SIZE      [[UIScreen mainScreen] bounds].size
@@ -33,6 +36,6 @@
 
 #define IL_ALBUM    [ILAlbumManager sharedInstance]
 #define PLAYER      [ILPlayerManager sharedInstance]
-#define DATASTORE   [ILDataStore sharedInstance]
+#define IL_DATA     [ILDataManager sharedInstance]
 
 #endif

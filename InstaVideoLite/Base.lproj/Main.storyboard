@@ -18,7 +18,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FAB-WQ-nUx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="813" y="-1079"/>
+            <point key="canvasLocation" x="1022" y="-1089"/>
         </scene>
         <!--Cover View Controller-->
         <scene sceneID="ZEe-dr-m3e">
@@ -33,7 +33,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hus-tk-G9m" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="887" y="-945"/>
+            <point key="canvasLocation" x="1426" y="-735"/>
         </scene>
         <!--Editor View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -47,7 +47,7 @@
                     <navigationItem key="navigationItem" id="vvs-wG-xOx"/>
                     <connections>
                         <segue destination="0fl-Te-6uI" kind="push" identifier="compose" id="egm-Fd-OdI"/>
-                        <segue destination="3O7-c7-BaN" kind="push" identifier="select" id="F1Q-eS-NR8"/>
+                        <segue destination="3O7-c7-BaN" kind="push" identifier="camera" id="F1Q-eS-NR8"/>
                         <segue destination="Srq-2m-0Fi" kind="push" identifier="album" id="oDQ-8F-YuL"/>
                         <segue destination="846-Uc-OQv" kind="push" identifier="frame" id="Dkl-p4-hbO"/>
                         <segue destination="2MW-Nz-XdN" kind="push" identifier="timespan" id="6YZ-gb-XXH"/>
@@ -70,7 +70,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="m3e-p8-buY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="887" y="-296"/>
+            <point key="canvasLocation" x="1022" y="-392"/>
         </scene>
         <!--Camera View Controller-->
         <scene sceneID="j1I-la-Usz">
@@ -88,10 +88,13 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="ajO-Sy-4tr"/>
+                    <connections>
+                        <segue destination="Srq-2m-0Fi" kind="push" identifier="photos" id="hwJ-ZE-zbD"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Shz-hp-ZLx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="679" y="33"/>
+            <point key="canvasLocation" x="542" y="105"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="sFx-zd-wPD">
@@ -127,7 +130,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="51l-UI-KbF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="320" y="45"/>
+            <point key="canvasLocation" x="281" y="45"/>
         </scene>
     </scenes>
     <resources>
@@ -138,4 +141,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="hwJ-ZE-zbD"/>
+    </inferredMetricsTieBreakers>
 </document>

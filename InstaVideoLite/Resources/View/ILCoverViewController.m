@@ -9,6 +9,7 @@
 #import "ILCoverViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "ILNavBarView.h"
+#import "ILShareViewController.h"
 
 
 @interface ILCoverViewController ()
@@ -223,7 +224,8 @@
     
     [_moviePlayer.view setFrame:CGRectMake(0.f, 0.f, width*ratio, height*ratio)];
     [_playerView setContentSize:_moviePlayer.view.frame.size];
-    
+    [_playerView setScrollsToTop:NO];
+    [_playerView setCenter:_topView.center];
     [_topView bringSubviewToFront:_btnPlay];
 }
 
@@ -257,6 +259,7 @@
     _navBarView = [[ILNavBarView alloc] initWithFrame:CGRectMake(.0f, IL_SCREEN_H - IL_COMMON_H, IL_SCREEN_W, IL_COMMON_H)];
     [_navBarView.btnBack addTarget:self action:@selector(btnBackPressed:) forControlEvents:UIControlEventTouchUpInside];
     [_navBarView.btnNext addTarget:self action:@selector(btnNextPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [_navBarView.btnNext setImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
     [self.view addSubview:_navBarView];
 }
 
@@ -267,7 +270,9 @@
 
 - (void)btnNextPressed:(UIButton *)sender
 {
-    
+    ILShareViewController *shareView = [[ILShareViewController alloc] initWithNibName:@"ILShareViewController" bundle:nil];
+//    [self addChildViewController:shareView];
+    [self showViewController:shareView sender:self];
 }
 
 @end

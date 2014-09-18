@@ -123,20 +123,15 @@
 		68E8BF9819C6DE8000D61814 /* ILVideoComposition.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8BF9719C6DE8000D61814 /* ILVideoComposition.m */; };
 		68E8BF9C19C6E00E00D61814 /* ILVideoClip.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8BF9B19C6E00E00D61814 /* ILVideoClip.m */; };
 		68E8BFE419C7DFE800D61814 /* ILAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8BFE219C7DFE800D61814 /* ILAlbumViewController.m */; };
-		68E8BFE519C7DFE800D61814 /* ILAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68E8BFE319C7DFE800D61814 /* ILAlbumViewController.xib */; };
 		68E8BFE819C8083600D61814 /* ILAlbumViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8BFE719C8083600D61814 /* ILAlbumViewCell.m */; };
 		68E8BFEB19C80B4700D61814 /* ILAlbumGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8BFEA19C80B4700D61814 /* ILAlbumGroupCell.m */; };
 		68E8BFEE19C819E300D61814 /* ILAlbumHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8BFED19C819E300D61814 /* ILAlbumHeader.m */; };
 		68E8BFF319C885F800D61814 /* ILAlbumManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8BFF219C885F800D61814 /* ILAlbumManager.m */; };
 		68E8BFF819C8A69900D61814 /* ILPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8BFF719C8A69900D61814 /* ILPlayerView.m */; };
 		68E8BFFD19C9320100D61814 /* ILAlbumGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8BFFB19C9320100D61814 /* ILAlbumGroup.m */; };
-		68E8BFFE19C9320100D61814 /* ILAlbumGroup.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68E8BFFC19C9320100D61814 /* ILAlbumGroup.xib */; };
 		68E8C00219C93F5200D61814 /* ILFrameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8C00019C93F5200D61814 /* ILFrameViewController.m */; };
-		68E8C00319C93F5200D61814 /* ILFrameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68E8C00119C93F5200D61814 /* ILFrameViewController.xib */; };
 		68E8C00719C948C100D61814 /* ILFrameGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8C00519C948C100D61814 /* ILFrameGroupCell.m */; };
-		68E8C00819C948C100D61814 /* ILFrameGroupCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68E8C00619C948C100D61814 /* ILFrameGroupCell.xib */; };
 		68E8C00C19C948F500D61814 /* ILFrameViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8C00A19C948F500D61814 /* ILFrameViewCell.m */; };
-		68E8C00D19C948F500D61814 /* ILFrameViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68E8C00B19C948F500D61814 /* ILFrameViewCell.xib */; };
 		68E8C01119C94D1100D61814 /* RES_FRAME in Resources */ = {isa = PBXBuildFile; fileRef = 68E8C01019C94D1100D61814 /* RES_FRAME */; };
 		68E8C02219C959D400D61814 /* FCFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8C02119C959D400D61814 /* FCFileManager.m */; };
 		68E8C03019C96A0D00D61814 /* CREATIVE.png in Resources */ = {isa = PBXBuildFile; fileRef = 68E8C02419C96A0D00D61814 /* CREATIVE.png */; };
@@ -152,28 +147,17 @@
 		68E8C03A19C96A0D00D61814 /* sticker.png in Resources */ = {isa = PBXBuildFile; fileRef = 68E8C02E19C96A0D00D61814 /* sticker.png */; };
 		68E8C03B19C96A0D00D61814 /* sticker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 68E8C02F19C96A0D00D61814 /* sticker@2x.png */; };
 		68E8C03F19C9839500D61814 /* ILCoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8C03D19C9839500D61814 /* ILCoverViewController.m */; };
-		68E8C04019C9839500D61814 /* ILCoverViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68E8C03E19C9839500D61814 /* ILCoverViewController.xib */; };
 		68E8C04419C9C9FD00D61814 /* ILTrimViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8C04219C9C9FD00D61814 /* ILTrimViewController.m */; };
-		68E8C04519C9C9FD00D61814 /* ILTrimViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68E8C04319C9C9FD00D61814 /* ILTrimViewController.xib */; };
+		68E9137919CA497400C7A4F4 /* ILShareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E9137719CA497400C7A4F4 /* ILShareViewController.m */; };
+		68E9137A19CA497400C7A4F4 /* ILShareViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68E9137819CA497400C7A4F4 /* ILShareViewController.xib */; };
+		68E9137D19CA9F5700C7A4F4 /* ILClipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E9137C19CA9F5700C7A4F4 /* ILClipView.m */; };
+		68E9138019CAE46300C7A4F4 /* ILDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E9137F19CAE46300C7A4F4 /* ILDataManager.m */; };
 		68F60D5219C20ED300F934A8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60D5119C20ED300F934A8 /* main.m */; };
 		68F60D5519C20ED300F934A8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60D5419C20ED300F934A8 /* AppDelegate.m */; };
 		68F60D5B19C20ED300F934A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 68F60D5919C20ED300F934A8 /* Main.storyboard */; };
 		68F60D5D19C20ED400F934A8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 68F60D5C19C20ED400F934A8 /* Images.xcassets */; };
 		68F60D6019C20ED400F934A8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68F60D5E19C20ED400F934A8 /* LaunchScreen.xib */; };
 		68F60D6C19C20ED400F934A8 /* InstaVideoLiteTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60D6B19C20ED400F934A8 /* InstaVideoLiteTests.m */; };
-		68F60D8419C20F5F00F934A8 /* 4inch_5.png in Resources */ = {isa = PBXBuildFile; fileRef = 68F60D7B19C20F5F00F934A8 /* 4inch_5.png */; };
-		68F60D8519C20F5F00F934A8 /* 4inch_6.png in Resources */ = {isa = PBXBuildFile; fileRef = 68F60D7C19C20F5F00F934A8 /* 4inch_6.png */; };
-		68F60D8619C20F5F00F934A8 /* 4inch_6a.png in Resources */ = {isa = PBXBuildFile; fileRef = 68F60D7D19C20F5F00F934A8 /* 4inch_6a.png */; };
-		68F60D8719C20F5F00F934A8 /* 4inch_7a.png in Resources */ = {isa = PBXBuildFile; fileRef = 68F60D7E19C20F5F00F934A8 /* 4inch_7a.png */; };
-		68F60D8819C20F5F00F934A8 /* 4inch_7b.png in Resources */ = {isa = PBXBuildFile; fileRef = 68F60D7F19C20F5F00F934A8 /* 4inch_7b.png */; };
-		68F60D8919C20F5F00F934A8 /* 4inch_7c.png in Resources */ = {isa = PBXBuildFile; fileRef = 68F60D8019C20F5F00F934A8 /* 4inch_7c.png */; };
-		68F60D8A19C20F5F00F934A8 /* 4inch_7d.png in Resources */ = {isa = PBXBuildFile; fileRef = 68F60D8119C20F5F00F934A8 /* 4inch_7d.png */; };
-		68F60D8B19C20F5F00F934A8 /* 4inch_8.png in Resources */ = {isa = PBXBuildFile; fileRef = 68F60D8219C20F5F00F934A8 /* 4inch_8.png */; };
-		68F60D8C19C20F5F00F934A8 /* 4inch_9.png in Resources */ = {isa = PBXBuildFile; fileRef = 68F60D8319C20F5F00F934A8 /* 4inch_9.png */; };
-		68F60D9119C20FCB00F934A8 /* 4inch_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 68F60D8D19C20FCB00F934A8 /* 4inch_1.png */; };
-		68F60D9219C20FCB00F934A8 /* 4inch_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 68F60D8E19C20FCB00F934A8 /* 4inch_2.png */; };
-		68F60D9319C20FCB00F934A8 /* 4inch_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 68F60D8F19C20FCB00F934A8 /* 4inch_3.png */; };
-		68F60D9419C20FCB00F934A8 /* 4inch_4.png in Resources */ = {isa = PBXBuildFile; fileRef = 68F60D9019C20FCB00F934A8 /* 4inch_4.png */; };
 		68F60D9D19C28B1000F934A8 /* ILEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60D9C19C28B1000F934A8 /* ILEditorViewController.m */; };
 		68F60DA319C28D1500F934A8 /* ILClipDockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60DA219C28D1500F934A8 /* ILClipDockView.m */; };
 		68F60DA919C28FBD00F934A8 /* skateboarding.m4v in Resources */ = {isa = PBXBuildFile; fileRef = 68F60DA619C28FBD00F934A8 /* skateboarding.m4v */; };
@@ -183,9 +167,7 @@
 		68F60DBB19C2ECAA00F934A8 /* ILCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60DBA19C2ECAA00F934A8 /* ILCameraViewController.m */; };
 		68F60DBF19C2EF5100F934A8 /* ILPhotosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60DBD19C2EF5100F934A8 /* ILPhotosViewController.m */; };
 		68F60DC519C2FF5C00F934A8 /* ILPhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60DC319C2FF5C00F934A8 /* ILPhotoCell.m */; };
-		68F60DC619C2FF5C00F934A8 /* ILPhotoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68F60DC419C2FF5C00F934A8 /* ILPhotoCell.xib */; };
 		68F60E8319C3DD6B00F934A8 /* ILNavBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60E8219C3DD6B00F934A8 /* ILNavBarView.m */; };
-		68F60E8619C42A5400F934A8 /* ILDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60E8519C42A5400F934A8 /* ILDataStore.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -320,7 +302,6 @@
 		68E8BF9B19C6E00E00D61814 /* ILVideoClip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILVideoClip.m; sourceTree = "<group>"; };
 		68E8BFE119C7DFE800D61814 /* ILAlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILAlbumViewController.h; sourceTree = "<group>"; };
 		68E8BFE219C7DFE800D61814 /* ILAlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILAlbumViewController.m; sourceTree = "<group>"; };
-		68E8BFE319C7DFE800D61814 /* ILAlbumViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ILAlbumViewController.xib; sourceTree = "<group>"; };
 		68E8BFE619C8083600D61814 /* ILAlbumViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILAlbumViewCell.h; sourceTree = "<group>"; };
 		68E8BFE719C8083600D61814 /* ILAlbumViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILAlbumViewCell.m; sourceTree = "<group>"; };
 		68E8BFE919C80B4700D61814 /* ILAlbumGroupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILAlbumGroupCell.h; sourceTree = "<group>"; };
@@ -333,16 +314,12 @@
 		68E8BFF719C8A69900D61814 /* ILPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILPlayerView.m; sourceTree = "<group>"; };
 		68E8BFFA19C9320100D61814 /* ILAlbumGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILAlbumGroup.h; sourceTree = "<group>"; };
 		68E8BFFB19C9320100D61814 /* ILAlbumGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILAlbumGroup.m; sourceTree = "<group>"; };
-		68E8BFFC19C9320100D61814 /* ILAlbumGroup.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ILAlbumGroup.xib; sourceTree = "<group>"; };
 		68E8BFFF19C93F5200D61814 /* ILFrameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILFrameViewController.h; sourceTree = "<group>"; };
 		68E8C00019C93F5200D61814 /* ILFrameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILFrameViewController.m; sourceTree = "<group>"; };
-		68E8C00119C93F5200D61814 /* ILFrameViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ILFrameViewController.xib; sourceTree = "<group>"; };
 		68E8C00419C948C100D61814 /* ILFrameGroupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILFrameGroupCell.h; sourceTree = "<group>"; };
 		68E8C00519C948C100D61814 /* ILFrameGroupCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILFrameGroupCell.m; sourceTree = "<group>"; };
-		68E8C00619C948C100D61814 /* ILFrameGroupCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ILFrameGroupCell.xib; sourceTree = "<group>"; };
 		68E8C00919C948F500D61814 /* ILFrameViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILFrameViewCell.h; sourceTree = "<group>"; };
 		68E8C00A19C948F500D61814 /* ILFrameViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILFrameViewCell.m; sourceTree = "<group>"; };
-		68E8C00B19C948F500D61814 /* ILFrameViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ILFrameViewCell.xib; sourceTree = "<group>"; };
 		68E8C01019C94D1100D61814 /* RES_FRAME */ = {isa = PBXFileReference; lastKnownFileType = folder; path = RES_FRAME; sourceTree = "<group>"; };
 		68E8C02019C959D400D61814 /* FCFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCFileManager.h; sourceTree = "<group>"; };
 		68E8C02119C959D400D61814 /* FCFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCFileManager.m; sourceTree = "<group>"; };
@@ -360,10 +337,15 @@
 		68E8C02F19C96A0D00D61814 /* sticker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sticker@2x.png"; sourceTree = "<group>"; };
 		68E8C03C19C9839500D61814 /* ILCoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILCoverViewController.h; sourceTree = "<group>"; };
 		68E8C03D19C9839500D61814 /* ILCoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILCoverViewController.m; sourceTree = "<group>"; };
-		68E8C03E19C9839500D61814 /* ILCoverViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ILCoverViewController.xib; sourceTree = "<group>"; };
 		68E8C04119C9C9FD00D61814 /* ILTrimViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILTrimViewController.h; sourceTree = "<group>"; };
 		68E8C04219C9C9FD00D61814 /* ILTrimViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILTrimViewController.m; sourceTree = "<group>"; };
-		68E8C04319C9C9FD00D61814 /* ILTrimViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ILTrimViewController.xib; sourceTree = "<group>"; };
+		68E9137619CA497400C7A4F4 /* ILShareViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILShareViewController.h; sourceTree = "<group>"; };
+		68E9137719CA497400C7A4F4 /* ILShareViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILShareViewController.m; sourceTree = "<group>"; };
+		68E9137819CA497400C7A4F4 /* ILShareViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ILShareViewController.xib; sourceTree = "<group>"; };
+		68E9137B19CA9F5700C7A4F4 /* ILClipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILClipView.h; sourceTree = "<group>"; };
+		68E9137C19CA9F5700C7A4F4 /* ILClipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILClipView.m; sourceTree = "<group>"; };
+		68E9137E19CAE46300C7A4F4 /* ILDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILDataManager.h; sourceTree = "<group>"; };
+		68E9137F19CAE46300C7A4F4 /* ILDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILDataManager.m; sourceTree = "<group>"; };
 		68F60D4C19C20ED300F934A8 /* InstaVideoLite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InstaVideoLite.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		68F60D5019C20ED300F934A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		68F60D5119C20ED300F934A8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -375,19 +357,6 @@
 		68F60D6519C20ED400F934A8 /* InstaVideoLiteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InstaVideoLiteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		68F60D6A19C20ED400F934A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		68F60D6B19C20ED400F934A8 /* InstaVideoLiteTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InstaVideoLiteTests.m; sourceTree = "<group>"; };
-		68F60D7B19C20F5F00F934A8 /* 4inch_5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 4inch_5.png; sourceTree = "<group>"; };
-		68F60D7C19C20F5F00F934A8 /* 4inch_6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 4inch_6.png; sourceTree = "<group>"; };
-		68F60D7D19C20F5F00F934A8 /* 4inch_6a.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 4inch_6a.png; sourceTree = "<group>"; };
-		68F60D7E19C20F5F00F934A8 /* 4inch_7a.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 4inch_7a.png; sourceTree = "<group>"; };
-		68F60D7F19C20F5F00F934A8 /* 4inch_7b.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 4inch_7b.png; sourceTree = "<group>"; };
-		68F60D8019C20F5F00F934A8 /* 4inch_7c.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 4inch_7c.png; sourceTree = "<group>"; };
-		68F60D8119C20F5F00F934A8 /* 4inch_7d.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 4inch_7d.png; sourceTree = "<group>"; };
-		68F60D8219C20F5F00F934A8 /* 4inch_8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 4inch_8.png; sourceTree = "<group>"; };
-		68F60D8319C20F5F00F934A8 /* 4inch_9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 4inch_9.png; sourceTree = "<group>"; };
-		68F60D8D19C20FCB00F934A8 /* 4inch_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 4inch_1.png; sourceTree = "<group>"; };
-		68F60D8E19C20FCB00F934A8 /* 4inch_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 4inch_2.png; sourceTree = "<group>"; };
-		68F60D8F19C20FCB00F934A8 /* 4inch_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 4inch_3.png; sourceTree = "<group>"; };
-		68F60D9019C20FCB00F934A8 /* 4inch_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 4inch_4.png; sourceTree = "<group>"; };
 		68F60D9B19C28B1000F934A8 /* ILEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILEditorViewController.h; sourceTree = "<group>"; };
 		68F60D9C19C28B1000F934A8 /* ILEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILEditorViewController.m; sourceTree = "<group>"; };
 		68F60DA119C28D1500F934A8 /* ILClipDockView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILClipDockView.h; sourceTree = "<group>"; };
@@ -405,11 +374,8 @@
 		68F60DBD19C2EF5100F934A8 /* ILPhotosViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILPhotosViewController.m; sourceTree = "<group>"; };
 		68F60DC219C2FF5C00F934A8 /* ILPhotoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILPhotoCell.h; sourceTree = "<group>"; };
 		68F60DC319C2FF5C00F934A8 /* ILPhotoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILPhotoCell.m; sourceTree = "<group>"; };
-		68F60DC419C2FF5C00F934A8 /* ILPhotoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ILPhotoCell.xib; sourceTree = "<group>"; };
 		68F60E8119C3DD6B00F934A8 /* ILNavBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILNavBarView.h; sourceTree = "<group>"; };
 		68F60E8219C3DD6B00F934A8 /* ILNavBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILNavBarView.m; sourceTree = "<group>"; };
-		68F60E8419C42A5400F934A8 /* ILDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILDataStore.h; sourceTree = "<group>"; };
-		68F60E8519C42A5400F934A8 /* ILDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILDataStore.m; sourceTree = "<group>"; };
 		BC32C2C6B22F40ED9A554C59 /* Pods-InstaVideoLite.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstaVideoLite.xcconfig"; path = "Pods/Pods-InstaVideoLite.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -627,21 +593,18 @@
 				68F60DBA19C2ECAA00F934A8 /* ILCameraViewController.m */,
 				68E8BFE119C7DFE800D61814 /* ILAlbumViewController.h */,
 				68E8BFE219C7DFE800D61814 /* ILAlbumViewController.m */,
-				68E8BFE319C7DFE800D61814 /* ILAlbumViewController.xib */,
 				68E8BFE619C8083600D61814 /* ILAlbumViewCell.h */,
 				68E8BFE719C8083600D61814 /* ILAlbumViewCell.m */,
 				68E8BFEC19C819E300D61814 /* ILAlbumHeader.h */,
 				68E8BFED19C819E300D61814 /* ILAlbumHeader.m */,
 				68E8BFFA19C9320100D61814 /* ILAlbumGroup.h */,
 				68E8BFFB19C9320100D61814 /* ILAlbumGroup.m */,
-				68E8BFFC19C9320100D61814 /* ILAlbumGroup.xib */,
 				68E8BFE919C80B4700D61814 /* ILAlbumGroupCell.h */,
 				68E8BFEA19C80B4700D61814 /* ILAlbumGroupCell.m */,
 				68F60DBC19C2EF5100F934A8 /* ILPhotosViewController.h */,
 				68F60DBD19C2EF5100F934A8 /* ILPhotosViewController.m */,
 				68F60DC219C2FF5C00F934A8 /* ILPhotoCell.h */,
 				68F60DC319C2FF5C00F934A8 /* ILPhotoCell.m */,
-				68F60DC419C2FF5C00F934A8 /* ILPhotoCell.xib */,
 			);
 			name = Camera;
 			sourceTree = "<group>";
@@ -651,13 +614,10 @@
 			children = (
 				68E8BFFF19C93F5200D61814 /* ILFrameViewController.h */,
 				68E8C00019C93F5200D61814 /* ILFrameViewController.m */,
-				68E8C00119C93F5200D61814 /* ILFrameViewController.xib */,
 				68E8C00919C948F500D61814 /* ILFrameViewCell.h */,
 				68E8C00A19C948F500D61814 /* ILFrameViewCell.m */,
-				68E8C00B19C948F500D61814 /* ILFrameViewCell.xib */,
 				68E8C00419C948C100D61814 /* ILFrameGroupCell.h */,
 				68E8C00519C948C100D61814 /* ILFrameGroupCell.m */,
-				68E8C00619C948C100D61814 /* ILFrameGroupCell.xib */,
 			);
 			name = Frame;
 			sourceTree = "<group>";
@@ -713,19 +673,6 @@
 		68F60D4E19C20ED300F934A8 /* InstaVideoLite */ = {
 			isa = PBXGroup;
 			children = (
-				68F60D8D19C20FCB00F934A8 /* 4inch_1.png */,
-				68F60D8E19C20FCB00F934A8 /* 4inch_2.png */,
-				68F60D8F19C20FCB00F934A8 /* 4inch_3.png */,
-				68F60D9019C20FCB00F934A8 /* 4inch_4.png */,
-				68F60D7B19C20F5F00F934A8 /* 4inch_5.png */,
-				68F60D7C19C20F5F00F934A8 /* 4inch_6.png */,
-				68F60D7D19C20F5F00F934A8 /* 4inch_6a.png */,
-				68F60D7E19C20F5F00F934A8 /* 4inch_7a.png */,
-				68F60D7F19C20F5F00F934A8 /* 4inch_7b.png */,
-				68F60D8019C20F5F00F934A8 /* 4inch_7c.png */,
-				68F60D8119C20F5F00F934A8 /* 4inch_7d.png */,
-				68F60D8219C20F5F00F934A8 /* 4inch_8.png */,
-				68F60D8319C20F5F00F934A8 /* 4inch_9.png */,
 				68F60D5319C20ED300F934A8 /* AppDelegate.h */,
 				68F60D5419C20ED300F934A8 /* AppDelegate.m */,
 				68F60D5919C20ED300F934A8 /* Main.storyboard */,
@@ -783,8 +730,6 @@
 				68F60DAD19C29EB600F934A8 /* ILCommon.h */,
 				68F60DAE19C29EB600F934A8 /* ILCommon.m */,
 				68F60DB019C29F2300F934A8 /* ILPreDefine.h */,
-				68F60E8419C42A5400F934A8 /* ILDataStore.h */,
-				68F60E8519C42A5400F934A8 /* ILDataStore.m */,
 			);
 			path = Class;
 			sourceTree = "<group>";
@@ -808,12 +753,16 @@
 		68F60D7A19C20F3300F934A8 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				68E9137E19CAE46300C7A4F4 /* ILDataManager.h */,
+				68E9137F19CAE46300C7A4F4 /* ILDataManager.m */,
 				68E8BFF619C8A69900D61814 /* ILPlayerView.h */,
 				68E8BFF719C8A69900D61814 /* ILPlayerView.m */,
 				68F60DAA19C296AD00F934A8 /* ILPlayerManager.h */,
 				68F60DAB19C296AD00F934A8 /* ILPlayerManager.m */,
 				68E8BFF119C885F800D61814 /* ILAlbumManager.h */,
 				68E8BFF219C885F800D61814 /* ILAlbumManager.m */,
+				68E9137B19CA9F5700C7A4F4 /* ILClipView.h */,
+				68E9137C19CA9F5700C7A4F4 /* ILClipView.m */,
 				68F60DA119C28D1500F934A8 /* ILClipDockView.h */,
 				68F60DA219C28D1500F934A8 /* ILClipDockView.m */,
 				68E8BEAC19C6D18900D61814 /* ILEditorView.h */,
@@ -822,10 +771,11 @@
 				68F60D9C19C28B1000F934A8 /* ILEditorViewController.m */,
 				68E8C03C19C9839500D61814 /* ILCoverViewController.h */,
 				68E8C03D19C9839500D61814 /* ILCoverViewController.m */,
-				68E8C03E19C9839500D61814 /* ILCoverViewController.xib */,
 				68E8C04119C9C9FD00D61814 /* ILTrimViewController.h */,
 				68E8C04219C9C9FD00D61814 /* ILTrimViewController.m */,
-				68E8C04319C9C9FD00D61814 /* ILTrimViewController.xib */,
+				68E9137619CA497400C7A4F4 /* ILShareViewController.h */,
+				68E9137719CA497400C7A4F4 /* ILShareViewController.m */,
+				68E9137819CA497400C7A4F4 /* ILShareViewController.xib */,
 				68E8C01219C94FFE00D61814 /* Frame */,
 				68E8BF9919C6DEA000D61814 /* Camera */,
 				68F60E8119C3DD6B00F934A8 /* ILNavBarView.h */,
@@ -920,7 +870,6 @@
 				68E8BF6D19C6D5C300D61814 /* title-page_btn.png in Resources */,
 				68E8BF3A19C6D5C300D61814 /* add_video@2x.png in Resources */,
 				68E8BF7C19C6D5C300D61814 /* play@2x.png in Resources */,
-				68E8C00D19C948F500D61814 /* ILFrameViewCell.xib in Resources */,
 				68E8C03219C96A0D00D61814 /* HOLIDAY.png in Resources */,
 				68E8BF6F19C6D5C300D61814 /* blue_btn.png in Resources */,
 				68E8BF6319C6D5C300D61814 /* done.png in Resources */,
@@ -936,43 +885,35 @@
 				68E8BF7A19C6D5C300D61814 /* Pause@2x.png in Resources */,
 				68E8BF7B19C6D5C300D61814 /* play.png in Resources */,
 				68E8C03519C96A0D00D61814 /* LIFESTLY@2x.png in Resources */,
-				68F60D9319C20FCB00F934A8 /* 4inch_3.png in Resources */,
 				68E8BF8F19C6D5C300D61814 /* Vimeo.png in Resources */,
 				68E8C03419C96A0D00D61814 /* LIFESTLY.png in Resources */,
 				68E8BF7419C6D5C300D61814 /* compose_small_btn@2x.png in Resources */,
 				68E8BF7619C6D5C300D61814 /* time@2x.png in Resources */,
 				68E8C03B19C96A0D00D61814 /* sticker@2x.png in Resources */,
-				68E8C04519C9C9FD00D61814 /* ILTrimViewController.xib in Resources */,
 				68E8C03319C96A0D00D61814 /* HOLIDAY@2x.png in Resources */,
 				68E8BF7F19C6D5C300D61814 /* Cancle.png in Resources */,
 				68E8BF8019C6D5C300D61814 /* Cancle@2x.png in Resources */,
 				68E8BF8119C6D5C300D61814 /* Email.png in Resources */,
-				68E8C04019C9839500D61814 /* ILCoverViewController.xib in Resources */,
 				68E8BF5819C6D5C300D61814 /* play_btn@2x.png in Resources */,
 				68E8BF6919C6D5C300D61814 /* store.png in Resources */,
 				68E8BF7D19C6D5C300D61814 /* play_edit_btn.png in Resources */,
 				68E8BF6A19C6D5C300D61814 /* store@2x.png in Resources */,
-				68E8C00319C93F5200D61814 /* ILFrameViewController.xib in Resources */,
 				68E8BF3119C6D5C300D61814 /* home_choose_btn-.png in Resources */,
-				68F60D8C19C20F5F00F934A8 /* 4inch_9.png in Resources */,
 				68E8BF6719C6D5C300D61814 /* restoe.png in Resources */,
 				68E8BF8319C6D5C300D61814 /* Facebook.png in Resources */,
 				68E8BF4119C6D5C300D61814 /* compose_crop.png in Resources */,
 				68E8BF7E19C6D5C300D61814 /* play_edit_btn@2x.png in Resources */,
 				68E8BF3819C6D5C300D61814 /* video_icon@2x.png in Resources */,
-				68F60D9219C20FCB00F934A8 /* 4inch_2.png in Resources */,
 				68E8BF6219C6D5C300D61814 /* buy@2x.png in Resources */,
 				68E8BF5319C6D5C300D61814 /* sound_max.png in Resources */,
 				68E8BF5019C6D5C300D61814 /* music@2x.png in Resources */,
 				68E8BF6119C6D5C300D61814 /* buy.png in Resources */,
 				68E8BF5919C6D5C300D61814 /* btn_creatne.png in Resources */,
 				68E8BF8A19C6D5C300D61814 /* Save@2x.png in Resources */,
-				68E8BFE519C7DFE800D61814 /* ILAlbumViewController.xib in Resources */,
 				68E8BF4019C6D5C300D61814 /* compose_btn@2x.png in Resources */,
 				68E8BF7519C6D5C300D61814 /* time.png in Resources */,
 				68E8BF8719C6D5C300D61814 /* Other-Apps.png in Resources */,
 				68E8BF5519C6D5C300D61814 /* sound_mis.png in Resources */,
-				68F60D8719C20F5F00F934A8 /* 4inch_7a.png in Resources */,
 				68E8BF3919C6D5C300D61814 /* add_video.png in Resources */,
 				68F60DA919C28FBD00F934A8 /* skateboarding.m4v in Resources */,
 				68E8BF3019C6D5C300D61814 /* delete_done@2x.png in Resources */,
@@ -981,28 +922,22 @@
 				68E8BF2719C6D5C300D61814 /* bar_btn.png in Resources */,
 				68E8BF8419C6D5C300D61814 /* Facebook@2x.png in Resources */,
 				68E8BF2C19C6D5C300D61814 /* delete-@2x.png in Resources */,
-				68F60D8919C20F5F00F934A8 /* 4inch_7c.png in Resources */,
 				68E8BF8C19C6D5C300D61814 /* share@2x.png in Resources */,
 				68E8BF4719C6D5C300D61814 /* edit_btn.png in Resources */,
 				68E8C03019C96A0D00D61814 /* CREATIVE.png in Resources */,
 				68E8BF3719C6D5C300D61814 /* video_icon.png in Resources */,
-				68F60D8419C20F5F00F934A8 /* 4inch_5.png in Resources */,
 				68E8BF5619C6D5C300D61814 /* sound_mis@2x.png in Resources */,
 				68E8BF2A19C6D5C300D61814 /* camera@2x.png in Resources */,
 				68E8BF4D19C6D5C300D61814 /* btn_add_music.png in Resources */,
 				68E8BF5D19C6D5C300D61814 /* btn_lifestly.png in Resources */,
-				68F60D8619C20F5F00F934A8 /* 4inch_6a.png in Resources */,
 				68E8BF4419C6D5C300D61814 /* compose_delete@2x.png in Resources */,
 				68E8BF7819C6D5C300D61814 /* Next@2x.png in Resources */,
-				68F60D9419C20FCB00F934A8 /* 4inch_4.png in Resources */,
 				68E8BF3F19C6D5C300D61814 /* compose_btn.png in Resources */,
-				68E8BFFE19C9320100D61814 /* ILAlbumGroup.xib in Resources */,
 				68E8BF4F19C6D5C300D61814 /* music.png in Resources */,
 				68E8C03919C96A0D00D61814 /* sticker-@2x.png in Resources */,
 				68E8BF5119C6D5C300D61814 /* sound_btn.png in Resources */,
 				68E8BF6E19C6D5C300D61814 /* title-page_btn@2x.png in Resources */,
 				68E8BF9119C6D5C300D61814 /* YouTube.png in Resources */,
-				68E8C00819C948C100D61814 /* ILFrameGroupCell.xib in Resources */,
 				68E8BF7119C6D5C300D61814 /* compose_big_btn.png in Resources */,
 				68E8BF9219C6D5C300D61814 /* YouTube@2x.png in Resources */,
 				68E8BF7719C6D5C300D61814 /* Next.png in Resources */,
@@ -1020,10 +955,8 @@
 				68E8BF2D19C6D5C300D61814 /* delete.png in Resources */,
 				68E8BF2919C6D5C300D61814 /* camera.png in Resources */,
 				68E8BF2519C6D5C300D61814 /* back.png in Resources */,
-				68F60D8519C20F5F00F934A8 /* 4inch_6.png in Resources */,
 				68E8BF7919C6D5C300D61814 /* Pause.png in Resources */,
 				68E8BF7319C6D5C300D61814 /* compose_small_btn.png in Resources */,
-				68F60D8819C20F5F00F934A8 /* 4inch_7b.png in Resources */,
 				68E8C03719C96A0D00D61814 /* LOVE@2x.png in Resources */,
 				68E8BF4819C6D5C300D61814 /* edit_btn@2x.png in Resources */,
 				68E8C01119C94D1100D61814 /* RES_FRAME in Resources */,
@@ -1039,7 +972,6 @@
 				68E8BF3B19C6D5C300D61814 /* bk_bar.png in Resources */,
 				68E8BF4519C6D5C300D61814 /* compose_fx.png in Resources */,
 				68E8BF6B19C6D5C300D61814 /* title-page.png in Resources */,
-				68F60D8B19C20F5F00F934A8 /* 4inch_8.png in Resources */,
 				68E8BF5E19C6D5C300D61814 /* btn_lifestly@2x.png in Resources */,
 				68E8BF9019C6D5C300D61814 /* Vimeo@2x.png in Resources */,
 				68E8BF5C19C6D5C300D61814 /* btn_holiday@2x.png in Resources */,
@@ -1048,20 +980,18 @@
 				68E8BF6419C6D5C300D61814 /* done@2x.png in Resources */,
 				68E8BF8B19C6D5C300D61814 /* share.png in Resources */,
 				68E8BF4A19C6D5C300D61814 /* add_music@2x.png in Resources */,
-				68F60D8A19C20F5F00F934A8 /* 4inch_7d.png in Resources */,
 				68E8BF3519C6D5C300D61814 /* Video_btn.png in Resources */,
 				68E8C03819C96A0D00D61814 /* sticker-.png in Resources */,
 				68F60D6019C20ED400F934A8 /* LaunchScreen.xib in Resources */,
 				68E8BF3E19C6D5C300D61814 /* bk_btn@2x.png in Resources */,
 				68E8BF4919C6D5C300D61814 /* add_music.png in Resources */,
-				68F60DC619C2FF5C00F934A8 /* ILPhotoCell.xib in Resources */,
 				68F60D5D19C20ED400F934A8 /* Images.xcassets in Resources */,
-				68F60D9119C20FCB00F934A8 /* 4inch_1.png in Resources */,
 				68E8BF8819C6D5C300D61814 /* Other-Apps@2x.png in Resources */,
 				68E8BF4619C6D5C300D61814 /* compose_fx@2x.png in Resources */,
 				68E8BF3219C6D5C300D61814 /* home_choose_btn-@2x.png in Resources */,
 				68E8BF6519C6D5C300D61814 /* fx_btn.png in Resources */,
 				68E8BF3C19C6D5C300D61814 /* bk_bar@2x.png in Resources */,
+				68E9137A19CA497400C7A4F4 /* ILShareViewController.xib in Resources */,
 				68E8BF5419C6D5C300D61814 /* sound_max@2x.png in Resources */,
 				68E8BF8D19C6D5C300D61814 /* Twitter.png in Resources */,
 				68E8BF7219C6D5C300D61814 /* compose_big_btn@2x.png in Resources */,
@@ -1133,17 +1063,19 @@
 				68E8BEAE19C6D18900D61814 /* ILEditorView.m in Sources */,
 				68F60DA319C28D1500F934A8 /* ILClipDockView.m in Sources */,
 				68F60DB819C2CCDC00F934A8 /* instavideo.xcdatamodeld in Sources */,
-				68F60E8619C42A5400F934A8 /* ILDataStore.m in Sources */,
 				68E8BFEB19C80B4700D61814 /* ILAlbumGroupCell.m in Sources */,
+				68E9138019CAE46300C7A4F4 /* ILDataManager.m in Sources */,
 				68E8C00C19C948F500D61814 /* ILFrameViewCell.m in Sources */,
 				68F60DAF19C29EB600F934A8 /* ILCommon.m in Sources */,
 				68E8BF9819C6DE8000D61814 /* ILVideoComposition.m in Sources */,
 				68E8BF9C19C6E00E00D61814 /* ILVideoClip.m in Sources */,
+				68E9137D19CA9F5700C7A4F4 /* ILClipView.m in Sources */,
 				68F60DBB19C2ECAA00F934A8 /* ILCameraViewController.m in Sources */,
 				68F60DC519C2FF5C00F934A8 /* ILPhotoCell.m in Sources */,
 				68E8BFFD19C9320100D61814 /* ILAlbumGroup.m in Sources */,
 				68E8BFF819C8A69900D61814 /* ILPlayerView.m in Sources */,
 				68E8BF9519C6DE1700D61814 /* ILRecordProgressView.m in Sources */,
+				68E9137919CA497400C7A4F4 /* ILShareViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

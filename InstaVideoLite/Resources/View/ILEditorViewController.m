@@ -25,7 +25,7 @@
 @property (strong, nonatomic) ILPlayerView *playerView;
 @property (strong, nonatomic) UIView *editorBar;
 @property (strong, nonatomic) UIButton *btnPlay;
-@property (strong, nonatomic) ILClipDockView *clipDock;
+@property (strong, nonatomic) ILClipDockView *dockView;
 @property (strong, nonatomic) UIButton *btnAdd;
 
 @end
@@ -44,7 +44,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self initializeClipDock];
+    [_dockView updateDockView];
 }
 
 - (void)viewDidLoad {
@@ -64,37 +64,10 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
 - (void)initialization
 {
     [IL_ALBUM updateAssets];
 }
-
-- (void)initializeClipDock
-{
-    [_clipDock initialize];
-}
-
-//TODO: Testing Code
-//- (void)test
-//{
-//    NSString *path1 = [[NSBundle mainBundle] pathForResource:@"jerryfish" ofType:@"m4v"];
-//    [DATASTORE addMovieClip:[AVAsset assetWithURL:[[NSURL alloc]initFileURLWithPath:path1]] atIndex:currentIndex];
-//    currentIndex += 1;
-    
-//    NSString *path2 = [[NSBundle mainBundle] pathForResource:@"skateboarding" ofType:@"m4v"];
-//    [DATASTORE addMovieClip:[AVAsset assetWithURL:[[NSURL alloc]initFileURLWithPath:path2]] atIndex:currentIndex];
-//    currentIndex += 1;
-//}
 
 # pragma mark - UI Initialization
 
@@ -110,13 +83,15 @@
     UIButton *btnDel = [UIButton buttonWithType:UIButtonTypeCustom];
     [btnDel setFrame:btnDelFrame];
     [btnDel setImage:[UIImage imageNamed:@"compose_delete"] forState:UIControlStateNormal];
+    [btnDel setImage:[UIImage imageNamed:@"compose_delete"] forState:UIControlStateHighlighted];
     [btnDel addTarget:self action:@selector(btnDelPressed:) forControlEvents:UIControlEventTouchUpInside];
     [_editorBar addSubview:btnDel];
     
     CGRect btnTrimFrame = CGRectMake(2 * (editorBarFrame.size.width/4 - 15), editorBarHeight/2 -15, 30, 30);
     UIButton *btnTrim = [UIButton buttonWithType:UIButtonTypeCustom];
     [btnTrim setFrame:btnTrimFrame];
-    [btnTrim setImage:[UIImage imageNamed:@"compose_crop"] forState:UIControlStateNormal];
+    [btnTrim setImage:[UIImage imageNamed:@"compose_btn"] forState:UIControlStateNormal];
+    [btnTrim setImage:[UIImage imageNamed:@"compose_btn"] forState:UIControlStateHighlighted];
     [btnTrim addTarget:self action:@selector(btnTrimPressed:) forControlEvents:UIControlEventTouchUpInside];
     [_editorBar addSubview:btnTrim];
     
@@ -124,6 +99,7 @@
     UIButton *btnFx = [UIButton buttonWithType:UIButtonTypeCustom];
     [btnFx setFrame:btnFxFrame];
     [btnFx setImage:[UIImage imageNamed:@"compose_fx"] forState:UIControlStateNormal];
+    [btnFx setImage:[UIImage imageNamed:@"compose_fx"] forState:UIControlStateHighlighted];
     [btnFx addTarget:self action:@selector(btnFxPressed:) forControlEvents:UIControlEventTouchUpInside];
     [_editorBar addSubview:btnFx];
     
@@ -132,18 +108,27 @@
 
 - (void)btnDelPressed:(UIButton *)sender
 {
-    
+    [_dockView removeSelectedItem];
 }
 
 - (void)btnTrimPressed:(UIButton *)sender
 {
-    [self performSegueWithIdentifier:@"timespan" sender:self];
+    [self pushWithEditType:@"timespan"];
 }
 
 - (void)btnFxPressed:(UIButton *)sender
 {
-    [self performSegueWithIdentifier:@"frame" sender:self];
-    
+    [self pushWithEditType:@"frame"];
+}
+
+- (void)pushWithEditType:(NSString *)editType
+{
+    NSURL *url = [_dockView getSelectedItem];
+    if (url == nil) {
+        return;
+    }
+    [IL_DATA pushURL:url];
+    [self performSegueWithIdentifier:editType sender:self];
 }
 
 - (void)createPlayerView
@@ -155,13 +140,13 @@
     CGRect btnPlayFrame = CGRectMake(IL_PLAYER_W/2 - 35, IL_PLAYER_H/2, 70, 70);
     _btnPlay = [UIButton buttonWithType:UIButtonTypeCustom];
     [_btnPlay setFrame:btnPlayFrame];
-    [_btnPlay setImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateNormal];
+    [_btnPlay setImage:[UIImage imageNamed:@"Pause.png"] forState:UIControlStateNormal];
     [_btnPlay setImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateHighlighted];
     [_btnPlay addTarget:self action:@selector(playPause:) forControlEvents:UIControlEventTouchUpInside];
     [_playerView addSubview:_btnPlay];
     _btnPlay.center = _playerView.center;
     
-    [PLAYER setPlayerItemWithAssets:[DATASTORE getMovieClips]];
+    [PLAYER setPlayerItemWithURLs:[IL_DATA getClipURLs]];
     [self.playerView.playerLayer setPlayer:PLAYER.queuePlayer];
     
     currentIndex = 0;
@@ -185,8 +170,8 @@
 - (void)createClipDock
 {
     CGRect clipDockFrame = CGRectMake(0, IL_PLAYER_H, IL_SCREEN_W - DOCK_H , DOCK_H);
-    _clipDock = [[ILClipDockView alloc] initWithFrame:clipDockFrame];
-    [self.view addSubview:_clipDock] ;
+    _dockView = [[ILClipDockView alloc] initWithFrame:clipDockFrame];
+    [self.view addSubview:_dockView] ;
 }
 - (void)btnPlayPressed:(UIButton *)sender
 {
@@ -207,10 +192,10 @@
 - (void)addClip:(UIButton *)sender
 {
     [PLAYER pause];
-//    [self test];
+//    [self addtest];
 //    [_clipDock addLastAsset];
-//    [self select:sender];
-    [self album:sender];
+    [self camera:sender];
+//    [self album:sender];
     
 }
 
@@ -237,9 +222,9 @@
     [self performSegueWithIdentifier:@"album" sender:self];
 }
 
-- (void)select:(id)sender
+- (void)camera:(id)sender
 {
-    [self performSegueWithIdentifier:@"select" sender:self];
+    [self performSegueWithIdentifier:@"camera" sender:self];
 }
 
 - (void)compose:(id)sender

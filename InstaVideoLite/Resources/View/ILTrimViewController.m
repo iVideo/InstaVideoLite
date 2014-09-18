@@ -13,9 +13,9 @@
 @interface ILTrimViewController ()
 {
     CGFloat midHeight;
-    
-    NSString *path;
     AVAssetImageGenerator *generator;
+    
+    NSURL *assetURL;
 }
 
 @property (strong, nonatomic) UIView *topView; //Container
@@ -80,7 +80,7 @@
 
 - (void)initialization
 {
-    path = [[NSBundle mainBundle] pathForResource:@"skateboarding" ofType:@"m4v"];
+    assetURL = [IL_DATA popURL];
 }
 
 #pragma mark - midView
@@ -143,15 +143,13 @@
 
 - (void)createScrollView
 {
-    
+    AVAsset *asset = [AVAsset assetWithURL:assetURL];
     //300px 15sec
-    
     Float64 rectsize = 88.f;
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"skateboarding" ofType:@"m4v"];
-    AVAsset *asset = [AVAsset assetWithURL:[[NSURL alloc] initFileURLWithPath:path]];
     generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
     Float64 duration = CMTimeGetSeconds([asset duration]);
-    
+    CGFloat contentsize = rectsize * ceilf(duration) ;
+    generator.maximumSize = CGSizeMake(contentsize, rectsize);
     CMTime actualTime;
     NSError *error;
     for (int i = 0; i < duration; i++) {
@@ -162,7 +160,7 @@
         imageView.frame = CGRectMake(i * rectsize, 1.f, rectsize-1.f, rectsize-1.f);
         [_scrollView addSubview:imageView];
     }
-    CGFloat contentsize = rectsize * ceilf(duration) ;
+
     [_scrollView setContentSize:CGSizeMake(contentsize, rectsize - 2)];
 }
 
@@ -178,6 +176,13 @@
             break;
         case UIGestureRecognizerStateChanged:
         {
+            if (view.center.x < 6) {
+                return;
+            }
+            if (view.center.x > IL_SCREEN_W - 6) {
+                return;
+            }
+            
             CGPoint offset = [recognizer translationInView:view];
             view.center = CGPointMake(view.center.x + offset.x, view.center.y);
             [recognizer setTranslation:CGPointZero inView:view];
@@ -206,6 +211,13 @@
             break;
         case UIGestureRecognizerStateChanged:
         {
+            if (view.center.x < 6) {
+                return;
+            }
+            if (view.center.x > IL_SCREEN_W - 6) {
+                return;
+            }
+            
             CGPoint offset = [recognizer translationInView:view];
             view.center = CGPointMake(view.center.x + offset.x, view.center.y);
             [recognizer setTranslation:CGPointZero inView:view];
@@ -234,6 +246,13 @@
             break;
         case UIGestureRecognizerStateChanged:
         {
+            if (view.center.x < 6) {
+                return;
+            }
+            if (view.center.x > IL_SCREEN_W - 6) {
+                return;
+            }
+            
             CGPoint offset = [recognizer translationInView:view];
             view.center = CGPointMake(view.center.x + offset.x, view.center.y);
             [recognizer setTranslation:CGPointZero inView:view];
@@ -265,8 +284,7 @@
 
 - (void)createPlayerView
 {
-    NSURL *url = [[NSURL alloc] initFileURLWithPath:path];
-    _moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:url];
+    _moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:assetURL];
     [_moviePlayer.view setFrame:CGRectMake(0.f, 0.f, IL_PLAYER_W, IL_PLAYER_H)];
     [_moviePlayer setControlStyle:MPMovieControlStyleNone];
     [_moviePlayer setScalingMode:MPMovieScalingModeAspectFill];
@@ -297,7 +315,8 @@
     
     [_moviePlayer.view setFrame:CGRectMake(0.f, 0.f, width*ratio, height*ratio)];
     [_playerView setContentSize:_moviePlayer.view.frame.size];
-    
+    [_playerView setScrollsToTop:NO];
+    [_playerView setCenter:_topView.center];
     [_topView bringSubviewToFront:_btnPlay];
 }
 
@@ -341,7 +360,7 @@
 
 - (void)btnNextPressed:(UIButton *)sender
 {
-    
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 

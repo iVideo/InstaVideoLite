@@ -39,7 +39,7 @@ static float kMaxDuration = 15.0f;
 
 - (NSArray *)getVideoClips
 {
-    return [[NSArray alloc]initWithArray:clips];
+    return [NSArray arrayWithArray:clips];
 }
 
 - (void)clearVideoClips

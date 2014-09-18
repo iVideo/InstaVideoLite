@@ -17,9 +17,9 @@
 
 + (instancetype) sharedInstance;
 
-//- (void)setPlayerItemWithURLs:(NSArray *)urls;
+- (void)setPlayerItemWithURLs:(NSArray *)urls;
 //- (void)setPlayerItemWithPaths:(NSArray *)paths;
-- (void)setPlayerItemWithAssets:(NSArray *)assets;
+//- (void)setPlayerItemWithAssets:(NSArray *)assets;
 - (void)playWithIndex:(NSInteger)index;
 
 - (void)play;

@@ -12,7 +12,7 @@
 
 - (AVAsset *)videoAsset
 {
-    return [AVAsset assetWithURL:_videoPath];
+    return [AVAsset assetWithURL:_videoURL];
 }
 
 - (CGSize) timeRange

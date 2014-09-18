@@ -11,6 +11,7 @@
 @interface ILDataStore ()
 
 @property (strong, nonatomic) NSMutableArray *assets;
+@property (strong, nonatomic) NSMutableArray *clips;
 
 @end
 
@@ -31,9 +32,22 @@
     self = [super init];
     if (self) {
         _assets = [[NSMutableArray alloc]initWithCapacity:1];
+        _clips = [[NSMutableArray alloc]initWithCapacity:1];
     }
     return self;
 }
+
+- (void)setEditClip:(AVAsset *)clip
+{
+    [_clips removeAllObjects];
+    [_clips addObject:clip];
+}
+
+- (AVAsset *)getEditClip
+{
+    return [_clips lastObject];
+}
+
 
 - (NSArray *)getMovieClips
 {

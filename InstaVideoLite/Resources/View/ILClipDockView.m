@@ -7,12 +7,21 @@
 //
 
 #import "ILClipDockView.h"
+#import "ILClipView.h"
 
 #define THRUMB_H 70.f
 #define THRUMB_W 70.f
 
 @interface ILClipDockView ()
 {
+    ILClipView *lastView;
+    
+    NSInteger selectedIndex;
+    
+    CGPoint originalCenter;
+    
+    BOOL hasContain;
+    
     CGFloat beganX;
     CGFloat endedX;
 
@@ -23,24 +32,78 @@
 }
 
 @property (strong, nonatomic) UIScrollView *scrollView;
+@property (strong, nonatomic) NSMutableArray *thumbArray;//<ILClipView>
+@property (strong, nonatomic) NSMutableArray *assetArray;//<URL>
 
 @end
 
 @implementation ILClipDockView
+
+#pragma mark - public
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bk_btn.png"]];
-        [self createScrollView];
+        [self initDockView];
     }
     return self;
 }
 
-- (void)deleteScrollView
+- (void)updateDockView
 {
-    [_scrollView removeFromSuperview];
+    NSArray *urls = [IL_DATA getClipURLs];
+    if ([urls count] < 1) {
+        return;
+    }else{
+        [_assetArray addObjectsFromArray:urls];
+        [IL_DATA clearClips];
+        [self rebuildContent];
+    }
+}
+
+- (void)removeSelectedItem
+{
+    if (selectedIndex < 0) {
+        return;
+    }
+    if ([_assetArray count] > selectedIndex) {
+        [_assetArray removeObjectAtIndex:selectedIndex];
+        [self rebuildContent];
+    }
+}
+
+- (void)replaceSelectedItem:(NSURL *)url
+{
+    if (selectedIndex < 0) {
+        return;
+    }
+    if ([_assetArray count] > selectedIndex) {
+        [_assetArray replaceObjectAtIndex:selectedIndex withObject:url];
+        [self rebuildContent];
+    }
+}
+
+- (NSURL *)getSelectedItem
+{
+    if (selectedIndex < 0) {
+        return nil;
+    }
+    if ([_assetArray count] > selectedIndex) {
+        return _assetArray[selectedIndex];
+    }
+        return nil;
+}
+
+#pragma mark - private
+
+- (void)initDockView
+{
+    _assetArray = [[NSMutableArray alloc] initWithCapacity:1];
+    _thumbArray = [[NSMutableArray alloc] initWithCapacity:1];
+    selectedIndex = -1;
+    [self createScrollView];
 }
 
 - (void)createScrollView
@@ -52,8 +115,14 @@
     [self addSubview:_scrollView];
 }
 
-- (void)initialize
+- (void)deleteScrollView
 {
+    [_scrollView removeFromSuperview];
+}
+
+- (void)rebuildContent
+{
+    selectedIndex = -1;
     [self clearContentView];
     [self createContentView];
 }
@@ -63,142 +132,119 @@
     for (UIView *subView in [_scrollView subviews]) {
         [subView removeFromSuperview];
     }
+    
+    [_thumbArray removeAllObjects];
 }
 
 - (void)createContentView
 {
-    NSArray *assets = [DATASTORE getMovieClips];
-    for (int i = 0; i < [assets count]; i ++) {
-        AVAsset *asset = [assets objectAtIndex:i];
-        [self createThumbView:asset maxCount:i];
+    for (int i = 0; i < [_assetArray count]; i++) {
+        [self createThumbView:[_assetArray objectAtIndex:i] index:i];
     }
-    _scrollView.contentSize = CGSizeMake(72*[assets count], self.frame.size.height);
+    _scrollView.contentSize = CGSizeMake(THRUMB_W*([_assetArray count]), self.frame.size.height);
 }
 
-//- (void)addLastAsset
-//{
-//    NSArray *assets = [DATASTORE getMovieClips];
-//    AVAsset *asset = [assets lastObject];
-//    NSInteger i = [assets count];
-//    [self createThumbView:asset maxCount:i];
-//    _scrollView.contentSize = CGSizeMake(72*[assets count], self.frame.size.height);
-//}
-
-- (void)createThumbView:(AVAsset *)asset maxCount:(NSInteger)i
+- (void)createThumbView:(NSURL *)url index:(NSInteger)idx
 {
-    UIView *thumbView = [[UIView alloc] initWithFrame:CGRectMake((i-1) * THRUMB_W, 1, THRUMB_W, THRUMB_H)];
-    thumbView.tag = i;
-    NSLog(@"Create ThumbView Tag : %ld", (long)i);
+    AVAssetImageGenerator *generator = [AVAssetImageGenerator assetImageGeneratorWithAsset:[AVAsset assetWithURL:url]];
+    CGImageRef imgRef = [generator copyCGImageAtTime:kCMTimeZero actualTime:nil error:nil];
+    UIImage *image = [UIImage imageWithCGImage:imgRef];
+    CGImageRelease(imgRef);
+    
+    ILClipView *thumbView = [[ILClipView alloc] initWithFrame:CGRectMake(idx * THRUMB_W, 1.f,THRUMB_W, THRUMB_W) image:image];
+    
+    [_thumbArray addObject:thumbView];
+    [_scrollView addSubview:thumbView];
+    
+    UITapGestureRecognizer *tapGusture = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                 action:@selector(tapThumb:)];
+    [thumbView addGestureRecognizer:tapGusture];
+    
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self
-                                                                             action:@selector(tapThumb:)];
+                                                                                action:@selector(thumbViewPan:)];
     panGesture.minimumNumberOfTouches = 1;
     panGesture.maximumNumberOfTouches = 1;
     [thumbView addGestureRecognizer:panGesture];
-    
-    UIImageView *selectView = [[UIImageView alloc] initWithFrame:CGRectMake(2, 2, 66, 66)];
-    selectView.image = [UIImage imageNamed:@"edit_btn"];
-    [thumbView addSubview:selectView];
-    
-    AVAssetImageGenerator *generator = [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
-    UIImage *coverImage = [UIImage imageWithCGImage:[generator copyCGImageAtTime:kCMTimeZero actualTime:nil error:nil]];
-    UIImageView *coverView = [[UIImageView alloc] initWithFrame:CGRectMake(3, 3, 64, 64)];
-    coverView.image = coverImage;
-    [thumbView insertSubview:coverView aboveSubview:selectView];
-    
-//    CGRect btnPlayFrame = CGRectMake(20, 18, 36, 36);
-//    UIButton *btnPlay = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [btnPlay setFrame:btnPlayFrame];
-//    [btnPlay setImage:[UIImage imageNamed:@"play_btn.png"] forState:UIControlStateNormal];
-//    [btnPlay addTarget:self action:@selector(btnPlayPressed:) forControlEvents:UIControlEventTouchUpInside];
-//    [btnPlay setTag:i];
-//    [thumbView insertSubview:btnPlay aboveSubview:coverView];
-    
-    [_scrollView addSubview:thumbView];
 }
 
-- (void)btnPlayPressed:(UIButton *)sender
+- (void)tapThumb:(UITapGestureRecognizer *)recognizer
 {
-    NSLog(@"%ld",(long)sender.tag);
+    lastView.clipBg.hidden = YES;
+    [lastView setNeedsDisplay];
+    
+    ILClipView *clipView = (ILClipView *)recognizer.view;
+    clipView.clipBg.hidden = NO;
+    [clipView setNeedsDisplay];
+    
+    selectedIndex = [_thumbArray indexOfObject:clipView];
+    NSLog(@"selectedIndex %ld ",(long)selectedIndex);
+    
+    lastView = clipView;
 }
 
-- (void)tapThumb:(UIPanGestureRecognizer *)sender
-{
-    UIView *view = sender.view;
-    if (sender.state == UIGestureRecognizerStateBegan) {
-        [_scrollView bringSubviewToFront:view];
-        originTrans = view.transform;
-        //Transform 10% bigger
-        CGAffineTransform trans = CGAffineTransformScale(originTrans, 1.2f, 1.1f);
-        view.transform = trans;
-        
-        NSLog(@"state : UIGestureRecognizerStateBegan");
-        currentBtnTag = view.tag;
-        totalBtnCount = [[_scrollView subviews] count];
-        return;
-    }else if (sender.state == UIGestureRecognizerStateEnded) {
-        //        NSLog(@"endedX : %f",view.center.x);
-//        NSInteger radio = ceil(view.center.x/THRUMB_W *view.tag);
-//        NSLog(@"Ended With Radio : %li",(long)radio);
-        
-        //Transform to orginal
-        view.transform = originTrans;
-        
-        [view setCenter:CGPointMake((view.tag - 1) * 70 + 35 , view.center.y)];
-        return;
-    }else{
-    
-        CGPoint offset = [sender translationInView:_scrollView];
-        [view setCenter:CGPointMake(view.center.x + offset.x, view.center.y)];
-        [sender setTranslation:CGPointMake(0, 0) inView:_scrollView];
-    
-//        CGFloat radio = view.center.x/THRUMB_W*view.tag;
-//        NSLog(@"Changed With Radio : %f",radio);
-        
-        [self aaa:view];
-    }
-}
 
--(void)bbb:(UIView *)view
+- (NSInteger)indexOfPoint:(CGPoint)point inView:(UIView *)view
 {
-//    NSInteger radio = ceil(view.center.x/THRUMB_W *view.tag);
-    
-}
-    
--(void)aaa:(UIView *)view
-{
-    //Change current btn to next position
-    if (view.center.x > totalBtnCount * 70) { //OffBound
-        NSLog(@"View Tag : %li -- OffBound : %f", (long)view.tag, view.center.x);
-        return;
-    }else if (view.center.x > 70 * view.tag) {
-        NSLog(@"View Tag : %li -- rightOff : %f", (long)view.tag, view.center.x);
-        for (UIView *subView in [_scrollView subviews]) {
-            if (subView.tag == currentBtnTag + 1 ) {
-                subView.tag = currentBtnTag;
-                [subView setCenter:CGPointMake(subView.center.x - 70, subView.center.y)];
+    for (UIView *thumb in _thumbArray) {
+        if (thumb != view) {
+            if (CGRectContainsPoint(thumb.frame, point))
+            {
+                return [_thumbArray indexOfObject:thumb];
             }
         }
-        currentBtnTag +=1;
-        view.tag = currentBtnTag;
-        //        NSLog(@"currentBtnTag : %ld", (long)currentBtnTag);
-        return;
-    }else if (70 < view.center.x < 70 * (view.tag - 1)) {
-        NSLog(@"View Tag : %li -- leftOff : %f", (long)view.tag, view.center.x);
-        //        for (UIView *subView in [_scrollView subviews]) {
-        //            if (subView.tag == currentBtnTag - 1 ) {
-        //                subView.tag = currentBtnTag;
-        //                [subView setCenter:CGPointMake(subView.center.x + 70, subView.center.y)];
-        //            }
-        //        }
-        //        currentBtnTag -=1;
-        //        view.tag = currentBtnTag;
-        return;
-    }else if (70 >= view.center.x) {
-        NSLog(@"View Tag : %li -- Less Zero : %f", (long)view.tag, view.center.x);
-        return;
-    }else{
-        NSLog(@"View Tag : %li -- Other Position : %f", (long)view.tag, view.center.x);
-        return;
+    }
+    return -1;
+}
+
+- (void)thumbViewPan:(UIPanGestureRecognizer *)recognizer
+{
+    UIView *view = recognizer.view;
+    switch (recognizer.state) {
+        case UIGestureRecognizerStateBegan:
+        {
+            [self bringSubviewToFront:view];
+            originalCenter = view.center;
+            [UIView animateWithDuration:.2f animations:^{
+                view.transform = CGAffineTransformMakeScale(1.1, 1.1);
+                view.alpha = 0.7;
+            }];
+        }
+            break;
+        case UIGestureRecognizerStateChanged:
+        {
+            CGPoint offset = [recognizer translationInView:view];
+            view.center = CGPointMake(view.center.x + offset.x, view.center.y);
+            [recognizer setTranslation:CGPointZero inView:view];
+            
+            NSInteger idxOfPoint = [self indexOfPoint:view.center inView:view];
+            if (idxOfPoint < 0) {
+                hasContain = NO;
+            }else{
+                [UIView animateWithDuration:.2f animations:^{
+                    UIView *viewOfPoint = _thumbArray[idxOfPoint];
+                    CGPoint viewOfPointCenter = viewOfPoint.center;
+                    viewOfPoint.center = originalCenter;
+                    originalCenter = viewOfPointCenter;
+                    hasContain = YES;
+                }];
+            }
+        }
+            break;
+        case UIGestureRecognizerStateEnded:
+        {
+            [UIView animateWithDuration:.2f animations:^{
+                view.transform = CGAffineTransformIdentity;
+                view.alpha = 1.0;
+                if (!hasContain)
+                {
+                    view.center = originalCenter;
+                }
+            }];
+        }
+            break;
+            
+        default:
+            break;
     }
 }
 

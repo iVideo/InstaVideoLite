@@ -348,8 +348,7 @@ UITableViewDataSource,UITableViewDelegate>
 
 - (void)createPlayerView
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"skateboarding" ofType:@"m4v"];
-    _moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:[[NSURL alloc] initFileURLWithPath:path]];
+    _moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:[IL_DATA popURL]];
     [_moviePlayer setControlStyle:MPMovieControlStyleNone];
     [_moviePlayer setScalingMode:MPMovieScalingModeAspectFit];
     [_moviePlayer setShouldAutoplay:YES];
@@ -490,7 +489,7 @@ UITableViewDataSource,UITableViewDelegate>
 
 - (void)btnNextPressed:(UIButton *)sender
 {
-    
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 

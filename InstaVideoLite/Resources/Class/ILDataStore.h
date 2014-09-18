@@ -13,6 +13,9 @@
 
 + (instancetype)sharedInstance;
 
+- (void)setEditClip:(AVAsset *)clip;
+- (AVAsset *)getEditClip;
+
 - (NSArray *)getMovieClips;
 
 - (void)addMovieClip:(AVAsset *)clip;

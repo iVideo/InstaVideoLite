@@ -21,8 +21,6 @@
 <UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,
 UITableViewDataSource,UITableViewDelegate>
 {
-        NSString *path;
-    
     CGFloat midHeight;
     
     CGPoint originTopViewPoint;
@@ -64,11 +62,14 @@ UITableViewDataSource,UITableViewDelegate>
     _albumView = nil;
     _groupView = nil;
     _midView = nil;
+    
+    _moviePlayer = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self firstAlbumSelected];
 }
 
 - (void)viewDidLoad {
@@ -87,12 +88,18 @@ UITableViewDataSource,UITableViewDelegate>
 
 - (void)initialization
 {
-    path = [[NSBundle mainBundle] pathForResource:@"skateboarding" ofType:@"m4v"];
-    
     _groups = [[NSDictionary alloc]initWithDictionary:[IL_ALBUM allVideoGroups]];
     ALAssetsGroup *firstGroup = (ALAssetsGroup *)[[_groups allValues] firstObject];
     groupName = [firstGroup valueForProperty:ALAssetsGroupPropertyName];
     _assets = [[NSArray alloc] initWithArray:[IL_ALBUM getVideoAssetsWithGroup:firstGroup]];
+}
+
+- (void)firstAlbumSelected
+{
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    [_albumView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionTop];
+    [self selectedAlbumWithIndexPath:indexPath];
+    
 }
 
 #pragma mark - midView
@@ -179,6 +186,7 @@ UITableViewDataSource,UITableViewDelegate>
     groupName = [group valueForProperty:ALAssetsGroupPropertyName];
     [self hideGroupView:nil];
     [_albumView reloadData];
+    [self firstAlbumSelected];
 }
 
 
@@ -213,11 +221,19 @@ UITableViewDataSource,UITableViewDelegate>
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-//    ALAsset *asset = [_assets objectAtIndex:indexPath.row];
+    [self selectedAlbumWithIndexPath:indexPath];
+}
 
-    ILAlbumViewCell *cell = (ILAlbumViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+- (void)selectedAlbumWithIndexPath:(NSIndexPath *)indexPath
+{
+    ALAsset *asset = [_assets objectAtIndex:indexPath.row];
+    [_moviePlayer stop];
+    _moviePlayer.contentURL = [[asset defaultRepresentation] url];
+    [_moviePlayer prepareToPlay];
+    ILAlbumViewCell *cell = (ILAlbumViewCell *)[_albumView cellForItemAtIndexPath:indexPath];
     cell.selectedBg.hidden = NO;
 }
+
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     ILAlbumViewCell *cell = (ILAlbumViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
@@ -268,18 +284,15 @@ UITableViewDataSource,UITableViewDelegate>
 
 - (void)createPlayerView
 {
-    NSURL *url = [[NSURL alloc] initFileURLWithPath:path];
-    _moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:url];
+    _moviePlayer = [[MPMoviePlayerController alloc] init];
     [_moviePlayer.view setFrame:CGRectMake(0.f, 0.f, IL_PLAYER_W, IL_PLAYER_H)];
     [_moviePlayer setControlStyle:MPMovieControlStyleNone];
     [_moviePlayer setScalingMode:MPMovieScalingModeAspectFill];
     [_moviePlayer setRepeatMode:MPMovieRepeatModeOne];
     [_moviePlayer setShouldAutoplay:YES];
-    [_moviePlayer prepareToPlay];
     
     _playerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.f, 0.f, IL_PLAYER_W, IL_PLAYER_H)];
     [_playerView addSubview:_moviePlayer.view];
-    
     [_topView addSubview:_playerView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(movieNaturalSizeAvailable:) name:MPMovieNaturalSizeAvailableNotification object:_moviePlayer];
@@ -303,7 +316,8 @@ UITableViewDataSource,UITableViewDelegate>
     
     [_moviePlayer.view setFrame:CGRectMake(0.f, 0.f, width*ratio, height*ratio)];
     [_playerView setContentSize:_moviePlayer.view.frame.size];
-    
+    [_playerView setScrollsToTop:NO];
+    [_playerView setCenter:_topView.center];
     [_topView bringSubviewToFront:_btnPlay];
     [_topView bringSubviewToFront:_toggleView];
 }
@@ -322,12 +336,11 @@ UITableViewDataSource,UITableViewDelegate>
 
 - (void)btnPlayPressed:(UIButton *)sender
 {
+    sender.selected = !sender.selected;
     if (!sender.selected) {
-        sender.selected = YES;
         [_moviePlayer pause];
         return;
     }
-    sender.selected = NO;
     [_moviePlayer play];
 }
 
@@ -402,7 +415,8 @@ UITableViewDataSource,UITableViewDelegate>
 
 - (void)btnNextPressed:(UIButton *)sender
 {
-    
+    [IL_DATA addClipURL:_moviePlayer.contentURL];
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 @end

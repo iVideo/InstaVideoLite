@@ -9,7 +9,7 @@
 #import "ILCameraViewController.h"
 
 //#import "ILPhotosViewController.h"
-#import "ILAlbumViewController.h"
+//#import "ILAlbumViewController.h"
 #import "ILRecordProgressView.h"
 #import "ILVideoComposition.h"
 #import "ILVideoClip.h"
@@ -19,7 +19,7 @@
 #import "SVProgressHUD.h"
 
 //#define OVERLAY_HEIGHT  320.f
-#define PAN_TIMING      0.5f
+//#define PAN_TIMING      0.5f
 
 @interface ILCameraViewController ()
 {
@@ -38,19 +38,15 @@
 }
 @property (strong, nonatomic) ILNavBarView *navBarView;
 
-//@property (strong, nonatomic) GPUImageVideoCamera *videoCamera;
-//@property (strong, nonatomic) GPUImageView *videoView;
-
 @property (strong, nonatomic) ILVideoComposition *composition;
 
 @property (strong, nonatomic) UIView *controlView;
 @property (strong, nonatomic) UIButton *btnDelete;
 @property (strong, nonatomic) UIButton *btnRecord;
 @property (strong, nonatomic) UIButton *btnCamera;
-//@property (strong, nonatomic) ILRecordProgressView *progressView;
+@property (strong, nonatomic) UIButton *btnAlbums;
 
-//@property (strong, nonatomic) ILPhotosViewController *photosView;
-@property (strong, nonatomic) ILAlbumViewController *albumView;
+//@property (strong, nonatomic) ILAlbumViewController *albumView;
 
 @end
 
@@ -58,7 +54,7 @@
 
 - (void)dealloc
 {
-    [self removeSelectView];
+//    [self removeSelectView];
 }
 
 - (void)viewDidLoad {
@@ -68,7 +64,7 @@
     [self createCameraView];
     [self createNavBar];
     
-    [self createSelectView];
+//    [self createSelectView];
 
 }
 
@@ -114,6 +110,13 @@
     [_btnCamera setImage:[UIImage imageNamed:@"camera"] forState:UIControlStateNormal];
     [_btnCamera addTarget:self action:@selector(btnCameraPressed:) forControlEvents:UIControlEventTouchUpInside];
     [_controlView addSubview:_btnCamera];
+    _btnCamera.hidden = YES;
+    
+    _btnAlbums = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_btnAlbums setFrame:CGRectMake(IL_SCREEN_W - 90, controlHeight/2 - 26, 64, 52)];
+    [_btnAlbums setImage:[UIImage imageNamed:@"camera"] forState:UIControlStateNormal];
+    [_btnAlbums addTarget:self action:@selector(btnAlbumsPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [_controlView addSubview:_btnAlbums];
 }
 - (void)createCameraView
 {
@@ -184,6 +187,10 @@
     [videoCamera rotateCamera];
 }
 
+- (void)btnAlbumsPressed:(UIButton *)sender
+{
+    [self performSegueWithIdentifier:@"photos" sender:self];
+}
 
 #pragma mark
 
@@ -209,7 +216,7 @@
         movieWriter.encodingLiveVideo = YES;
         
         videoTake = [[ILVideoClip alloc] init];
-        videoTake.videoPath = movieURL;
+        videoTake.videoURL = movieURL;
         [_composition addVideoClip: videoTake];
         
         [videoCamera addTarget: movieWriter];
@@ -272,98 +279,98 @@
     NSArray *clips = [[_composition getVideoClips] copy];
     [_composition clearVideoClips];
     for (ILVideoClip *clip in clips) {
-        [DATASTORE addMovieClip:[clip videoAsset]];
+        [IL_DATA addClipURL:[clip videoURL]];
     }
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-#pragma mark -- selectView ---
-
-- (void)removeSelectView
-{
-    [_albumView removeFromParentViewController];
-    _albumView = nil;
-}
-
-- (void)createSelectView
-{
-
-    if (_albumView == nil) {
-        _albumView = [[ILAlbumViewController alloc] init];
-//        _albumView = [[ILAlbumViewController alloc] initWithFrame:CGRectMake(0, IL_PLAYER_H, IL_SCREEN_W, IL_SCREEN_H)];
-        //add the overlay as child view controller
-        [self addChildViewController:_albumView];
-        [self.view addSubview:_albumView.view];
-        
-        [_albumView didMoveToParentViewController:self];
-    }
-
-    selectPanGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(toggleSelectView:)];
-    [selectPanGesture setDelegate:self];
-    [_albumView.view  addGestureRecognizer:selectPanGesture];
-    
-//    UITapGestureRecognizer *selectTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapSelectVC:)];
-//    [selectTapGesture setDelegate:self];
-//    [_photosView.view addGestureRecognizer:selectTapGesture];
-    
-}
-
-
-- (void)tapSelectVC:(id)sender
-{
-    
-}
-
--(void)toggleSelectView:(id)sender
-{
-    UIGestureRecognizerState state = [(UIPanGestureRecognizer *) sender state];
-    if (state == UIGestureRecognizerStateBegan) {
-        
-    } else if (state == UIGestureRecognizerStateChanged) {
-        
-        [self changedTranslateSelectView:sender];
-        [self resetFinalPoint:sender];
-        
-    } else if (state == UIGestureRecognizerStateEnded) {
-        [self endedTranslateSelectView:sender];
-    }
-}
-
-- (void)changedTranslateSelectView:(id)sender
-{
-    CGPoint translatedPoint = [(UIPanGestureRecognizer *) sender translationInView:self.view];
-    CGRect selectFrame = _albumView.view.frame ;
-    selectFrame.origin.y = selectFrame.origin.y + translatedPoint.y;
-    _albumView.view.frame = selectFrame;
-    [sender setTranslation:CGPointZero inView:self.view];
-}
-
-- (void)endedTranslateSelectView:(id)sender
-{
-    [UIView animateWithDuration:PAN_TIMING delay:0.0f options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        
-        CGRect selectFrame = _albumView.view.frame;
-        selectFrame.origin = finalPoint;
-        _albumView.view.frame = selectFrame;
-        [sender setTranslation:CGPointZero inView:self.view];
-        
-    } completion:^(BOOL finished) {
-        
-        
-    }];
-}
-
-- (void)resetFinalPoint:(id)sender
-{
-    CGPoint velocity = [(UIPanGestureRecognizer *)sender velocityInView:self.view];
-    if (velocity.y < IL_PLAYER_H) {
-        finalPoint = CGPointMake(0, - IL_PLAYER_H/2);
-    } else if (velocity.y > IL_SCREEN_H*3/4) {
-        finalPoint = CGPointMake(0, IL_SCREEN_H);
-    }else {
-        finalPoint = CGPointMake(0, IL_PLAYER_H);
-    }
-}
+//#pragma mark -- selectView ---
+//
+//- (void)removeSelectView
+//{
+//    [_albumView removeFromParentViewController];
+//    _albumView = nil;
+//}
+//
+//- (void)createSelectView
+//{
+//
+//    if (_albumView == nil) {
+//        _albumView = [[ILAlbumViewController alloc] init];
+////        _albumView = [[ILAlbumViewController alloc] initWithFrame:CGRectMake(0, IL_PLAYER_H, IL_SCREEN_W, IL_SCREEN_H)];
+//        //add the overlay as child view controller
+//        [self addChildViewController:_albumView];
+//        [self.view addSubview:_albumView.view];
+//        
+//        [_albumView didMoveToParentViewController:self];
+//    }
+//
+//    selectPanGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(toggleSelectView:)];
+//    [selectPanGesture setDelegate:self];
+//    [_albumView.view  addGestureRecognizer:selectPanGesture];
+//    
+////    UITapGestureRecognizer *selectTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapSelectVC:)];
+////    [selectTapGesture setDelegate:self];
+////    [_photosView.view addGestureRecognizer:selectTapGesture];
+//    
+//}
+//
+//
+//- (void)tapSelectVC:(id)sender
+//{
+//    
+//}
+//
+//-(void)toggleSelectView:(id)sender
+//{
+//    UIGestureRecognizerState state = [(UIPanGestureRecognizer *) sender state];
+//    if (state == UIGestureRecognizerStateBegan) {
+//        
+//    } else if (state == UIGestureRecognizerStateChanged) {
+//        
+//        [self changedTranslateSelectView:sender];
+//        [self resetFinalPoint:sender];
+//        
+//    } else if (state == UIGestureRecognizerStateEnded) {
+//        [self endedTranslateSelectView:sender];
+//    }
+//}
+//
+//- (void)changedTranslateSelectView:(id)sender
+//{
+//    CGPoint translatedPoint = [(UIPanGestureRecognizer *) sender translationInView:self.view];
+//    CGRect selectFrame = _albumView.view.frame ;
+//    selectFrame.origin.y = selectFrame.origin.y + translatedPoint.y;
+//    _albumView.view.frame = selectFrame;
+//    [sender setTranslation:CGPointZero inView:self.view];
+//}
+//
+//- (void)endedTranslateSelectView:(id)sender
+//{
+//    [UIView animateWithDuration:PAN_TIMING delay:0.0f options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+//        
+//        CGRect selectFrame = _albumView.view.frame;
+//        selectFrame.origin = finalPoint;
+//        _albumView.view.frame = selectFrame;
+//        [sender setTranslation:CGPointZero inView:self.view];
+//        
+//    } completion:^(BOOL finished) {
+//        
+//        
+//    }];
+//}
+//
+//- (void)resetFinalPoint:(id)sender
+//{
+//    CGPoint velocity = [(UIPanGestureRecognizer *)sender velocityInView:self.view];
+//    if (velocity.y < IL_PLAYER_H) {
+//        finalPoint = CGPointMake(0, - IL_PLAYER_H/2);
+//    } else if (velocity.y > IL_SCREEN_H*3/4) {
+//        finalPoint = CGPointMake(0, IL_SCREEN_H);
+//    }else {
+//        finalPoint = CGPointMake(0, IL_PLAYER_H);
+//    }
+//}
 
 
 @end

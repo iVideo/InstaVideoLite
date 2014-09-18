@@ -11,23 +11,14 @@
 
 @class ILClipDockView;
 
-@protocol ILClipDockViewDelegate <NSObject>
-
-@required
-
-- (void)dockView:(ILClipDockView *)dockView didSelectAtIndex:(NSUInteger)idx;
-- (void)dockView:(ILClipDockView *)dockView didDeleteAtIndex:(NSUInteger)idx;
-- (void)dockView:(ILClipDockView *)dockView didMoveToIndex:(NSUInteger)idx;
-
-@end
-
 @interface ILClipDockView : UIView
-<UITableViewDelegate>
 
 - (instancetype)initWithFrame:(CGRect)frame;
 
-- (void)initialize;
+- (void)updateDockView;
 
-//- (void)addLastAsset;
+- (void)removeSelectedItem;
+- (void)replaceSelectedItem:(NSURL *)url;
+- (NSURL *)getSelectedItem;
 
 @end

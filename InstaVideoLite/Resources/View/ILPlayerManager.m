@@ -42,13 +42,13 @@
     return self;
 }
 
-//- (void)setPlayerItemWithURLs:(NSArray *)urls
-//{
-//    for (NSURL *url in urls) {
-//        [_playItems addObject:[AVPlayerItem playerItemWithURL:url]];
-//    }
-//    _queuePlayer = [AVQueuePlayer queuePlayerWithItems:[NSArray arrayWithArray:_playItems]];
-//}
+- (void)setPlayerItemWithURLs:(NSArray *)urls
+{
+    for (NSURL *url in urls) {
+        [_playItems addObject:[AVPlayerItem playerItemWithURL:url]];
+    }
+    _queuePlayer = [AVQueuePlayer queuePlayerWithItems:[NSArray arrayWithArray:_playItems]];
+}
 
 //- (void)setPlayerItemWithPaths:(NSArray *)paths
 //{
@@ -58,13 +58,13 @@
 //    _queuePlayer = [AVQueuePlayer queuePlayerWithItems:[NSArray arrayWithArray:_playItems]];
 //}
 //
-- (void)setPlayerItemWithAssets:(NSArray *)assets
-{
-    for (AVAsset *asset in assets) {
-        [_playItems addObject:[AVPlayerItem playerItemWithAsset:asset]];
-    }
-    _queuePlayer = [AVQueuePlayer queuePlayerWithItems:[NSArray arrayWithArray:_playItems]];
-}
+//- (void)setPlayerItemWithAssets:(NSArray *)assets
+//{
+//    for (AVAsset *asset in assets) {
+//        [_playItems addObject:[AVPlayerItem playerItemWithAsset:asset]];
+//    }
+//    _queuePlayer = [AVQueuePlayer queuePlayerWithItems:[NSArray arrayWithArray:_playItems]];
+//}
 
 - (void)playWithIndex:(NSInteger)index
 {
