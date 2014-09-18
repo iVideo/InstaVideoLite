@@ -7,18 +7,17 @@
 //
 
 #import "ILTrimViewController.h"
-#import <MediaPlayer/MediaPlayer.h>
-#import "ILNavBarView.h"
+
+#define THUMB_H 88.f
+#define THUMB_W 60.f
 
 @interface ILTrimViewController ()
 {
     CGFloat midHeight;
     AVAssetImageGenerator *generator;
-    
-    NSURL *assetURL;
 }
 
-@property (strong, nonatomic) UIView *topView; //Container
+@property (strong, nonatomic) UIView *topView;
 @property (strong, nonatomic) UIScrollView *playerView;
 @property (strong, nonatomic) MPMoviePlayerController *moviePlayer;
 @property (strong, nonatomic) UIButton *btnPlay;
@@ -26,14 +25,20 @@
 @property (strong, nonatomic) UIView *toggleView;
 
 @property (strong, nonatomic) UIView *midView;
-@property (strong, nonatomic) UIView *controlView;
+
 @property (strong, nonatomic) UIImageView *timespanView;
 @property (strong, nonatomic) UIScrollView *scrollView;
+
+@property (strong, nonatomic) UIView *controlView;
+@property (strong, nonatomic) UIView *leftView;
 @property (strong, nonatomic) UIButton *leftBar;
+@property (strong, nonatomic) UIView *rightView;
 @property (strong, nonatomic) UIButton *rightBar;
 @property (strong, nonatomic) UIButton *trackBar;
 
 @property (strong, nonatomic) ILNavBarView *navBarView;
+
+@property (strong, nonatomic) NSURL *movieURL;
 
 @end
 
@@ -82,7 +87,7 @@
 
 - (void)initialization
 {
-    assetURL = [IL_DATA popURL];
+    _movieURL = [IL_DATA popURL];
 }
 
 #pragma mark - midView
@@ -105,29 +110,38 @@
 
 - (void)createFrameView
 {
-    _controlView = [[UIView alloc] initWithFrame:CGRectMake(0.f, midHeight/2 - 57.f, IL_SCREEN_W, 88.f)];
-    _controlView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"blue_btn"]];
+    UIColor *bgColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"blue_btn"]];
+    _controlView = [[UIView alloc] initWithFrame:CGRectMake(0.f, midHeight/2 - 57.f, IL_SCREEN_W, THUMB_H)];
+    _controlView.backgroundColor = bgColor;
     [_midView addSubview:_controlView];
     
-    _trackBar = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_trackBar setFrame:CGRectMake(22.f, midHeight/2 - 65.f, 4.f, 104.f)];
-    [_trackBar setImage:[UIImage imageNamed:@"compose_big_btn"] forState:UIControlStateNormal];
-    [_midView insertSubview:_trackBar aboveSubview:_controlView];
-    
-    _leftBar = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_leftBar setFrame:CGRectMake(10.f, 30.f, 4.f, 28.f)];
-    [_leftBar setImage:[UIImage imageNamed:@"compose_small_btn"] forState:UIControlStateNormal];
-    [_controlView addSubview:_leftBar];
-    
-    _rightBar = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_rightBar setFrame:CGRectMake(IL_SCREEN_W - 14.f, 30.f, 4.f, 28.f)];
-    [_rightBar setImage:[UIImage imageNamed:@"compose_small_btn"] forState:UIControlStateNormal];
-    [_controlView addSubview:_rightBar];
-    
-    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(20.f, 1.f, IL_SCREEN_W - 40.f, 86.f)];
+    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(10.f, 0.f, IL_SCREEN_W - 20.f, THUMB_H)];
     _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.showsVerticalScrollIndicator = NO;
-    [_controlView insertSubview:_scrollView atIndex:0 ];
+    [_controlView addSubview:_scrollView];
+    
+    _leftView = [[UIView alloc] initWithFrame:CGRectMake(.0f, .0f, 10.f, THUMB_H)];
+    _leftView.backgroundColor = bgColor;
+    [_controlView addSubview:_leftView];
+    
+    _rightView = [[UIView alloc] initWithFrame:CGRectMake(IL_SCREEN_W - 10.f, .0f, 10.f, THUMB_H)];
+    _rightView.backgroundColor = bgColor;
+    [_controlView addSubview:_rightView];
+    
+    _leftBar = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_leftBar setFrame:CGRectMake(_leftView.frame.size.width - 6.f, 30.f, 4.f, 28.f)];
+    [_leftBar setImage:[UIImage imageNamed:@"compose_small_btn"] forState:UIControlStateNormal];
+    [_leftView addSubview:_leftBar];
+    
+    _rightBar = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_rightBar setFrame:CGRectMake(3.f, 30.f, 4.f, 28.f)];
+    [_rightBar setImage:[UIImage imageNamed:@"compose_small_btn"] forState:UIControlStateNormal];
+    [_rightView addSubview:_rightBar];
+    
+    _trackBar = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_trackBar setFrame:CGRectMake(20.f, midHeight/2 - 65.f, 4.f, 104.f)];
+    [_trackBar setImage:[UIImage imageNamed:@"compose_big_btn"] forState:UIControlStateNormal];
+    [_midView insertSubview:_trackBar aboveSubview:_controlView];
 
 }
 
@@ -145,26 +159,32 @@
 
 - (void)createScrollView
 {
-    AVAsset *asset = [AVAsset assetWithURL:assetURL];
-    //300px 15sec
-    Float64 rectsize = 88.f;
-    generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    AVAsset *asset = [AVAsset assetWithURL:_movieURL];
+    
+    //300px / 15sec = 20px/sec
     Float64 duration = CMTimeGetSeconds([asset duration]);
-    CGFloat contentsize = rectsize * ceilf(duration) ;
-    generator.maximumSize = CGSizeMake(contentsize, rectsize);
+    int picnum = ceilf(duration / 5);// 1pic/5sec
+    CGFloat contentsize = THUMB_W * picnum; //300px/5pic
+    
+    generator = [[AVAssetImageGenerator alloc] initWithAsset:[AVAsset assetWithURL:_movieURL]];
+    generator.maximumSize = CGSizeMake(contentsize, THUMB_H);
     generator.appliesPreferredTrackTransform = YES;
-    CMTime actualTime;
-    NSError *error;
-    for (int i = 0; i < duration; i++) {
+    
+    CMTime actualTime;NSError *error;
+    for (int i = 0; i <= picnum; i++) {
         CMTime time = CMTimeMakeWithSeconds(i, 600);
         CGImageRef imgRef = [generator copyCGImageAtTime:time actualTime:&actualTime error:&error];
         UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithCGImage:imgRef]];
         CGImageRelease(imgRef);
-        imageView.frame = CGRectMake(i * rectsize, 1.f, rectsize-1.f, rectsize-1.f);
+        imageView.frame = CGRectMake(i * THUMB_W + 1.f, 2.f, THUMB_W - 1.f, THUMB_H - 4.f);
         [_scrollView addSubview:imageView];
     }
 
-    [_scrollView setContentSize:CGSizeMake(contentsize, rectsize - 2)];
+    [_scrollView setContentSize:CGSizeMake(contentsize, THUMB_H)];
+    
+    [_controlView bringSubviewToFront:_leftView];
+    [_controlView bringSubviewToFront:_rightView];
+    [_controlView bringSubviewToFront:_trackBar];
 }
 
 #pragma mark - panGesture
@@ -179,16 +199,28 @@
             break;
         case UIGestureRecognizerStateChanged:
         {
-            if (view.center.x < 6) {
-                return;
-            }
-            if (view.center.x > IL_SCREEN_W - 6) {
-                return;
-            }
+            CGPoint offset = [recognizer translationInView:_leftView];
+            _leftView.center = CGPointMake(_leftView.center.x + offset.x, _leftView.center.y);
+            [recognizer setTranslation:CGPointZero inView:_leftView];
             
-            CGPoint offset = [recognizer translationInView:view];
-            view.center = CGPointMake(view.center.x + offset.x, view.center.y);
-            [recognizer setTranslation:CGPointZero inView:view];
+            CGFloat leftWidth = _leftView.frame.size.width + offset.x;
+            _leftView.frame = CGRectMake(.0f, .0f, leftWidth, THUMB_H);
+            view.frame = CGRectMake(leftWidth - 6.f, 30.f, 4.f, 28.f);
+            _trackBar.frame = CGRectMake(leftWidth, midHeight/2 - 65.f, 4.f, 104.f);
+            
+            if (_rightView.center.x - _leftView.frame.size.width < 60.f) {
+                _leftView.frame = CGRectMake(.0f, .0f, IL_SCREEN_W - _rightView.center.x -70.f, THUMB_H);
+                return;
+            }
+            if (_leftView.frame.size.width < 9.f) {
+                _leftView.frame = CGRectMake(.0f, .0f, 10.f, THUMB_H);
+                return;
+            }
+            if (_leftView.frame.size.width > IL_SCREEN_W - 80.f) {
+                _leftView.frame = CGRectMake(.0f, .0f, IL_SCREEN_W -70.f, THUMB_H);
+                return;
+            }
+        
         }
             break;
         case UIGestureRecognizerStateEnded:
@@ -205,7 +237,7 @@
 
 - (void)panRightBar:(UIPanGestureRecognizer *)recognizer
 {
-    UIView *view = recognizer.view;
+//    UIView *view = recognizer.view;
     switch (recognizer.state) {
         case UIGestureRecognizerStateBegan:
         {
@@ -214,16 +246,29 @@
             break;
         case UIGestureRecognizerStateChanged:
         {
-            if (view.center.x < 6) {
-                return;
-            }
-            if (view.center.x > IL_SCREEN_W - 6) {
+            CGPoint offset = [recognizer translationInView:_rightView];
+            _rightView.center = CGPointMake(_rightView.center.x + offset.x, _rightView.center.y);
+            [recognizer setTranslation:CGPointZero inView:_rightView];
+            
+            CGFloat rightWidth = _rightView.frame.size.width - offset.x;
+            _rightView.frame = CGRectMake(IL_SCREEN_W - rightWidth, .0f, rightWidth, THUMB_H);
+            //            view.frame = CGRectMake(6.f, 30.f, 4.f, 28.f);
+            //            _trackBar.frame = CGRectMake(IL_SCREEN_W - rightWidth, midHeight/2 - 65.f, 4.f, 104.f);
+            
+            if (_rightView.center.x - _leftView.frame.size.width < 60.f) {
+                _rightView.center = CGPointMake(_rightView.center.x - 10.f, _rightView.center.y);
                 return;
             }
             
-            CGPoint offset = [recognizer translationInView:view];
-            view.center = CGPointMake(view.center.x + offset.x, view.center.y);
-            [recognizer setTranslation:CGPointZero inView:view];
+            if (_rightView.center.x < 70.f) {
+                _rightView.center = CGPointMake(80.f, _rightView.center.y);
+                return;
+            }
+            
+            if (_rightView.center.x > IL_SCREEN_W - 11.f) {
+                _rightView.center = CGPointMake(IL_SCREEN_W - 10.f, _rightView.center.y);
+                return;
+            }
         }
             break;
         case UIGestureRecognizerStateEnded:
@@ -287,9 +332,7 @@
 
 - (void)createPlayerView
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"skateboarding" ofType:@"m4v"];
-    NSURL *url = [[NSURL alloc] initFileURLWithPath:path];
-    _moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:url];
+    _moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:_movieURL];
     [_moviePlayer.view setFrame:CGRectMake(0.f, 0.f, IL_PLAYER_W, IL_PLAYER_H)];
     [_moviePlayer setControlStyle:MPMovieControlStyleNone];
     [_moviePlayer setScalingMode:MPMovieScalingModeAspectFill];
@@ -334,6 +377,7 @@
     [_btnPlay setImage:[UIImage imageNamed:@"Pause"] forState:UIControlStateNormal];
     [_btnPlay setImage:[UIImage imageNamed:@"play"] forState:UIControlStateSelected];
     [_btnPlay addTarget:self action:@selector(btnPlayPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [_btnPlay setSelected:YES];
     [_topView addSubview:_btnPlay];
 }
 

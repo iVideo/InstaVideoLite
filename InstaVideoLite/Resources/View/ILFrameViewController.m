@@ -7,11 +7,8 @@
 //
 
 #import "ILFrameViewController.h"
-#import <MediaPlayer/MediaPlayer.h>
-#import "ILNavBarView.h"
 #import "ILFrameViewCell.h"
 #import "ILFrameGroupCell.h"
-#import "ILPlayerManager.h"
 #import "FCFileManager.h"
 
 @interface ILFrameViewController ()
@@ -27,21 +24,14 @@ UITableViewDataSource,UITableViewDelegate>
     
     int categoryIndex;
     int selectedIndex;
-    
-//    //需要优化为只保存地址在内存中，而不是整个Image对象，建议使用path的fastimagecache
-//    NSMutableDictionary *freeStickers;//Free
-//    //为加快显示速度，使用Image对象
-//    NSMutableDictionary *freeImgThumb;//Free
-//    
-//    NSMutableArray *categoryData;
-//    NSMutableArray *contentsData;
-//    NSMutableArray *imgThumbData;
 }
 
-@property (strong, nonatomic) UIView *topView; //Container
-@property (strong, nonatomic) UIView *toggleView;
-@property (strong, nonatomic) UIButton *btnPlay;
+@property (strong, nonatomic) UIView *topView;
+@property (strong, nonatomic) UIScrollView *playerView;
 @property (strong, nonatomic) MPMoviePlayerController *moviePlayer;
+@property (strong, nonatomic) UIButton *btnPlay;
+
+@property (strong, nonatomic) UIView *toggleView;
 @property (strong, nonatomic) UIImageView *imgPreview;
 
 @property (strong, nonatomic) UIView *midView;
@@ -55,14 +45,26 @@ UITableViewDataSource,UITableViewDelegate>
 @property (strong, nonatomic) NSMutableArray *images;   //source image
 @property (strong, nonatomic) NSMutableArray *thumbs;   //source thumb
 
+@property (strong, nonatomic) NSURL *movieURL;
+
 @end
 
 @implementation ILFrameViewController
 
--(void)dealloc
+- (void)dealloc
 {
-    
+    _moviePlayer = nil;
 }
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:MPMovieNaturalSizeAvailableNotification
+                                                  object:_moviePlayer];
+}
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -88,6 +90,7 @@ UITableViewDataSource,UITableViewDelegate>
 
 - (void)initialization
 {
+    _movieURL = [IL_DATA popURL];
     
     _groups = [[NSMutableDictionary alloc] initWithCapacity:5];
     _images = [[NSMutableArray alloc] initWithCapacity:20];
@@ -105,14 +108,6 @@ UITableViewDataSource,UITableViewDelegate>
     categoryIndex = 0;
     
     [self changeCategory];
-    
-    
-    
-//    WEBlurView *blurView = [[WEBlurView alloc]initWithFrame:CGRectMake(0, 320, 320, SCREEN_H-320-44)];
-//    [blurView setBlurColor:[UIColor blackColor]];
-//    [blurView setBlurAlpha:0.6f];
-//    blurView.alpha = 0.8f;
-//    [self.view addSubview:blurView];
     
     categoryIndex = 0;
     [self selectTableView];
@@ -278,9 +273,6 @@ UITableViewDataSource,UITableViewDelegate>
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     ILFrameGroupCell *cell = (ILFrameGroupCell *)[tableView dequeueReusableCellWithIdentifier:@"ILFrameGroupCell" forIndexPath:indexPath];
-    if (cell == nil) {
-        
-    }
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
     cell.backgroundView = nil;
     cell.backgroundColor = [UIColor clearColor];
@@ -344,17 +336,33 @@ UITableViewDataSource,UITableViewDelegate>
 
 - (void)createPlayerView
 {
-    _moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:[IL_DATA popURL]];
+    _moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:_movieURL];
+    [_moviePlayer.view setFrame:CGRectMake(0.f, 0.f, IL_PLAYER_W, IL_PLAYER_H)];
     [_moviePlayer setControlStyle:MPMovieControlStyleNone];
     [_moviePlayer setScalingMode:MPMovieScalingModeAspectFit];
-    [_moviePlayer setShouldAutoplay:YES];
-    [_moviePlayer.view setBackgroundColor:[UIColor lightGrayColor]];
-    [_moviePlayer.view setFrame:CGRectMake(0.f, 0.f, IL_PLAYER_W, IL_PLAYER_H)];
-    [_moviePlayer setScalingMode:MPMovieScalingModeAspectFill];
     [_moviePlayer setRepeatMode:MPMovieRepeatModeOne];
+    [_moviePlayer setShouldAutoplay:YES];
     [_moviePlayer prepareToPlay];
-    [_moviePlayer.view setCenter:_topView.center];
-    [_topView addSubview:_moviePlayer.view];
+    
+    _playerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.f, 0.f, IL_PLAYER_W, IL_PLAYER_H)];
+    [_playerView addSubview:_moviePlayer.view];
+    
+    [_topView addSubview:_playerView];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(movieNaturalSizeAvailable:) name:MPMovieNaturalSizeAvailableNotification object:_moviePlayer];
+}
+
+- (void)movieNaturalSizeAvailable:(NSNotification*)notification
+{
+    float height = _moviePlayer.naturalSize.height;
+    float width = _moviePlayer.naturalSize.width;
+    float ratio = MAX(IL_PLAYER_H / height, IL_PLAYER_W / width);
+    
+    [_moviePlayer.view setFrame:CGRectMake(0.f, 0.f, width*ratio, height*ratio)];
+    [_playerView setContentSize:_moviePlayer.view.frame.size];
+    [_playerView setScrollsToTop:NO];
+    [_playerView setCenter:_topView.center];
+    [_topView bringSubviewToFront:_btnPlay];
 }
 
 - (void)createPlayButton
@@ -366,20 +374,18 @@ UITableViewDataSource,UITableViewDelegate>
     [_btnPlay setImage:[UIImage imageNamed:@"Pause"] forState:UIControlStateNormal];
     [_btnPlay setImage:[UIImage imageNamed:@"play"] forState:UIControlStateSelected];
     [_btnPlay addTarget:self action:@selector(btnPlayPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [_moviePlayer.view addSubview:_btnPlay];
-    
-    [self.view addSubview:_moviePlayer.view];
+    [_btnPlay setSelected:YES];
+    [_topView addSubview:_btnPlay];
 }
 
 - (void)btnPlayPressed:(UIButton *)sender
 {
+    sender.selected = !sender.selected;
     if (!sender.selected) {
-        sender.selected = YES;
-        [_moviePlayer play];
+        [_moviePlayer pause];
         return;
     }
-    sender.selected = NO;
-    [_moviePlayer pause];
+    [_moviePlayer play];
 }
 
 - (void)createPreView

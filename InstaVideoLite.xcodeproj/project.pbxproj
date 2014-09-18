@@ -127,7 +127,6 @@
 		68E8BFEB19C80B4700D61814 /* ILAlbumGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8BFEA19C80B4700D61814 /* ILAlbumGroupCell.m */; };
 		68E8BFEE19C819E300D61814 /* ILAlbumHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8BFED19C819E300D61814 /* ILAlbumHeader.m */; };
 		68E8BFF319C885F800D61814 /* ILAlbumManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8BFF219C885F800D61814 /* ILAlbumManager.m */; };
-		68E8BFF819C8A69900D61814 /* ILPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8BFF719C8A69900D61814 /* ILPlayerView.m */; };
 		68E8BFFD19C9320100D61814 /* ILAlbumGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8BFFB19C9320100D61814 /* ILAlbumGroup.m */; };
 		68E8C00219C93F5200D61814 /* ILFrameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8C00019C93F5200D61814 /* ILFrameViewController.m */; };
 		68E8C00719C948C100D61814 /* ILFrameGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E8C00519C948C100D61814 /* ILFrameGroupCell.m */; };
@@ -160,8 +159,6 @@
 		68F60D6C19C20ED400F934A8 /* InstaVideoLiteTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60D6B19C20ED400F934A8 /* InstaVideoLiteTests.m */; };
 		68F60D9D19C28B1000F934A8 /* ILEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60D9C19C28B1000F934A8 /* ILEditorViewController.m */; };
 		68F60DA319C28D1500F934A8 /* ILClipDockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60DA219C28D1500F934A8 /* ILClipDockView.m */; };
-		68F60DA919C28FBD00F934A8 /* skateboarding.m4v in Resources */ = {isa = PBXBuildFile; fileRef = 68F60DA619C28FBD00F934A8 /* skateboarding.m4v */; };
-		68F60DAC19C296AD00F934A8 /* ILPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60DAB19C296AD00F934A8 /* ILPlayerManager.m */; };
 		68F60DAF19C29EB600F934A8 /* ILCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60DAE19C29EB600F934A8 /* ILCommon.m */; };
 		68F60DB819C2CCDC00F934A8 /* instavideo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 68F60DB619C2CCDC00F934A8 /* instavideo.xcdatamodeld */; };
 		68F60DBB19C2ECAA00F934A8 /* ILCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68F60DBA19C2ECAA00F934A8 /* ILCameraViewController.m */; };
@@ -308,8 +305,6 @@
 		68E8BFED19C819E300D61814 /* ILAlbumHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILAlbumHeader.m; sourceTree = "<group>"; };
 		68E8BFF119C885F800D61814 /* ILAlbumManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILAlbumManager.h; sourceTree = "<group>"; };
 		68E8BFF219C885F800D61814 /* ILAlbumManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILAlbumManager.m; sourceTree = "<group>"; };
-		68E8BFF619C8A69900D61814 /* ILPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILPlayerView.h; sourceTree = "<group>"; };
-		68E8BFF719C8A69900D61814 /* ILPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILPlayerView.m; sourceTree = "<group>"; };
 		68E8BFFA19C9320100D61814 /* ILAlbumGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILAlbumGroup.h; sourceTree = "<group>"; };
 		68E8BFFB19C9320100D61814 /* ILAlbumGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILAlbumGroup.m; sourceTree = "<group>"; };
 		68E8BFFF19C93F5200D61814 /* ILFrameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILFrameViewController.h; sourceTree = "<group>"; };
@@ -359,9 +354,6 @@
 		68F60D9C19C28B1000F934A8 /* ILEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILEditorViewController.m; sourceTree = "<group>"; };
 		68F60DA119C28D1500F934A8 /* ILClipDockView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILClipDockView.h; sourceTree = "<group>"; };
 		68F60DA219C28D1500F934A8 /* ILClipDockView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILClipDockView.m; sourceTree = "<group>"; };
-		68F60DA619C28FBD00F934A8 /* skateboarding.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = skateboarding.m4v; sourceTree = "<group>"; };
-		68F60DAA19C296AD00F934A8 /* ILPlayerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILPlayerManager.h; sourceTree = "<group>"; };
-		68F60DAB19C296AD00F934A8 /* ILPlayerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILPlayerManager.m; sourceTree = "<group>"; };
 		68F60DAD19C29EB600F934A8 /* ILCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILCommon.h; sourceTree = "<group>"; };
 		68F60DAE19C29EB600F934A8 /* ILCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILCommon.m; sourceTree = "<group>"; };
 		68F60DB019C29F2300F934A8 /* ILPreDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILPreDefine.h; sourceTree = "<group>"; };
@@ -727,7 +719,6 @@
 		68F60D7819C20F3300F934A8 /* Media */ = {
 			isa = PBXGroup;
 			children = (
-				68F60DA619C28FBD00F934A8 /* skateboarding.m4v */,
 			);
 			path = Media;
 			sourceTree = "<group>";
@@ -745,10 +736,6 @@
 			children = (
 				68E9137E19CAE46300C7A4F4 /* ILDataManager.h */,
 				68E9137F19CAE46300C7A4F4 /* ILDataManager.m */,
-				68E8BFF619C8A69900D61814 /* ILPlayerView.h */,
-				68E8BFF719C8A69900D61814 /* ILPlayerView.m */,
-				68F60DAA19C296AD00F934A8 /* ILPlayerManager.h */,
-				68F60DAB19C296AD00F934A8 /* ILPlayerManager.m */,
 				68E8BFF119C885F800D61814 /* ILAlbumManager.h */,
 				68E8BFF219C885F800D61814 /* ILAlbumManager.m */,
 				68E9137B19CA9F5700C7A4F4 /* ILClipView.h */,
@@ -905,7 +892,6 @@
 				68E8BF8719C6D5C300D61814 /* Other-Apps.png in Resources */,
 				68E8BF5519C6D5C300D61814 /* sound_mis.png in Resources */,
 				68E8BF3919C6D5C300D61814 /* add_video.png in Resources */,
-				68F60DA919C28FBD00F934A8 /* skateboarding.m4v in Resources */,
 				68E8BF3019C6D5C300D61814 /* delete_done@2x.png in Resources */,
 				68E8BF4C19C6D5C300D61814 /* btn_add_music-@2x.png in Resources */,
 				68E8BF3319C6D5C300D61814 /* home_choose_btn.png in Resources */,
@@ -1044,7 +1030,6 @@
 				68F60D9D19C28B1000F934A8 /* ILEditorViewController.m in Sources */,
 				68E8C00719C948C100D61814 /* ILFrameGroupCell.m in Sources */,
 				68E8BFEE19C819E300D61814 /* ILAlbumHeader.m in Sources */,
-				68F60DAC19C296AD00F934A8 /* ILPlayerManager.m in Sources */,
 				68E8BFF319C885F800D61814 /* ILAlbumManager.m in Sources */,
 				68F60D5219C20ED300F934A8 /* main.m in Sources */,
 				68E8C02219C959D400D61814 /* FCFileManager.m in Sources */,
@@ -1061,7 +1046,6 @@
 				68E9137D19CA9F5700C7A4F4 /* ILClipView.m in Sources */,
 				68F60DBB19C2ECAA00F934A8 /* ILCameraViewController.m in Sources */,
 				68E8BFFD19C9320100D61814 /* ILAlbumGroup.m in Sources */,
-				68E8BFF819C8A69900D61814 /* ILPlayerView.m in Sources */,
 				68E8BF9519C6DE1700D61814 /* ILRecordProgressView.m in Sources */,
 				68E9137919CA497400C7A4F4 /* ILShareViewController.m in Sources */,
 			);

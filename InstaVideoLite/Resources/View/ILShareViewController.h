@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ILPreDefine.h"
 
 @interface ILShareViewController : UIViewController
 

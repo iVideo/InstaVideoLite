@@ -8,15 +8,11 @@
 
 #import "ILCameraViewController.h"
 
-//#import "ILPhotosViewController.h"
-//#import "ILAlbumViewController.h"
 #import "ILRecordProgressView.h"
 #import "ILVideoComposition.h"
 #import "ILVideoClip.h"
-#import "ILNavBarView.h"
-#import "GPUImage.h"
 
-#import "SVProgressHUD.h"
+#import "GPUImage.h"
 
 //#define OVERLAY_HEIGHT  320.f
 //#define PAN_TIMING      0.5f

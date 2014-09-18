@@ -30,10 +30,28 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="8Sk-tR-PRa"/>
+                    <connections>
+                        <segue destination="c0U-zF-V6U" kind="push" identifier="share" id="VhN-UX-gLF"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hus-tk-G9m" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1426" y="-735"/>
+        </scene>
+        <!--Share View Controller-->
+        <scene sceneID="qPT-JG-JQk">
+            <objects>
+                <viewController id="c0U-zF-V6U" customClass="ILShareViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="6nA-Lm-wec">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="qf9-V5-Vi5"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kuO-7V-ycT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1867" y="-735"/>
         </scene>
         <!--Editor View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -133,6 +151,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="hwJ-ZE-zbD"/>
+        <segue reference="oDQ-8F-YuL"/>
     </inferredMetricsTieBreakers>
 </document>

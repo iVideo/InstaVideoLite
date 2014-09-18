@@ -7,7 +7,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ILShareViewController">
             <connections>
-                <outlet property="btnCancel" destination="3Jv-pS-Smo" id="8c3-Tv-opt"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -70,9 +69,6 @@
                             <state key="normal" image="Cancle.png">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
-                            <connections>
-                                <action selector="btnCancelPressed:" destination="-1" eventType="touchUpInside" id="6iq-At-kzi"/>
-                            </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l0a-gP-n5T">
                             <rect key="frame" x="167" y="160" width="128" height="35"/>

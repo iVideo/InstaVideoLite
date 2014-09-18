@@ -11,9 +11,9 @@
 
 #import "ILDataStore.h"
 #import <AVFoundation/AVFoundation.h>
+#import <MediaPlayer/MediaPlayer.h>
+#import "ILNavBarView.h"
 #import "ILDataManager.h"
-#import "ILPlayerManager.h"
-#import "ILAlbumManager.h"
 #import "SVProgressHUD.h"
 
 //#define IL_SCREEN_BOUNDS    [[UIScreen mainScreen] bounds]

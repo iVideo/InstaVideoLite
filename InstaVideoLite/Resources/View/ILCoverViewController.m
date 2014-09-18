@@ -7,22 +7,24 @@
 //
 
 #import "ILCoverViewController.h"
-#import <MediaPlayer/MediaPlayer.h>
-#import "ILNavBarView.h"
-#import "ILShareViewController.h"
 
+#define THUMB_H 78.f
+#define THUMB_W 39.f
+
+#define COVER_H 92.f
+#define COVER_W 92.f
 
 @interface ILCoverViewController ()
 {
-    NSString *path;
-    
     CGFloat midHeight;
     
     AVAssetImageGenerator *generator;
     NSMutableArray *images;
+    
+    int picnum;
 }
 
-@property (strong, nonatomic) UIView *topView; //Container
+@property (strong, nonatomic) UIView *topView;
 @property (strong, nonatomic) UIScrollView *playerView;
 @property (strong, nonatomic) MPMoviePlayerController *moviePlayer;
 @property (strong, nonatomic) UIButton *btnPlay;
@@ -33,6 +35,8 @@
 @property (strong, nonatomic) UIImageView *postImage;
 
 @property (strong, nonatomic) ILNavBarView *navBarView;
+
+@property (strong, nonatomic) NSURL *movieURL;
 
 @end
 
@@ -53,6 +57,12 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:MPMovieNaturalSizeAvailableNotification
                                                   object:_moviePlayer];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [SVProgressHUD dismiss];
 }
 
 - (void)viewDidLoad {
@@ -76,8 +86,7 @@
 - (void)initialization
 {
     images = [[NSMutableArray alloc] initWithCapacity:1];
-    
-    path = [[NSBundle mainBundle] pathForResource:@"skateboarding" ofType:@"m4v"];
+    _movieURL = [IL_DATA popURL];
 }
 
 #pragma mark - MidView
@@ -96,48 +105,49 @@
 
 - (void)createCoverView
 {
-    _coverView = [[UIView alloc] initWithFrame:CGRectMake(.0f, midHeight/2 - 39.f, IL_SCREEN_W, 78.f)];
+    _coverView = [[UIView alloc] initWithFrame:CGRectMake(THUMB_W/2, midHeight/2 - THUMB_H/2, IL_SCREEN_W - THUMB_W, THUMB_H)];
     [_midView addSubview:_coverView];
     
     _maskView = [[UIView alloc] initWithFrame:_coverView.frame];
-    _maskView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.6];
+    _maskView.backgroundColor = [UIColor colorWithWhite:.2f alpha:0.8f];
     [_midView insertSubview:_maskView aboveSubview:_coverView];
     
 }
 
 - (void)generateImages
 {
-    Float64 rect_h = 78.f;
+    Float64 view_w = IL_SCREEN_W - THUMB_H;
     
-    AVAsset *asset = [AVAsset assetWithURL:[[NSURL alloc] initFileURLWithPath:path]];
+    AVAsset *asset = [AVAsset assetWithURL:_movieURL];
     generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
     generator.appliesPreferredTrackTransform = YES;
-    generator.maximumSize = CGSizeMake(IL_SCREEN_W - 2.f, rect_h - 2.f);
-    Float64 duration = CMTimeGetSeconds([asset duration]);
-    Float64 rect_w = IL_SCREEN_W / ceilf(duration);
+    generator.maximumSize = CGSizeMake(view_w, THUMB_H - 2.f);
     
-    CMTime actualTime;
-    NSError *error;
-    for (int i = 0; i <= duration; i++) {
-        CMTime time = CMTimeMakeWithSeconds(i, 600);
+    Float64 duration = CMTimeGetSeconds([asset duration]);
+    picnum = ceilf(view_w / (THUMB_W/2));
+    
+    CMTime actualTime;NSError *error;
+    for (int i = 0; i <= picnum; i++) {
+        CMTime time = CMTimeMakeWithSeconds(i * duration/picnum, 600);
         CGImageRef imgRef = [generator copyCGImageAtTime:time actualTime:&actualTime error:&error];
         UIImage *image = [UIImage imageWithCGImage:imgRef];CGImageRelease(imgRef);[images addObject:image];
         UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-        imageView.frame = CGRectMake(i * rect_w + 1.f, 1.f, rect_w - 2.f, rect_h - 2.f);
+        imageView.frame = CGRectMake(i * THUMB_W/2 + 3.f, 1.f, THUMB_W/2 - 1.f, THUMB_H - 2.f);
         [_coverView addSubview:imageView];
     }
 }
 
 - (void)createPostImage
 {
-    CGImageRef postRef = [generator copyCGImageAtTime:kCMTimeZero actualTime:nil error:nil];
-    _postImage = [[UIImageView alloc] initWithImage:[UIImage imageWithCGImage:postRef]];
-    [_postImage setFrame:CGRectMake(.0f, midHeight/2 - 46.f, 92.f, 92.f)];
-    _postImage.userInteractionEnabled = YES;
-    [_midView insertSubview:_postImage aboveSubview:_maskView];
-    CGImageRelease(postRef);
+    _postImage = [[UIImageView alloc] initWithImage:[images firstObject]];
+    [_postImage setFrame:CGRectMake(.0f, midHeight/2 - COVER_H/2, COVER_W, COVER_H)];
+    [_midView addSubview:_postImage];
+    
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panPostImage:)];
     [_postImage addGestureRecognizer:panGesture];
+    _postImage.userInteractionEnabled = YES;
+    
+    [_midView bringSubviewToFront:_postImage];
 }
 
 - (void)panPostImage:(UIPanGestureRecognizer *)recognizer
@@ -154,22 +164,39 @@
             CGPoint offset = [recognizer translationInView:view];
             view.center = CGPointMake(view.center.x + offset.x, view.center.y);
             [recognizer setTranslation:CGPointZero inView:view];
-            
+            [self updatePostImage:view.center.x];
         }
             break;
         case UIGestureRecognizerStateEnded:
         {
-            if (view.center.x < 49.f) {
-                view.center = CGPointMake(49.f, view.center.y);
-            }else if (view.center.x > IL_SCREEN_W - 49.f)
+            if (view.center.x < COVER_W/2) {
+                view.center = CGPointMake(COVER_W/2, view.center.y);
+                [self updatePostImage:view.center.x];
+            }else if (view.center.x > IL_SCREEN_W - COVER_W/2)
             {
-                view.center = CGPointMake(IL_SCREEN_W - 49.f, view.center.y);
+                view.center = CGPointMake(IL_SCREEN_W - COVER_W/2, view.center.y);
+                [self updatePostImage:view.center.x];
             }
         }
             break;
             
         default:
             break;
+    }
+}
+
+- (void)updatePostImage:(CGFloat)centerX
+{
+    Float64 pos = centerX / (THUMB_W/2);
+    int num = ceilf(pos);
+    if (num < 0) {
+        num = 0;
+    }else if (num >= picnum)
+    {
+        num = picnum - 1;
+    }
+    if (_postImage.image != [images objectAtIndex:num]) {
+        _postImage.image = [images objectAtIndex:num];
     }
 }
 
@@ -187,8 +214,7 @@
 
 - (void)createPlayerView
 {
-    NSURL *url = [[NSURL alloc] initFileURLWithPath:path];
-    _moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:url];
+    _moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:_movieURL];
     [_moviePlayer.view setFrame:CGRectMake(0.f, 0.f, IL_PLAYER_W, IL_PLAYER_H)];
     [_moviePlayer setControlStyle:MPMovieControlStyleNone];
     [_moviePlayer setScalingMode:MPMovieScalingModeAspectFill];
@@ -239,6 +265,7 @@
     [_btnPlay setImage:[UIImage imageNamed:@"Pause"] forState:UIControlStateNormal];
     [_btnPlay setImage:[UIImage imageNamed:@"play"] forState:UIControlStateSelected];
     [_btnPlay addTarget:self action:@selector(btnPlayPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [_btnPlay setSelected:YES];
     [_topView addSubview:_btnPlay];
 }
 
@@ -270,9 +297,19 @@
 
 - (void)btnNextPressed:(UIButton *)sender
 {
-    ILShareViewController *shareView = [[ILShareViewController alloc] initWithNibName:@"ILShareViewController" bundle:nil];
-//    [self addChildViewController:shareView];
-    [self showViewController:shareView sender:self];
+    [self pushWithEditType:@"share"];
+}
+
+- (void)pushWithEditType:(NSString *)editType
+{
+    NSURL *url = _movieURL;
+    if (url == nil) {
+        return;
+    }
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
+    [IL_DATA pushURL:url];
+    [self performSegueWithIdentifier:editType sender:self];
+    
 }
 
 @end

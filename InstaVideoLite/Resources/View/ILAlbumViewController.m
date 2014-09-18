@@ -7,10 +7,7 @@
 //
 
 #import "ILAlbumViewController.h"
-#import <MediaPlayer/MediaPlayer.h>
-#import "ILPlayerManager.h"
 #import "ILAlbumManager.h"
-#import "ILNavBarView.h"
 
 #import "ILAlbumViewCell.h"
 #import "ILAlbumHeader.h"
@@ -31,13 +28,13 @@ UITableViewDataSource,UITableViewDelegate>
     NSString *groupName;
 }
 
-@property (strong, nonatomic) UIView *topView; //Container
+@property (strong, nonatomic) UIView *topView;
 @property (strong, nonatomic) UIScrollView *playerView;
 @property (strong, nonatomic) MPMoviePlayerController *moviePlayer;
 @property (strong, nonatomic) UIButton *btnPlay;
 @property (strong, nonatomic) UIView *toggleView;
 
-@property (strong, nonatomic) UIView *midView; //Container
+@property (strong, nonatomic) UIView *midView;
 @property (strong, nonatomic) UITableView *groupView;
 @property (strong, nonatomic) UICollectionView *albumView;
 
@@ -348,6 +345,7 @@ UITableViewDataSource,UITableViewDelegate>
     [_btnPlay setImage:[UIImage imageNamed:@"Pause"] forState:UIControlStateNormal];
     [_btnPlay setImage:[UIImage imageNamed:@"play"] forState:UIControlStateSelected];
     [_btnPlay addTarget:self action:@selector(btnPlayPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [_btnPlay setSelected:YES];
     [_topView addSubview:_btnPlay];
 }
 

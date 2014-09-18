@@ -7,10 +7,8 @@
 //
 
 #import "ILEditorViewController.h"
-#import "ILNavBarView.h"
-#import "ILClipDockView.h"
-#import "ILPlayerManager.h"
 #import "ILAlbumManager.h"
+#import "ILClipDockView.h"
 
 #define DOCK_H 72.0f
 #define DOCK_W 72.0f
@@ -22,7 +20,7 @@
 
 @property (strong, nonatomic) ILNavBarView *navBarView;
 
-@property (strong, nonatomic) ILPlayerView *playerView;
+//@property (strong, nonatomic) ILPlayerView *playerView;
 @property (strong, nonatomic) UIView *editorBar;
 @property (strong, nonatomic) UIButton *btnPlay;
 @property (strong, nonatomic) ILClipDockView *dockView;
@@ -120,54 +118,40 @@
     [self pushWithEditType:@"frame"];
 }
 
-- (void)pushWithEditType:(NSString *)editType
-{
-    NSURL *url = [_dockView getSelectedItem];
-    if (url == nil) {
-        return;
-    }
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
-    [IL_DATA pushURL:url];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        [self performSegueWithIdentifier:editType sender:self];
-    });
-
-}
-
 - (void)createPlayerView
 {
-    _playerView = [[ILPlayerView alloc] initWithFrame:CGRectMake(0, 0,IL_PLAYER_W, IL_PLAYER_H)];
-    [_playerView setBackgroundColor:[UIColor blackColor]];
-    [self.view addSubview:_playerView];
+//    _playerView = [[ILPlayerView alloc] initWithFrame:CGRectMake(0, 0,IL_PLAYER_W, IL_PLAYER_H)];
+//    [_playerView setBackgroundColor:[UIColor blackColor]];
+//    [self.view addSubview:_playerView];
     
-    CGRect btnPlayFrame = CGRectMake(IL_PLAYER_W/2 - 35, IL_PLAYER_H/2, 70, 70);
-    _btnPlay = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_btnPlay setFrame:btnPlayFrame];
-    [_btnPlay setImage:[UIImage imageNamed:@"Pause.png"] forState:UIControlStateNormal];
-    [_btnPlay setImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateHighlighted];
-    [_btnPlay addTarget:self action:@selector(playPause:) forControlEvents:UIControlEventTouchUpInside];
-    [_playerView addSubview:_btnPlay];
-    _btnPlay.center = _playerView.center;
-    
-    [PLAYER setPlayerItemWithURLs:[IL_DATA getClipURLs]];
-    [self.playerView.playerLayer setPlayer:PLAYER.queuePlayer];
-    
-    currentIndex = 0;
-    
-    [PLAYER play];
-    _btnPlay.selected = YES;
+//    CGRect btnPlayFrame = CGRectMake(IL_PLAYER_W/2 - 35, IL_PLAYER_H/2, 70, 70);
+//    _btnPlay = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [_btnPlay setFrame:btnPlayFrame];
+//    [_btnPlay setImage:[UIImage imageNamed:@"Pause.png"] forState:UIControlStateNormal];
+//    [_btnPlay setImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateHighlighted];
+//    [_btnPlay addTarget:self action:@selector(playPause:) forControlEvents:UIControlEventTouchUpInside];
+//    [_playerView addSubview:_btnPlay];
+//    _btnPlay.center = _playerView.center;
+//    
+//    [PLAYER setPlayerItemWithURLs:[IL_DATA getClipURLs]];
+//    [self.playerView.playerLayer setPlayer:PLAYER.queuePlayer];
+//    
+//    currentIndex = 0;
+//    
+//    [PLAYER play];
+//    _btnPlay.selected = YES;
 
 }
 
 - (void)playPause:(UIButton *)sender
 {
-    if (sender.selected == YES) {
-        sender.selected = NO;
-        [PLAYER pause];
-        return;
-    }
-    sender.selected = YES;
-    [PLAYER play];
+//    if (sender.selected == YES) {
+//        sender.selected = NO;
+//        [PLAYER pause];
+//        return;
+//    }
+//    sender.selected = YES;
+//    [PLAYER play];
 }
 
 - (void)createClipDock
@@ -194,7 +178,7 @@
 
 - (void)addClip:(UIButton *)sender
 {
-    [PLAYER pause];
+//    [PLAYER pause];
     [self camera:sender];
 }
 
@@ -213,7 +197,7 @@
 
 - (void)btnNextPressed:(UIButton *)sender
 {
-    [self performSegueWithIdentifier:@"compose" sender:self];
+    [self pushWithEditType:@"compose"];
 }
 
 - (void)album:(id)sender
@@ -231,8 +215,15 @@
     [self performSegueWithIdentifier:@"compose" sender:self];
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+- (void)pushWithEditType:(NSString *)editType
 {
+    NSURL *url = [_dockView getSelectedItem];
+    if (url == nil) {
+        return;
+    }
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
+    [IL_DATA pushURL:url];
+    [self performSegueWithIdentifier:editType sender:self];
     
 }
 
