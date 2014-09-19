@@ -36,6 +36,7 @@
         [_infoView addSubview:_iconView];
         
         _lblDuration = [[UILabel alloc]initWithFrame:CGRectMake(40.f, 4.f, 40.f, 22.f)];
+        _lblDuration.backgroundColor = [UIColor clearColor];
         _lblDuration.textAlignment = NSTextAlignmentCenter;
         _lblDuration.textColor = [UIColor whiteColor];
         [_lblDuration setFont:[UIFont systemFontOfSize:11.f]];

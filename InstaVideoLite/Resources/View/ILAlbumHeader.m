@@ -22,6 +22,7 @@
         [self addSubview:_btnBack];
         
         _lblGroup = [[UILabel alloc]initWithFrame:CGRectMake(40.f, 11.f, frame.size.width - 80.f, 22.f)];
+        _lblGroup.backgroundColor = [UIColor clearColor];
         _lblGroup.textAlignment = NSTextAlignmentCenter;
         _lblGroup.textColor = [UIColor whiteColor];
         [self addSubview:_lblGroup];

@@ -80,7 +80,7 @@
     [self.view addSubview:_controlView];
     
     //Progress view
-    progressView = [[ILRecordProgressView alloc] initWithFrame: CGRectMake(0, 0, IL_CAMERA_W, 10)];
+    progressView = [[ILRecordProgressView alloc] initWithFrame: CGRectMake(0, 0, IL_CAMERA_W - 10, 10)];
     [_controlView addSubview:progressView];
     
     //Record button

@@ -36,7 +36,10 @@
 #define iPhone5 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
 
 #define IL_ALBUM    [ILAlbumManager sharedInstance]
-#define PLAYER      [ILPlayerManager sharedInstance]
+//#define PLAYER      [ILPlayerManager sharedInstance]
 #define IL_DATA     [ILDataManager sharedInstance]
+
+#define IL_DURA     .3f
+
 
 #endif

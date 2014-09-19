@@ -21,9 +21,12 @@ UITableViewDataSource,UITableViewDelegate>
     CGFloat midHeight;
     
     CGPoint originTopViewPoint;
-    CGPoint originMidViewPoint;
     
-    CGPoint offsetTogglePoint;
+    CGRect originGroupFrame;
+    CGRect originAlbumFrame;
+    CGRect originMidViewFrame;
+    
+    CGPoint offsetPoint;
     
     NSString *groupName;
 }
@@ -119,10 +122,10 @@ UITableViewDataSource,UITableViewDelegate>
 - (void)createMidView
 {
     midHeight = IL_SCREEN_H - IL_PLAYER_H - IL_NAVBAR_H;
-    _midView = [[UIView alloc] initWithFrame:CGRectMake(.0f, IL_PLAYER_H,2*IL_SCREEN_W,midHeight)];
+    originMidViewFrame = CGRectMake(.0f, IL_PLAYER_H,2*IL_SCREEN_W,midHeight);
+    _midView = [[UIView alloc] initWithFrame:originMidViewFrame];
     _midView.backgroundColor = [UIColor blackColor];
     [self.view addSubview:_midView];
-    originMidViewPoint = _midView.center;
     
     [self createGroupView];
     [self createAlbumView];
@@ -132,12 +135,14 @@ UITableViewDataSource,UITableViewDelegate>
 
 - (void)createGroupView
 {
-    _groupView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, IL_SCREEN_W, midHeight) style:UITableViewStylePlain];
+    originGroupFrame = CGRectMake(0, 0, IL_SCREEN_W, midHeight);
+    _groupView = [[UITableView alloc]initWithFrame:originGroupFrame style:UITableViewStylePlain];
     [_groupView registerClass:[ILAlbumGroupCell class] forCellReuseIdentifier:@"ILAlbumGroupCell"];
     _groupView.dataSource = self;
     _groupView.delegate = self;
     _groupView.backgroundView = nil;
     _groupView.backgroundColor = [UIColor clearColor];
+    _groupView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [_midView addSubview:_groupView];
 }
 
@@ -149,7 +154,8 @@ UITableViewDataSource,UITableViewDelegate>
     flowLayout.minimumLineSpacing = .0f;
     flowLayout.minimumInteritemSpacing = 0.f;
     
-    _albumView = [[UICollectionView alloc] initWithFrame:CGRectMake(IL_SCREEN_W, 0, IL_SCREEN_W, midHeight) collectionViewLayout:flowLayout];
+    originAlbumFrame = CGRectMake(IL_SCREEN_W, 0, IL_SCREEN_W, midHeight);
+    _albumView = [[UICollectionView alloc] initWithFrame:originAlbumFrame collectionViewLayout:flowLayout];
     [_albumView registerClass:[ILAlbumHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"ILAlbumHeader"];
     [_albumView registerClass:[ILAlbumViewCell class] forCellWithReuseIdentifier:@"ILAlbumViewCell"];
     _albumView.delegate = self;
@@ -285,8 +291,9 @@ UITableViewDataSource,UITableViewDelegate>
 
 - (void)createTopView
 {
+    self.view.backgroundColor = [UIColor blackColor];
     _topView = [[UIView alloc] initWithFrame:CGRectMake(.0f, .0f, IL_PLAYER_W, IL_PLAYER_H)];
-    _topView.backgroundColor = [UIColor blackColor];
+    _topView.backgroundColor = [UIColor clearColor];
     originTopViewPoint = _topView.center;
     [self.view addSubview:_topView];
     
@@ -374,26 +381,32 @@ UITableViewDataSource,UITableViewDelegate>
     switch (recognizer.state) {
         case UIGestureRecognizerStateBegan:
         {
-            
+
         }
             break;
         case UIGestureRecognizerStateChanged:
         {
-            offsetTogglePoint = [recognizer translationInView:self.view];
-            [_topView setCenter:CGPointMake(_topView.center.x, _topView.center.y + offsetTogglePoint.y)];
-            [_midView setCenter:CGPointMake(_midView.center.x, _midView.center.y + offsetTogglePoint.y)];
+            offsetPoint = [recognizer translationInView:self.view];
+            CGFloat offsetY = offsetPoint.y;
+            [UIView animateWithDuration:IL_DURA animations:^{
+                [self resetViewHeight:offsetY];
+                [_topView setCenter:CGPointMake(_topView.center.x, _topView.center.y + offsetY)];
+                [_midView setCenter:CGPointMake(_midView.center.x, _midView.center.y + offsetY)];
+            }];
+            [self.view setNeedsDisplay];
             [recognizer setTranslation:CGPointZero inView:self.view];
+            
         }
             break;
         case UIGestureRecognizerStateEnded:
         {
-            if (offsetTogglePoint.y < 0 ) {
-                [_topView setCenter:CGPointMake(_topView.center.x, originTopViewPoint.y - IL_PLAYER_H/2 -80.f)];
-                [_midView setCenter:CGPointMake(_midView.center.x, originMidViewPoint.y - IL_PLAYER_H/2 -80.f)];
-            }else{
-                [_topView setCenter:CGPointMake(_topView.center.x,originTopViewPoint.y)];
-                [_midView setCenter:CGPointMake(_midView.center.x,originMidViewPoint.y)];
-            }
+            CGFloat offsetY = offsetPoint.y;
+            [UIView animateWithDuration:IL_DURA animations:^{
+                [self endedTopView:offsetY];
+                [self endedMidView:offsetY];
+            }];
+            [self.view bringSubviewToFront:_topView];
+            [self.view setNeedsDisplay];
         }
             break;
             
@@ -402,14 +415,108 @@ UITableViewDataSource,UITableViewDelegate>
     }
 }
 
-- (void)playPause:(UIButton *)sender
+- (void)resetViewHeight:(CGFloat)offsetY
 {
-    sender.selected = !sender.selected;
-    if (sender.selected == YES) {
-        [_moviePlayer play];
-        return;
+    [self resetAView:offsetY];
+    [self resetMView:offsetY];
+    [self resetGView:offsetY];
+}
+
+- (void)endedTopView:(CGFloat)offsetY
+{
+    CGFloat centerY;
+    if (offsetY < 0 ) {
+        CGFloat top_view_offset_y = 0.75 * _topView.frame.size.height;// 3/4 topView
+        centerY = originTopViewPoint.y - top_view_offset_y;
+    }else{
+        centerY = originTopViewPoint.y;
     }
-    [_moviePlayer pause];
+    [_topView setCenter:CGPointMake(_topView.center.x, centerY)];
+}
+
+- (void)endedMidView:(CGFloat)offsetY
+{
+    if (offsetY < 0 ) {
+        CGFloat mid_origin_y = 0.25 * _topView.frame.size.height; // 1/4 topView
+        CGFloat mid_size_h = IL_SCREEN_H - mid_origin_y - IL_NAVBAR_H;
+        
+        CGFloat originX = _midView.frame.origin.x;
+        CGFloat originY = mid_origin_y;
+        CGFloat size_W = _midView.frame.size.width;
+        CGFloat size_H = mid_size_h;
+//        NSLog(@"X %f,Y %f,W %f,H %f",originX,originY,size_W,size_H);
+        _midView.frame = CGRectMake(originX,originY,size_W,size_H);
+        
+        [UIView animateWithDuration:IL_DURA * 3 animations:^{
+            [self resetAlbumViewHeight:mid_size_h];
+            [self resetGroupViewHeight:mid_size_h];
+        }];
+        
+    }else{
+        
+        CGFloat originX = _midView.frame.origin.x;
+        CGFloat originY = originMidViewFrame.origin.y;
+        CGFloat size_W = _midView.frame.size.width;
+        CGFloat size_H = originMidViewFrame.size.height;
+        _midView.frame = CGRectMake(originX,originY,size_W,size_H);
+        
+        [UIView animateWithDuration:IL_DURA * 3 animations:^{
+            _groupView.frame = originGroupFrame;
+            _albumView.frame = originAlbumFrame;
+        }];
+    }
+}
+
+- (void)resetGroupViewHeight:(CGFloat)height
+{
+    CGFloat originX = _groupView.frame.origin.x;
+    CGFloat originY = _groupView.frame.origin.y;
+    CGFloat size_W = _groupView.frame.size.width;
+    CGFloat size_H = height;
+    //    NSLog(@"X %f,Y %f,W %f,H %f",originX,originY,size_W,size_H);
+    _groupView.frame = CGRectMake(originX,originY,size_W,size_H);
+    [_groupView setNeedsDisplay];
+}
+
+- (void)resetAlbumViewHeight:(CGFloat)height
+{
+    CGFloat originX = _albumView.frame.origin.x;
+    CGFloat originY = _albumView.frame.origin.y;
+    CGFloat size_W = _albumView.frame.size.width;
+    CGFloat size_H = height;
+    //    NSLog(@"X %f,Y %f,W %f,H %f",originX,originY,size_W,size_H);
+    _albumView.frame = CGRectMake(originX,originY,size_W,size_H);
+    [_albumView setNeedsDisplay];
+}
+
+- (void)resetMView:(CGFloat)offsetY
+{
+    CGFloat originX = _midView.frame.origin.x;
+    CGFloat originY = _midView.frame.origin.y;
+    CGFloat size_W = _midView.frame.size.width;
+    CGFloat size_H = _midView.frame.size.height - offsetY;
+//    NSLog(@"X %f,Y %f,W %f,H %f",originX,originY,size_W,size_H);
+    _midView.frame = CGRectMake(originX,originY,size_W,size_H);
+}
+
+- (void)resetGView:(CGFloat)offsetY
+{
+    CGFloat originX = _groupView.frame.origin.x;
+    CGFloat originY = _groupView.frame.origin.y;
+    CGFloat size_W = _groupView.frame.size.width;
+    CGFloat size_H = _groupView.frame.size.height - offsetY;
+//    NSLog(@"X %f,Y %f,W %f,H %f",originX,originY,size_W,size_H);
+    _groupView.frame = CGRectMake(originX,originY,size_W,size_H);
+}
+
+- (void)resetAView:(CGFloat)offsetY
+{
+    CGFloat originX = _albumView.frame.origin.x;
+    CGFloat originY = _albumView.frame.origin.y;
+    CGFloat size_W = _albumView.frame.size.width;
+    CGFloat size_H = _albumView.frame.size.height - offsetY;
+//    NSLog(@"offsetY %f X %f,Y %f,W %f,H %f",offsetY,originX,originY,size_W,size_H);
+    _albumView.frame = CGRectMake(originX,originY,size_W,size_H);
 }
 
 #pragma mark - naviBarView

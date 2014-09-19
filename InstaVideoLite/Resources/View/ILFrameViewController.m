@@ -463,16 +463,6 @@ UITableViewDataSource,UITableViewDelegate>
     }
 }
 
-- (void)playPause:(UIButton *)sender
-{
-    sender.selected = !sender.selected;
-    if (!sender.selected) {
-        [_moviePlayer pause];
-        return;
-    }
-    [_moviePlayer play];
-}
-
 #pragma mark - naviBarView
 
 - (void)createNavView
