@@ -140,21 +140,21 @@
     _btnPlay = [UIButton buttonWithType:UIButtonTypeCustom];
     _btnPlay.frame = btnPlayFrame;
     _btnPlay.center = _moviePlayer.view.center;
-    [_btnPlay setImage:[UIImage imageNamed:@"Pause"] forState:UIControlStateNormal];
-    [_btnPlay setImage:[UIImage imageNamed:@"play"] forState:UIControlStateSelected];
+    [_btnPlay setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+    [_btnPlay setImage:[UIImage imageNamed:@"Pause"] forState:UIControlStateSelected];
     [_btnPlay addTarget:self action:@selector(btnPlayPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [_btnPlay setSelected:YES];
+    _btnPlay.selected = YES;
     [_topView addSubview:_btnPlay];
 }
 
 - (void)btnPlayPressed:(UIButton *)sender
 {
-    sender.selected = !sender.selected;
-    if (!sender.selected) {
+    if (sender.selected) {
         [_moviePlayer pause];
-        return;
+    }else{
+        [_moviePlayer play];
     }
-    [_moviePlayer play];
+    sender.selected = !sender.selected;
 }
 
 #pragma mark - naviBarView

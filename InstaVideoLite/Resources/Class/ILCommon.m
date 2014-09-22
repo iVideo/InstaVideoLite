@@ -10,4 +10,18 @@
 
 @implementation ILCommon
 
++ (instancetype)sharedInstance
+{
+    static ILCommon *common;
+    static dispatch_once_t *onceToke;
+    dispatch_once(onceToke, ^{
+        common = [[ILCommon alloc] init];
+    });
+    return common;
+}
+
+-(BOOL) isRetina{
+    return ([UIScreen instancesRespondToSelector:@selector(displayLinkWithTarget:selector:)] && ([UIScreen mainScreen].scale == 2.0));
+}
+
 @end

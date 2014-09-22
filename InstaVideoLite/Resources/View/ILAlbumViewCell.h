@@ -14,8 +14,8 @@
 @property (strong, nonatomic) UIImageView *iconView;
 @property (strong, nonatomic) UILabel *lblDuration;
 
-@property (strong, nonatomic) UIImageView *selectedBg;
 @property (strong, nonatomic) UIImageView *imageView;
+@property (strong, nonatomic) UIButton *choosenBtn;
 
 - (void)updateCellImage:(UIImage *)image duration:(NSNumber *)duration;
 

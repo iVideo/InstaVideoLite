@@ -8,6 +8,12 @@
 
 #import "ILAlbumViewCell.h"
 
+@interface ILAlbumViewCell ()
+
+@property (strong, nonatomic) UIImageView *selectedBg;
+
+@end
+
 @implementation ILAlbumViewCell
 
 -(instancetype)initWithFrame:(CGRect)frame
@@ -21,12 +27,21 @@
         _selectedBg = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"play_edit_btn"]];
         _selectedBg.frame = CGRectMake(1.f, 1.f, 78.f, 78.f);
         _selectedBg.contentMode = UIViewContentModeScaleAspectFill;
-        _selectedBg.hidden = YES;
-        [self addSubview:_selectedBg];
+//        _selectedBg.hidden = YES;
+//        [self addSubview:_selectedBg];
+        self.selectedBackgroundView = _selectedBg;
         
         _imageView = [[UIImageView alloc]initWithFrame:CGRectMake(2.f, 2.f, 76.f, 76.f)];
         _imageView.contentMode = UIViewContentModeScaleAspectFill;
         [self insertSubview:_imageView aboveSubview:_selectedBg];
+        
+        _choosenBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _choosenBtn.frame = CGRectMake(50.f, 8.f, 22.f, 22.f);
+        [_choosenBtn setImage:[UIImage imageNamed:@"home_choose_btn"] forState:UIControlStateNormal];
+        [_choosenBtn setImage:[UIImage imageNamed:@"home_choose_btn-"] forState:UIControlStateSelected];
+        _choosenBtn.selected = NO;
+        _choosenBtn.userInteractionEnabled = NO;
+        [self addSubview:_choosenBtn];
         
         _infoView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 50.f, 80.f, 30.f)];
         

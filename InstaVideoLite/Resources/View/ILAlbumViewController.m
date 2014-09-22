@@ -8,10 +8,8 @@
 
 #import "ILAlbumViewController.h"
 #import "ILAlbumManager.h"
-
 #import "ILAlbumViewCell.h"
 #import "ILAlbumHeader.h"
-
 #import "ILAlbumGroupCell.h"
 
 @interface ILAlbumViewController ()
@@ -29,6 +27,8 @@ UITableViewDataSource,UITableViewDelegate>
     CGPoint offsetPoint;
     
     NSString *groupName;
+    
+    AVAssetExportSession *exporter;
 }
 
 @property (strong, nonatomic) UIView *topView;
@@ -46,6 +46,7 @@ UITableViewDataSource,UITableViewDelegate>
 @property (strong, nonatomic) NSDictionary *groups; //groupView datasource
 @property (strong, nonatomic) NSArray *assets;   //albumView datasource
 
+@property (strong, nonatomic) NSMutableArray *selectedURLs;
 
 @end
 
@@ -63,18 +64,22 @@ UITableViewDataSource,UITableViewDelegate>
     _midView = nil;
     
     _moviePlayer = nil;
+    
+    _selectedURLs = nil;
 }
 
 -(void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self
-//                                                    name:MPMoviePlayerThumbnailImageRequestDidFinishNotification
-//                                                  object:_moviePlayer];
-    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:MPMovieNaturalSizeAvailableNotification
                                                   object:_moviePlayer];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [_moviePlayer stop];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -107,14 +112,15 @@ UITableViewDataSource,UITableViewDelegate>
     ALAssetsGroup *firstGroup = (ALAssetsGroup *)[[_groups allValues] firstObject];
     groupName = [firstGroup valueForProperty:ALAssetsGroupPropertyName];
     _assets = [[NSArray alloc] initWithArray:[IL_ALBUM getVideoAssetsWithGroup:firstGroup]];
+    
+    _selectedURLs = [[NSMutableArray alloc] initWithCapacity:1];
 }
 
 - (void)firstAlbumSelected
 {
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [_albumView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionTop];
     [self selectedAlbumWithIndexPath:indexPath];
-    
+    [_albumView reloadItemsAtIndexPaths:[NSArray arrayWithObject:indexPath]];
 }
 
 #pragma mark - midView
@@ -204,7 +210,6 @@ UITableViewDataSource,UITableViewDelegate>
     groupName = [group valueForProperty:ALAssetsGroupPropertyName];
     [self hideGroupView:nil];
     [_albumView reloadData];
-    [self firstAlbumSelected];
 }
 
 
@@ -234,6 +239,10 @@ UITableViewDataSource,UITableViewDelegate>
     ALAsset *asset = [_assets objectAtIndex:indexPath.row];
     [cell updateCellImage:[UIImage imageWithCGImage:[asset thumbnail]]
                  duration:[asset valueForProperty:ALAssetPropertyDuration]];
+    if (indexPath.row == 0) {
+        cell.selected = YES;
+        cell.choosenBtn.selected = YES;
+    }
     return cell;
 }
 
@@ -245,18 +254,27 @@ UITableViewDataSource,UITableViewDelegate>
 - (void)selectedAlbumWithIndexPath:(NSIndexPath *)indexPath
 {
     ALAsset *asset = [_assets objectAtIndex:indexPath.row];
-    [_moviePlayer stop];
-    _moviePlayer.contentURL = [[asset defaultRepresentation] url];
-    NSLog(@" Album moviePlayer.contentURL %@",_moviePlayer.contentURL);
+    NSURL *url = [[asset defaultRepresentation] url];
+    
+    [_moviePlayer pause];
+    _moviePlayer.contentURL = url;
     [_moviePlayer prepareToPlay];
+    
     ILAlbumViewCell *cell = (ILAlbumViewCell *)[_albumView cellForItemAtIndexPath:indexPath];
-    cell.selectedBg.hidden = NO;
+    cell.selected = YES;
+    
+    if ([_selectedURLs containsObject:url]) {
+        [_selectedURLs removeObject:url];
+        cell.choosenBtn.selected = NO;
+    }else{
+        [_selectedURLs addObject:url];
+        cell.choosenBtn.selected = YES;
+    }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    ILAlbumViewCell *cell = (ILAlbumViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
-    cell.selectedBg.hidden = YES;
+    
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
@@ -316,16 +334,6 @@ UITableViewDataSource,UITableViewDelegate>
     [_topView addSubview:_playerView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(movieNaturalSizeAvailable:) name:MPMovieNaturalSizeAvailableNotification object:_moviePlayer];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(movieThumbnailLoadComplete:) name:MPMoviePlayerThumbnailImageRequestDidFinishNotification object:_moviePlayer];
-    
-    [_moviePlayer requestThumbnailImagesAtTimes:[NSArray arrayWithObject:[NSNumber numberWithDouble:0]] timeOption:MPMovieTimeOptionNearestKeyFrame];
-    
-}
-
-- (void)movieThumbnailLoadComplete:(NSNotification*)notification
-{
-//    NSDictionary *userInfo = [notification userInfo];
 }
 
 - (void)movieNaturalSizeAvailable:(NSNotification*)notification
@@ -340,7 +348,6 @@ UITableViewDataSource,UITableViewDelegate>
     [_playerView setCenter:_topView.center];
     [_topView bringSubviewToFront:_btnPlay];
     [_topView bringSubviewToFront:_toggleView];
-    NSLog(@"movieNaturalSizeAvailable notification");
 }
 
 - (void)createPlayButton
@@ -349,8 +356,8 @@ UITableViewDataSource,UITableViewDelegate>
     _btnPlay = [UIButton buttonWithType:UIButtonTypeCustom];
     _btnPlay.frame = btnPlayFrame;
     _btnPlay.center = _moviePlayer.view.center;
-    [_btnPlay setImage:[UIImage imageNamed:@"Pause"] forState:UIControlStateNormal];
-    [_btnPlay setImage:[UIImage imageNamed:@"play"] forState:UIControlStateSelected];
+    [_btnPlay setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+    [_btnPlay setImage:[UIImage imageNamed:@"Pause"] forState:UIControlStateSelected];
     [_btnPlay addTarget:self action:@selector(btnPlayPressed:) forControlEvents:UIControlEventTouchUpInside];
     [_btnPlay setSelected:YES];
     [_topView addSubview:_btnPlay];
@@ -358,13 +365,14 @@ UITableViewDataSource,UITableViewDelegate>
 
 - (void)btnPlayPressed:(UIButton *)sender
 {
-    sender.selected = !sender.selected;
-    if (!sender.selected) {
+    if (sender.selected) {
         [_moviePlayer pause];
-        return;
+    }else{
+        [_moviePlayer play];
     }
-    [_moviePlayer play];
+    sender.selected = !sender.selected;
 }
+
 
 - (void)createToggleView
 {
@@ -536,8 +544,84 @@ UITableViewDataSource,UITableViewDelegate>
 
 - (void)btnNextPressed:(UIButton *)sender
 {
-    [IL_DATA addClipURL:_moviePlayer.contentURL];
+    for (NSURL *url in _selectedURLs) {
+//        [self CropVideoSquare:url];
+        AVPlayerItem *item = [[AVPlayerItem alloc] initWithURL:url];
+        [IL_DATA pushItem:item];
+    }
+    [_selectedURLs removeAllObjects];
     [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+#pragma mark - CropVideoSquare
+- (void)CropVideoSquare:(NSURL *)url
+{
+    AVAsset *asset = [AVAsset assetWithURL:url];
+    //create an avassetrack with our asset
+    AVAssetTrack *clipVideoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+    CMTimeValue timeValue = [asset duration].value;
+    CMTimeScale timescale = [asset duration].timescale;
+    NSLog(@"%lld,%d",timeValue, timescale);
+    //create a video composition and preset some settings
+    AVMutableVideoComposition* videoComposition = [AVMutableVideoComposition videoComposition];
+    videoComposition.frameDuration = CMTimeMake(1, 30);
+    //here we are setting its render size to its height x height (Square)
+//    float height = clipVideoTrack.naturalSize.height;
+//    float width = clipVideoTrack.naturalSize.width;
+//    float ratio = MAX(IL_PLAYER_H / height, IL_PLAYER_W / width);
+//    videoComposition.renderScale = ratio;
+    videoComposition.renderSize = CGSizeMake(clipVideoTrack.naturalSize.height, clipVideoTrack.naturalSize.height);
+    
+    //create a video instruction
+    AVMutableVideoCompositionInstruction *instruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
+    instruction.timeRange = CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithSeconds(60, 30));
+    
+    AVMutableVideoCompositionLayerInstruction* transformer = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:clipVideoTrack];
+    
+    //Here we shift the viewing square up to the TOP of the video so we only see the top
+//    CGAffineTransform t1 = CGAffineTransformMakeTranslation(clipVideoTrack.naturalSize.height, 0 );
+    
+    //Use this code if you want the viewing square to be in the middle of the video
+    CGAffineTransform t1 = CGAffineTransformMakeTranslation(clipVideoTrack.naturalSize.height, -(clipVideoTrack.naturalSize.width - clipVideoTrack.naturalSize.height) /2 );
+    
+    //Make sure the square is portrait
+    CGAffineTransform t2 = CGAffineTransformRotate(t1, M_PI_2);
+    
+    CGAffineTransform finalTransform = t2;
+    [transformer setTransform:finalTransform atTime:kCMTimeZero];
+    
+    //add the transformer layer instructions, then add to video composition
+    instruction.layerInstructions = [NSArray arrayWithObject:transformer];
+    videoComposition.instructions = [NSArray arrayWithObject: instruction];
+    
+    //Create an Export Path to store the cropped video
+    NSString * documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *exportPath = [documentsPath stringByAppendingFormat:@"/CroppedVideo.mp4"];
+    NSURL *exportUrl = [NSURL fileURLWithPath:exportPath];
+    
+    //Remove any prevouis videos at that path
+    [[NSFileManager defaultManager]  removeItemAtURL:exportUrl error:nil];
+    
+    //Export
+    exporter = [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetHighestQuality] ;
+    exporter.videoComposition = videoComposition;
+    exporter.outputURL = exportUrl;
+    exporter.outputFileType = AVFileTypeQuickTimeMovie;
+    
+    [exporter exportAsynchronouslyWithCompletionHandler:^
+     {
+         dispatch_async(dispatch_get_main_queue(), ^{
+             //Call when finished
+             [self exportDidFinish:exporter];
+         });
+     }];
+
+}
+
+- (void)exportDidFinish:(AVAssetExportSession*)session
+{
+    //Play the New Cropped video
+    NSLog(@"%@",session.outputURL);
 }
 
 @end

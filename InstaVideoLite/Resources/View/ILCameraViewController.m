@@ -36,6 +36,8 @@
 
 @property (strong, nonatomic) ILVideoComposition *composition;
 
+@property (strong, nonatomic) UIView *topView;
+
 @property (strong, nonatomic) UIView *controlView;
 @property (strong, nonatomic) UIButton *btnDelete;
 @property (strong, nonatomic) UIButton *btnRecord;
@@ -56,6 +58,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [self createTopView];
     [self createControlView];
     [self createCameraView];
     [self createNavBar];
@@ -69,6 +72,20 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - topView
+
+- (void)createTopView
+{
+    self.view.backgroundColor = [UIColor blackColor];
+    _topView = [[UIView alloc] initWithFrame:CGRectMake(.0f, .0f, IL_PLAYER_W, IL_PLAYER_H)];
+    _topView.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:_topView];
+    
+    //Progress view
+    progressView = [[ILRecordProgressView alloc] initWithFrame: CGRectMake(0, IL_PLAYER_H - 10, IL_CAMERA_W, 10)];
+    [_topView addSubview:progressView];
+}
+
 #pragma mark -- cameraView ---
 - (void)createControlView
 {
@@ -78,10 +95,6 @@
                     CGRectMake(0, IL_CAMERA_H, IL_CAMERA_W, controlHeight)];
     [_controlView setBackgroundColor:[UIColor blackColor]];
     [self.view addSubview:_controlView];
-    
-    //Progress view
-    progressView = [[ILRecordProgressView alloc] initWithFrame: CGRectMake(0, 0, IL_CAMERA_W - 10, 10)];
-    [_controlView addSubview:progressView];
     
     //Record button
     _btnRecord = [UIButton buttonWithType:UIButtonTypeCustom];

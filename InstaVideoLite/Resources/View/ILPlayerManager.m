@@ -10,7 +10,7 @@
 
 @interface ILPlayerManager ()
 
-@property (strong, nonatomic) ILPlayerView *playerView;
+//@property (strong, nonatomic) ILPlayerView *playerView;
 @property (strong, nonatomic) NSMutableArray *playItems;
 
 @end
@@ -19,9 +19,9 @@
 
 - (void)dealloc
 {
-    _queuePlayer = nil;
-    _playerView = nil;
     _playItems = nil;
+    _queuePlayer = nil;
+//    _playerView = nil;
 }
 
 + (instancetype) sharedInstance
@@ -37,38 +37,72 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        _playItems = [[NSMutableArray alloc] init];
+        [self createSubView];
     }
     return self;
 }
 
-- (void)setPlayerItemWithURLs:(NSArray *)urls
+- (instancetype)initWithPlayerItems:(NSArray *)items
 {
-    for (NSURL *url in urls) {
-        [_playItems addObject:[AVPlayerItem playerItemWithURL:url]];
+    if (self = [super init]) {
+        _queuePlayer = [AVQueuePlayer queuePlayerWithItems:items];
     }
-    _queuePlayer = [AVQueuePlayer queuePlayerWithItems:[NSArray arrayWithArray:_playItems]];
+    return self;
 }
 
-//- (void)setPlayerItemWithPaths:(NSArray *)paths
-//{
-//    for (NSString *path in paths) {
-//        [_playItems addObject:[AVPlayerItem playerItemWithURL:[NSURL URLWithString:path]]];
-//    }
-//    _queuePlayer = [AVQueuePlayer queuePlayerWithItems:[NSArray arrayWithArray:_playItems]];
-//}
-//
-//- (void)setPlayerItemWithAssets:(NSArray *)assets
-//{
-//    for (AVAsset *asset in assets) {
-//        [_playItems addObject:[AVPlayerItem playerItemWithAsset:asset]];
-//    }
-//    _queuePlayer = [AVQueuePlayer queuePlayerWithItems:[NSArray arrayWithArray:_playItems]];
-//}
-
-- (void)playWithIndex:(NSInteger)index
+- (void)createSubView
 {
-    
+    _playItems = [[NSMutableArray alloc] initWithCapacity:1];
+    _queuePlayer = [[AVQueuePlayer alloc] init];
+}
+
+#pragma mark - public
+
+- (void)addPlayerItems:(NSArray *)items
+{
+    for (AVPlayerItem *item in items) {
+        [self addLastItem:item];
+    }
+}
+
+- (NSArray *)allPlayItems
+{
+    return [_queuePlayer items];
+}
+
+- (void)clearPlayItems
+{
+    [_queuePlayer removeAllItems];
+}
+
+- (void)addLastItemWithURL:(NSURL *)url
+{
+    AVPlayerItem *item = [AVPlayerItem playerItemWithURL:url];
+    [self addLastItem:item];
+}
+
+- (void)addLastItem:(AVPlayerItem *)item
+{
+    AVPlayerItem *last = [_playItems lastObject];
+    if ([_queuePlayer canInsertItem:item afterItem:last]) {
+        [_queuePlayer insertItem:item afterItem:last];
+        [_playItems addObject:item];
+    }
+}
+
+- (void)deleteItem:(AVPlayerItem *)item
+{
+    [_queuePlayer removeItem:item];
+}
+
+
+- (void)playOrPause:(BOOL)play
+{
+    if (play) {
+        [self play];
+    }else{
+        [self pause];
+    }
 }
 
 - (void)play
@@ -80,5 +114,42 @@
 {
     [_queuePlayer pause];
 }
+
+@end
+
+#pragma mark --- ILPlayerView Class----
+
+@implementation ILPlayerView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self createLayer:frame];
+        [self createBtnPlay:frame];
+    }
+    return self;
+}
+
+- (void)createLayer:(CGRect)frame
+{
+    _playerLayer = [[AVPlayerLayer alloc] init];
+    [_playerLayer setFrame:frame];
+    [_playerLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    [self.layer addSublayer:_playerLayer];
+}
+
+- (void)createBtnPlay:(CGRect)frame
+{
+    CGSize btnSize = CGSizeMake(70.f, 70.f);
+    CGRect btnFrame = CGRectMake(frame.size.width/2 - btnSize.width/2, frame.size.height/2 - btnSize.height/2, btnSize.width, btnSize.height);
+    _btnPlay = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_btnPlay setFrame:btnFrame];
+    [_btnPlay setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+    _btnPlay.userInteractionEnabled = NO;
+    [self addSubview:_btnPlay];
+    [self bringSubviewToFront:_btnPlay];
+}
+
 
 @end

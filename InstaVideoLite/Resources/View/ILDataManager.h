@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundation.h>
 
 @interface ILDataManager : NSObject
 
@@ -18,5 +19,13 @@
 
 - (void)pushURL:(NSURL *)url;
 - (NSURL *)popURL;
+
+- (void)pushItem:(AVPlayerItem *)item;
+- (NSArray *)popAllItems;
+- (AVPlayerItem *)popItem;
+- (BOOL)hasItem;
+
+- (void)pushIndex:(NSInteger)idx;
+- (NSInteger)popIndex;
 
 @end

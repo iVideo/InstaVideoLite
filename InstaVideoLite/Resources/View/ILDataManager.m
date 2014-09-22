@@ -10,9 +10,11 @@
 
 @interface ILDataManager ()
 
+
 @property (strong, nonatomic) NSMutableArray *clipURLs;
 @property (strong, nonatomic) NSMutableArray *itemURLs;
-
+@property (strong, nonatomic) NSMutableArray *playerItems;
+@property NSInteger itemIndex;
 @end
 
 @implementation ILDataManager
@@ -33,6 +35,8 @@
     if (self) {
         _clipURLs = [[NSMutableArray alloc]initWithCapacity:1];
         _itemURLs = [[NSMutableArray alloc]initWithCapacity:1];
+        _playerItems = [[NSMutableArray alloc]initWithCapacity:1];
+        _itemIndex = -1;
     }
     return self;
 }
@@ -53,7 +57,7 @@
     [_clipURLs removeAllObjects];
 }
 
-#pragma mark - editable item
+#pragma mark - editable url
 - (void)pushURL:(NSURL *)url
 {
     [_itemURLs removeAllObjects];
@@ -63,6 +67,48 @@
 - (NSURL *)popURL
 {
     return [_itemURLs lastObject];
+}
+
+#pragma mark - editable item
+
+- (void)pushItem:(AVPlayerItem *)item
+{
+    [_playerItems addObject:item];
+}
+
+- (AVPlayerItem *)popItem
+{
+    AVPlayerItem *item = [[_playerItems lastObject] copy];
+    [_playerItems removeLastObject];
+    return item;
+}
+
+- (NSArray *)popAllItems
+{
+    NSArray *array = [_playerItems copy];
+    [_playerItems removeAllObjects];
+    return array;
+}
+
+- (BOOL)hasItem
+{
+    if ([_playerItems count] > 0) {
+        return YES;
+    }
+    return NO;
+}
+
+#pragma mark - editable index
+- (void)pushIndex:(NSInteger)idx
+{
+    _itemIndex = idx;
+}
+
+- (NSInteger)popIndex
+{
+    NSInteger idx = _itemIndex;
+    _itemIndex = -1;
+    return idx;
 }
 
 @end

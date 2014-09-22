@@ -20,9 +20,8 @@
 
 @property (strong, nonatomic) ILNavBarView *navBarView;
 
-//@property (strong, nonatomic) ILPlayerView *playerView;
+@property (strong, nonatomic) ILPlayerView *playerView;
 @property (strong, nonatomic) UIView *editorBar;
-@property (strong, nonatomic) UIButton *btnPlay;
 @property (strong, nonatomic) ILClipDockView *dockView;
 @property (strong, nonatomic) UIButton *btnAdd;
 
@@ -33,13 +32,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [_dockView updateDockView];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
+    [self updatePlayerItems];
 }
 
 - (void)viewDidLoad {
@@ -120,38 +113,32 @@
 
 - (void)createPlayerView
 {
-//    _playerView = [[ILPlayerView alloc] initWithFrame:CGRectMake(0, 0,IL_PLAYER_W, IL_PLAYER_H)];
-//    [_playerView setBackgroundColor:[UIColor blackColor]];
-//    [self.view addSubview:_playerView];
+    _playerView = [[ILPlayerView alloc] initWithFrame:CGRectMake(0, 0,IL_PLAYER_W, IL_PLAYER_H)];
+    [_playerView setBackgroundColor:[UIColor clearColor]];
+    _playerView.btnPlay.hidden = YES;
+    [self.view addSubview:_playerView];
     
-//    CGRect btnPlayFrame = CGRectMake(IL_PLAYER_W/2 - 35, IL_PLAYER_H/2, 70, 70);
-//    _btnPlay = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [_btnPlay setFrame:btnPlayFrame];
-//    [_btnPlay setImage:[UIImage imageNamed:@"Pause.png"] forState:UIControlStateNormal];
-//    [_btnPlay setImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateHighlighted];
-//    [_btnPlay addTarget:self action:@selector(playPause:) forControlEvents:UIControlEventTouchUpInside];
-//    [_playerView addSubview:_btnPlay];
-//    _btnPlay.center = _playerView.center;
-//    
-//    [PLAYER setPlayerItemWithURLs:[IL_DATA getClipURLs]];
-//    [self.playerView.playerLayer setPlayer:PLAYER.queuePlayer];
-//    
-//    currentIndex = 0;
-//    
-//    [PLAYER play];
-//    _btnPlay.selected = YES;
-
+    [_playerView.playerLayer setPlayer:PLAYER.queuePlayer];
+    [self.view bringSubviewToFront:_playerView];
+    
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playerTaped:)];
+    [_playerView addGestureRecognizer:tapGesture];
 }
 
-- (void)playPause:(UIButton *)sender
+- (void)playerTaped:(UITapGestureRecognizer *)recognizer
 {
-//    if (sender.selected == YES) {
-//        sender.selected = NO;
-//        [PLAYER pause];
-//        return;
-//    }
-//    sender.selected = YES;
-//    [PLAYER play];
+    _playerView.btnPlay.hidden = !_playerView.btnPlay.hidden;
+    [PLAYER playOrPause:_playerView.btnPlay.hidden];
+}
+
+- (void)updatePlayerItems
+{
+    NSArray *items = [IL_DATA popAllItems];
+    if ([items count] > 0) {
+        [_dockView updateDockWithItems:items];
+        [PLAYER addPlayerItems:items];
+        [self.view setNeedsDisplay];
+    }
 }
 
 - (void)createClipDock
@@ -159,10 +146,6 @@
     CGRect clipDockFrame = CGRectMake(0, IL_PLAYER_H, IL_SCREEN_W - DOCK_H , DOCK_H);
     _dockView = [[ILClipDockView alloc] initWithFrame:clipDockFrame];
     [self.view addSubview:_dockView] ;
-}
-- (void)btnPlayPressed:(UIButton *)sender
-{
-    NSLog(@"%ld",(long)sender.tag);
 }
 
 - (void)createAddButon
@@ -178,7 +161,7 @@
 
 - (void)addClip:(UIButton *)sender
 {
-//    [PLAYER pause];
+    [PLAYER pause];
     [self camera:sender];
 }
 
@@ -217,12 +200,19 @@
 
 - (void)pushWithEditType:(NSString *)editType
 {
-    NSURL *url = [_dockView getSelectedItem];
-    if (url == nil) {
+    //    AVPlayerItem *item = [_dockView getSelectedItem];
+    //    if (item == nil) {
+    //        return;
+    //    }
+    //    [IL_DATA pushItem:item];
+    
+    NSInteger idx = [_dockView getSelectedIndex];
+    if (idx < 0) {
         return;
     }
+    [IL_DATA pushIndex:idx];
+    
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
-    [IL_DATA pushURL:url];
     [self performSegueWithIdentifier:editType sender:self];
     
 }

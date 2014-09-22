@@ -15,10 +15,11 @@
 
 - (instancetype)initWithFrame:(CGRect)frame;
 
-- (void)updateDockView;
+- (void)updateDockWithItems:(NSArray *)items;
 
 - (void)removeSelectedItem;
-- (void)replaceSelectedItem:(NSURL *)url;
-- (NSURL *)getSelectedItem;
+
+- (AVPlayerItem *)getSelectedItem;
+- (NSInteger)getSelectedIndex;
 
 @end

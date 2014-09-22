@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
-#import "ILPlayerView.h"
 
 @interface ILPlayerManager : NSObject
 
@@ -17,12 +16,28 @@
 
 + (instancetype) sharedInstance;
 
-- (void)setPlayerItemWithURLs:(NSArray *)urls;
-//- (void)setPlayerItemWithPaths:(NSArray *)paths;
-//- (void)setPlayerItemWithAssets:(NSArray *)assets;
-- (void)playWithIndex:(NSInteger)index;
+//- (instancetype)initWithPlayerItems:(NSArray *)items;
 
+- (void)addPlayerItems:(NSArray *)items;
+- (NSArray *)allPlayItems;
+- (void)clearPlayItems;
+
+- (void)addLastItemWithURL:(NSURL *)url;
+- (void)addLastItem:(AVPlayerItem *)item;
+- (void)deleteItem:(AVPlayerItem *)item;
+
+- (void)playOrPause:(BOOL)play;
 - (void)play;
 - (void)pause;
+
+@end
+
+@interface ILPlayerView : UIView
+
+@property (strong, nonatomic) AVPlayerLayer *playerLayer;
+@property (strong, nonatomic) UIButton *btnPlay;
+
+- (instancetype)initWithFrame:(CGRect)frame;
+
 
 @end

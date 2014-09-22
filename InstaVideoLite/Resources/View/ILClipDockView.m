@@ -32,8 +32,8 @@
 }
 
 @property (strong, nonatomic) UIScrollView *scrollView;
-@property (strong, nonatomic) NSMutableArray *thumbArray;//<ILClipView>
-@property (strong, nonatomic) NSMutableArray *assetArray;//<URL>
+@property (strong, nonatomic) NSMutableArray *thumbArray;// <ILClipView>
+@property (strong, nonatomic) NSMutableArray *assetArray;// <AVPlayerItem>
 
 @end
 
@@ -51,16 +51,10 @@
     return self;
 }
 
-- (void)updateDockView
+- (void)updateDockWithItems:(NSArray *)items
 {
-    NSArray *urls = [IL_DATA getClipURLs];
-    if ([urls count] < 1) {
-        return;
-    }else{
-        [_assetArray addObjectsFromArray:urls];
-        [IL_DATA clearClips];
-        [self rebuildContent];
-    }
+    [_assetArray addObjectsFromArray:items];
+    [self rebuildContent];
 }
 
 - (void)removeSelectedItem
@@ -74,18 +68,15 @@
     }
 }
 
-- (void)replaceSelectedItem:(NSURL *)url
+- (NSInteger)getSelectedIndex
 {
     if (selectedIndex < 0) {
-        return;
+        return -1;
     }
-    if ([_assetArray count] > selectedIndex) {
-        [_assetArray replaceObjectAtIndex:selectedIndex withObject:url];
-        [self rebuildContent];
-    }
+    return selectedIndex;
 }
 
-- (NSURL *)getSelectedItem
+- (AVPlayerItem *)getSelectedItem
 {
     if (selectedIndex < 0) {
         return nil;
@@ -100,7 +91,7 @@
 
 - (void)initDockView
 {
-    _assetArray = [[NSMutableArray alloc] initWithCapacity:1];
+    _assetArray = [[NSMutableArray alloc] initWithCapacity:1];// <AVPlayerItem>
     _thumbArray = [[NSMutableArray alloc] initWithCapacity:1];
     selectedIndex = -1;
     [self createScrollView];
@@ -139,14 +130,15 @@
 - (void)createContentView
 {
     for (int i = 0; i < [_assetArray count]; i++) {
-        [self createThumbView:[_assetArray objectAtIndex:i] index:i];
+        AVPlayerItem *item = [_assetArray objectAtIndex:i];
+        [self createThumbView:item.asset index:i];
     }
     _scrollView.contentSize = CGSizeMake(THRUMB_W*([_assetArray count]), self.frame.size.height);
 }
 
-- (void)createThumbView:(NSURL *)url index:(NSInteger)idx
+- (void)createThumbView:(AVAsset *)asset index:(NSInteger)idx
 {
-    AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc]initWithAsset:[AVAsset assetWithURL:url]];
+    AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
     generator.maximumSize = CGSizeMake(THRUMB_W, THRUMB_H);
     generator.appliesPreferredTrackTransform = YES;
     CMTime actualTime; NSError *error;
@@ -206,7 +198,7 @@
             [self bringSubviewToFront:view];
             originalCenter = view.center;
             [UIView animateWithDuration:.2f animations:^{
-                view.transform = CGAffineTransformMakeScale(1.1, 1.1);
+//                view.transform = CGAffineTransformMakeScale(1.1, 1.1);
                 view.alpha = 0.7;
             }];
         }
